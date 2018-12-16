@@ -2,7 +2,10 @@ package com.self.framework.http;
 
 import com.self.framework.base.BaseReult;
 import com.self.framework.constant.HttpCodeConstant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,7 @@ import java.util.Map;
  * @version v.1.0
  */
 @Data
+@NoArgsConstructor
 public class HttpResult<T> extends BaseReult {
 
     private T result;

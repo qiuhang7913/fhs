@@ -1,7 +1,7 @@
 package com.self.framework.ucenter.service;
 
+import com.self.framework.base.BaseService;
 import com.self.framework.ucenter.bean.TestBean;
 
-public interface TestService {
-    TestBean add(TestBean bean);
+public interface TestService extends BaseService<TestBean> {
 }

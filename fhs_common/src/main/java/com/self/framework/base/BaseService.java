@@ -53,4 +53,12 @@ public interface BaseService<T extends BaseBean> {
      * @return
      */
     List<T> queryList(T v);
+
+    /**
+     * @des 详情数据查询
+     * @param v
+     * @param <V>
+     * @return
+     */
+    T findOne(T v);
 }

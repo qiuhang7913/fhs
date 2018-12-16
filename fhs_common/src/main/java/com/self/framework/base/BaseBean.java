@@ -1,5 +1,9 @@
 package com.self.framework.base;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Persistent;
 
 import javax.persistence.Column;
@@ -13,6 +17,9 @@ import java.util.Map;
  * @author qiuhang
  * @version v1.0
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @MappedSuperclass
 public class BaseBean implements Serializable {
 
@@ -31,43 +38,4 @@ public class BaseBean implements Serializable {
     @Transient
     private Map<String,String> between;
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    public Map<String, String> getBetween() {
-        return between;
-    }
-
-    public void setBetween(Map<String, String> between) {
-        this.between = between;
-    }
 }

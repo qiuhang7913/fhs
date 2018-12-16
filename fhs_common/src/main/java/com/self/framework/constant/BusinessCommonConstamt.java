@@ -17,4 +17,17 @@ public class BusinessCommonConstamt {
     public static final Integer ALL_PAGE_START = -1;
 
     public static final Integer ALL_PAGE_END = -1;
+
+    public static final String SYS_MENU_RESOURCE_FUNC_ADD_FLAG = "add";
+    public static final Integer SYS_MENU_RESOURCE_FUNC_ADD_CODE = 0;
+
+    public static final String SYS_MENU_RESOURCE_FUNC_UPDATE_FLAG = "update";
+    public static final Integer SYS_MENU_RESOURCE_FUNC_UPDATE_CODE = 1;
+
+    public static final String SYS_MENU_RESOURCE_FUNC_DELETE_FLAG = "delete";
+    public static final Integer SYS_MENU_RESOURCE_FUNC_DELETE_CODE = 2;
+
+    public static final String SYS_MENU_RESOURCE_FUNC_FIND_FLAG = "find";
+    public static final Integer SYS_MENU_RESOURCE_FUNC_FIND_CODE = 3;
+
 }

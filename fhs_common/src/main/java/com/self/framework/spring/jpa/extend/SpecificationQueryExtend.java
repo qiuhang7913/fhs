@@ -125,6 +125,10 @@ public class SpecificationQueryExtend<T> {
                                 continue;
                             }
 
+                            if (field.isAnnotationPresent(NoSpecificationQuery.class)){//当前字段不需要匹配条件
+                                continue;
+                            }
+
                             if (field.isAnnotationPresent(Between.class)){
                                 predicates.add(obtainBetweenSqlWhere(root, cb, ((BaseBean)obj).getBetween(), field.getName()));
                             }else if (field.isAnnotationPresent(Like.class)){
