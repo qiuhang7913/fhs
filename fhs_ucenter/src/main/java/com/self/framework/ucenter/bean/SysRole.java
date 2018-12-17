@@ -2,8 +2,10 @@ package com.self.framework.ucenter.bean;
 
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,17 +16,11 @@ import java.util.Map;
  * @des 用户实体
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "role")
 public class SysRole extends BaseBean {
-
-    @Builder
-    public SysRole(String createTime, String createUser, String updateTime, String updateUser, Map<String, String> between, String roleName, String roleDes, String status, Integer is_delete) {
-        super(createTime, createUser, updateTime, updateUser, between);
-        this.roleName = roleName;
-        this.roleDes = roleDes;
-        this.status = status;
-        this.is_delete = is_delete;
-    }
 
     /**
      *  用户id

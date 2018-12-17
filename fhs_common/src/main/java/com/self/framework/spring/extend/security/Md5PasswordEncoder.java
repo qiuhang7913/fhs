@@ -1,4 +1,4 @@
-package com.self.framework.spring.security.extend;
+package com.self.framework.spring.extend.security;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 

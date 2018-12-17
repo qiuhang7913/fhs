@@ -1,4 +1,4 @@
-package com.self.framework.spring.jpa.extend;
+package com.self.framework.spring.extend.jpa;
 
 import com.self.framework.annotation.*;
 import com.self.framework.base.BaseBean;

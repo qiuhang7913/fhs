@@ -18,11 +18,20 @@ public class LoginAction {
     private AuthenticationManager myAuthenticationManager;
 
     @RequestMapping(value = "/login")
-    public String goLoginPage(){
+    public String goLoginPage(HttpServletRequest  request){
+        System.out.println(request.getRequestURI());
+        System.out.println(request.getRequestURL());
+        System.out.println(request.getParameterMap());
+        System.out.println(request.getParameter("error"));
         return "login";
     }
 
-    @RequestMapping(value = "/userLogin")
+    @RequestMapping(value = "/loginError")
+    public String goLoginError(HttpServletRequest  request){
+        return "login";
+    }
+
+    @RequestMapping(value = "/goLogin")
     public String userLogin(HttpServletRequest  request) {
         SysUser sysUser = SysUser.builder().loginName("qiuhang").password("123456").build();
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

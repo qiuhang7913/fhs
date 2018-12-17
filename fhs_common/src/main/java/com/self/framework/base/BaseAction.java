@@ -5,7 +5,6 @@ import com.self.framework.constant.HttpCodeConstant;
 import com.self.framework.http.HttpResult;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,8 +21,9 @@ import java.util.Map;
  * @author qiuhang
  * @version v1.0
  */
-public class BaseAction<T extends BaseBean> {
+public class BaseAction<T extends BaseBean> extends SuperAction {
 
+    /** service 操作 */
     @Autowired
     private BaseService<T> baseService;
 

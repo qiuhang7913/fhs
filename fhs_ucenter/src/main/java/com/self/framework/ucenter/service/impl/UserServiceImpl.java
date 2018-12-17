@@ -1,15 +1,13 @@
 package com.self.framework.ucenter.service.impl;
 
-import com.self.framework.base.BaseService;
+import com.self.framework.base.BaseDao;
 import com.self.framework.base.BaseServiceImpl;
 import com.self.framework.ucenter.bean.SysUser;
 import com.self.framework.ucenter.dao.UserDao;
 import com.self.framework.ucenter.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 /**
  * @des 用户管理 ifa 实现

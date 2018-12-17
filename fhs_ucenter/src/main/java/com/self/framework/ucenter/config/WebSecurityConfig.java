@@ -1,6 +1,6 @@
 package com.self.framework.ucenter.config;
 
-import com.self.framework.spring.security.extend.Md5PasswordEncoder;
+import com.self.framework.spring.extend.security.Md5PasswordEncoder;
 import com.self.framework.ucenter.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,12 +36,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 								"/images/**",
 								"/captcha.jpg",
 								"/login",
-								"/userLogin",
+								"/goLogin",
 								"/login-error").permitAll()
 				// 任何尚未匹配的URL只需要验证用户即可访问
 				.anyRequest().authenticated()
 				.and()
-				.formLogin().loginPage("/login").successForwardUrl("/index").failureForwardUrl("/login?error=1")
+				.formLogin().loginPage("/login").successForwardUrl("/index").failureForwardUrl("/loginError?error=1")
 				.and()
 				//权限拒绝的页面
 				.exceptionHandling().accessDeniedPage("/403");

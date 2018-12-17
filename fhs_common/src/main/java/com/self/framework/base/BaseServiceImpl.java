@@ -1,7 +1,7 @@
 package com.self.framework.base;
 
 import com.self.framework.constant.BusinessCommonConstamt;
-import com.self.framework.spring.jpa.extend.SpecificationQueryExtend;
+import com.self.framework.spring.extend.jpa.SpecificationQueryExtend;
 import com.self.framework.utils.ConvertDataUtil;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,10 +20,10 @@ import java.util.Optional;
  * @version v1.0
  * @param <T>
  */
-@Service
 public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
 
-    private BaseDao<T> baseDao;
+    @Autowired
+    protected BaseDao<T> baseDao;
 
     @Autowired
     private SpecificationQueryExtend<T> querySqlBuild;
@@ -80,11 +79,4 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
         return one.get();
     }
 
-    public BaseDao<T> getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao<T> baseDao) {
-        this.baseDao = baseDao;
-    }
 }

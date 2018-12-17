@@ -57,7 +57,6 @@ public interface BaseService<T extends BaseBean> {
     /**
      * @des 详情数据查询
      * @param v
-     * @param <V>
      * @return
      */
     T findOne(T v);

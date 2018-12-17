@@ -2,34 +2,24 @@ package com.self.framework.ucenter.bean;
 
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @des 用户实体
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "menu")
 public class SysMenuResource extends BaseBean {
-
-    @Builder
-    public SysMenuResource(String createTime, String createUser, String updateTime, String updateUser, Map<String, String> between, String icon, String name, String url, Integer type, String parentId, Integer sort, String status, List<SysMenuResourceFunc> sysMenuResourceFuncs) {
-        super(createTime, createUser, updateTime, updateUser, between);
-        this.icon = icon;
-        this.name = name;
-        this.url = url;
-        this.type = type;
-        this.parentId = parentId;
-        this.sort = sort;
-        this.status = status;
-        //this.sysMenuResourceFuncs = sysMenuResourceFuncs;
-    }
-
     /**
      *  菜单id
      */

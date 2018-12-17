@@ -1,17 +1,24 @@
 package com.self.framework.ucenter.bean;
 
-import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * @des 菜单资源方法实体
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "menu_func")
 public class SysMenuResourceFunc extends BaseBean {
 

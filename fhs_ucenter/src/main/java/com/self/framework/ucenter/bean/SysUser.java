@@ -3,8 +3,7 @@ package com.self.framework.ucenter.bean;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
 import com.self.framework.constant.BusinessCommonConstamt;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,25 +16,12 @@ import java.util.*;
  * @des 用户实体
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity(name = "user")
 public class SysUser extends BaseBean implements UserDetails {
-
-    @Builder
-    public SysUser(String createTime, String createUser, String updateTime, String updateUser, Map<String, String> between, String realName, String loginName, String password, Integer sex, Integer birthday, String address, String province, String city, String area, Integer status, Integer type, Integer is_delete) {
-        super(createTime, createUser, updateTime, updateUser, between);
-        this.realName = realName;
-        this.loginName = loginName;
-        this.password = password;
-        this.sex = sex;
-        this.birthday = birthday;
-        this.address = address;
-        this.province = province;
-        this.city = city;
-        this.area = area;
-        this.status = status;
-        this.type = type;
-        this.is_delete = is_delete;
-    }
 
     /**
      *  用户id
@@ -143,4 +129,5 @@ public class SysUser extends BaseBean implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
