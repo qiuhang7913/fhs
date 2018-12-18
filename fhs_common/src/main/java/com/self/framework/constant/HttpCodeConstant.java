@@ -3,7 +3,7 @@ package com.self.framework.constant;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
 /**
- * @des HTTP常亮
+ * @des HTTP 相应信息常量
  * @author qiuhang
  * @version v1.0
  */

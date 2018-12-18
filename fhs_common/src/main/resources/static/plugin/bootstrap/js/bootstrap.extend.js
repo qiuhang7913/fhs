@@ -31,9 +31,14 @@ function initVlidator(domId, fields) {
  * @param5 displayTime:显示时间
  */
 function Ealert(domId, type, msg, langType, displayTime) {
-    var insertHtml = ''
-    if (displayTime === null) {
-        displayTime = 3000;
+    var insertHtml = '';
+
+    if (typeof(langType) === "undefined" || langType === null) {
+        langType = 1;
+    }
+
+    if (typeof(displayTime) === "undefined" || displayTime === null) {
+        displayTime = 10000;
     }
     if (type === 1) {
         insertHtml = insertHtml + '<div class="alert alert-success">'

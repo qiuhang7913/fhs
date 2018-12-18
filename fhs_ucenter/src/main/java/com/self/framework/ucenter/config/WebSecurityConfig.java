@@ -10,6 +10,7 @@ import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -30,25 +31,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests()
 				// 所有用户均可访问的资源
 				.antMatchers( "/favicon.ico",
+								"/plugin/**",
 								"/css/**",
-								"/common/**",
+								"/img/**",
 								"/js/**",
-								"/images/**",
 								"/captcha.jpg",
 								"/login",
-								"/goLogin",
-								"/login-error").permitAll()
+								"/doLogin").permitAll()
 				// 任何尚未匹配的URL只需要验证用户即可访问
 				.anyRequest().authenticated()
 				.and()
-				.formLogin().loginPage("/login").successForwardUrl("/index").failureForwardUrl("/loginError?error=1")
+				.formLogin().loginPage("/login").successForwardUrl("/index").failureForwardUrl("/login?error=1")
 				.and()
 				//权限拒绝的页面
 				.exceptionHandling().accessDeniedPage("/403");
 
 		http.logout().logoutSuccessUrl("/login");
 	}
-
 
 	/**
 	 * 设置用户密码的加密方式

@@ -1,6 +1,10 @@
 package com.self.framework.ucenter.action;
 
-import com.self.framework.ucenter.bean.SysUser;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.self.framework.constant.HttpSessionAttrConstant;
+import com.self.framework.ucenter.from.LoginForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,42 +12,67 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 @Controller
 public class LoginAction {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AuthenticationManager myAuthenticationManager;
 
+    @Autowired
+    DefaultKaptcha defaultKaptcha;
+
     @RequestMapping(value = "/login")
     public String goLoginPage(HttpServletRequest  request){
-        System.out.println(request.getRequestURI());
-        System.out.println(request.getRequestURL());
-        System.out.println(request.getParameterMap());
-        System.out.println(request.getParameter("error"));
+        logger.info("进入login" + request.getParameter("error"));
         return "login";
     }
 
-    @RequestMapping(value = "/loginError")
-    public String goLoginError(HttpServletRequest  request){
-        return "login";
-    }
+    @RequestMapping(value = "/doLogin", method = {RequestMethod.POST})
+    public String userLogin(@Valid LoginForm loginForm, HttpServletRequest request) {
 
-    @RequestMapping(value = "/goLogin")
-    public String userLogin(HttpServletRequest  request) {
-        SysUser sysUser = SysUser.builder().loginName("qiuhang").password("123456").build();
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken("qiuhang", "123456");
+        //验证码校验
+        String s = request.getSession().getAttribute(HttpSessionAttrConstant.HTTP_VERIFICATION_CODE_NAME).toString();
+        if (!s.equals(loginForm.getVerificationCode())) {
+            return "redirect:login?error=1";
+        }
 
         //使用SpringSecurity拦截登陆请求 进行认证和授权
         try {
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginForm.getLoginName(), loginForm.getPassword());
             Authentication authenticate = myAuthenticationManager.authenticate(usernamePasswordAuthenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("登陆失败,失败原因可能为{},请求参数为{}",e.getMessage(), loginForm.asJson());
+            return "redirect:login?error=1";
         }
         return "redirect:index";
+    }
+
+    @RequestMapping("/captcha.jpg")
+    public void applyCheckCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Cache-Control", "no-store, no-cache");
+        response.setContentType("image/jpeg");
+
+        //生成文字验证码
+        String text = defaultKaptcha.createText();
+        //生成图片验证码
+        BufferedImage image = defaultKaptcha.createImage(text);
+        //保存到session
+        request.getSession().setAttribute(HttpSessionAttrConstant.HTTP_VERIFICATION_CODE_NAME, text);
+        ServletOutputStream out = response.getOutputStream();
+        ImageIO.write(image, "jpg", out);
+
     }
 }
