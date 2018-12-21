@@ -1,20 +1,93 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"><!-- 1 -->
-<head>
-<meta content="text/html;charset=UTF-8"/>
-<link rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
-<style type="text/css">
-body {
-  padding-top: 50px;
-}
-.starter-template {
-  padding: 40px 15px;
-  text-align: center;
-}
-</style>
-</head>
-<body>
-asasdasd
-</body>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>主页</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!--css引入-->
+        <link rel="stylesheet" th:href="@{css/min.css}" />
+        <link rel="stylesheet" th:href="@{content/settings/style.css}" />
+
+        <!--js引入-->
+        <script type="text/javascript" th:src="@{js/libs/jquery/1.6/jquery.min.js}" src=""></script>
+        <script type="text/javascript" th:src="@{js/libs/jqueryui/1.8.13/jquery-ui.min.js}"></script>
+        <script type="text/javascript" th:src="@{js/min.js}"></script>
+        <script type="text/javascript" th:src="@{content/settings/main.js}"></script>
+    </head>
+    <body>
+
+        <!--hed 头部-->
+        <div id="head">
+            <div class="left">
+                <a href="#" class="button profile"><img th:src="@{img/icons/top/huser.png}" alt="" /></a>
+                Hi, 
+                <a href="#">admin</a>
+                |
+                <a href="#">退出</a>
+            </div>
+            <div class="right">
+                <form action="#" id="search" class="search placeholder">
+                    <label>全局查询</label>
+                    <input type="text" value="" name="q" class="text"/>
+                    <input type="submit" value="rechercher" class="submit"/>
+                </form>
+            </div>
+        </div>
+                
+                
+        <!-- sidebar 左侧菜单 -->
+        <div id="sidebar">
+            <ul>
+                <li>
+                    <a th:href="@{/index}">
+                        <img src="img/icons/menu/inbox.png" alt="" />主页
+                    </a>
+                </li>
+                <li class="current">
+                    <a href="#"><img th:src="@{img/icons/menu/layout.png}" alt="" />一级菜单</a>
+                    <ul>
+                        <li class="current">
+                            <a href="javascript:void(0)" onclick="goToPage(this)">默认主页</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" onclick="goToPage(this)">Forms</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><img src="img/icons/menu/brush.png" alt="" />多级菜单展示</a>
+                    <ul>
+                        <li><a href="#">Fake menu #1</a></li>
+                        <li><a href="#">Fake menu #2</a></li>
+                        <li><a href="#">Fake menu #3</a>
+                        <ul>
+                            <li><a href="#">Fake menu #1</a></li>
+                            <li><a href="#">Fake menu #2</a></li>
+                            <li><a href="#">Fake menu #3</a>
+                                <ul>
+                                    <li><a href="#">Fake menu #1</a></li>
+                                    <li><a href="#">Fake menu #2</a></li>
+                                    <li><a href="#">Fake menu #3</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- content 主页-->
+        <div id="content" class="white">
+            <iframe name="myiframe" id="myrame" th:src="@{/dashboard}" frameborder="0" align="left" width="200" height="200" scrolling="no">
+                <p>你的浏览器不支持iframe标签</p>
+            </iframe>
+        </div>
+    </body>
+    <script th:inline="javascript">
+
+        function goToPage(which) {
+            console.log($(which));
+        }
+
+    </script>
 </html>

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @des 公共action
+ * @des 公共 crud action
  * @author qiuhang
  * @version v1.0
  */

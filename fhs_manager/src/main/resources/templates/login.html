@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+    <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta content="text/html;charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,9 +35,9 @@
                               data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
                             <div class="input_outer">
                                 <span class="u_user"></span>
-                                <div class="form-group">
-                                    <div class="col-lg-5" style="margin-left: 10%">
-                                        <input name="loginName" class="text form-control" style="height: 20px; color: #FFFFFF !important" type="text" placeholder="请输入账户："
+                                <div class="form-group" style="width: 75%; padding-left: 15%;">
+                                    <div>
+                                        <input name="loginName" class="text form-control" style="width:100%; height: 20px; color: #FFFFFF !important" type="text" placeholder="请输入账户："
                                                required data-bv-notempty-message="登录名不能为空"
                                         >
                                     </div>
@@ -45,20 +45,26 @@
                             </div>
                             <div class="input_outer">
                                 <span class="us_uer"></span>
-                                <div class="form-group">
-                                    <div class="col-lg-5" style="margin-left: 10%">
-                                        <input name="password" class="text form-control" style="height: 20px; color: #FFFFFF !important;" type="password" placeholder="请输入密码："
+                                <div class="form-group" style="width: 75%; padding-left: 15%;">
+                                    <div>
+                                        <input name="password" class="text form-control" style="width: 100%; height: 20px; color: #FFFFFF !important;" type="password" placeholder="请输入密码："
                                                required data-bv-notempty-message="密码不能为空"
                                         >
                                     </div>
                                 </div>
                             </div>
                             <div class="input_outer">
-                                <div class="form-group">
-                                    <div class="col-lg-5" style="margin-left: 10%">
-                                        <input name="verificationCode" class="text form-control" style="width:40%; height: 20px; color: #FFFFFF !important;" type="text" placeholder="请输入验证码："
-                                               required data-bv-notempty-message="验证码不能为空"
-                                        >
+                                <div style="margin-left: 10%;" >
+                                    <div style="float: left; width: 50%">
+                                        <div class="form-group" style="width: 95%" >
+                                            <div>
+                                                <input name="verificationCode" class="text form-control" style="width:100%; height: 20px; color: #FFFFFF !important;" type="text" placeholder="请输入验证码："
+                                                       required data-bv-notempty-message="验证码不能为空"
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float: left">
                                         <img src="captcha.jpg" onclick="refresh(this)" >
                                     </div>
                                 </div>
