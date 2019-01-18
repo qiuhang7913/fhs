@@ -5,6 +5,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+/**
+ * @des 获取spring容器bean
+ * @author qh
+ * @version v1.0
+ */
 @Component
 public class ObtainSpringBean implements ApplicationContextAware {
     private static ApplicationContext applicationContext;

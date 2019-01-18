@@ -37,19 +37,23 @@
         <!-- sidebar 左侧菜单 -->
         <div id="sidebar">
             <ul>
-                <li>
+                <li class="current">
                     <a th:href="@{/index}">
                         <img src="img/icons/menu/inbox.png" alt="" />主页
                     </a>
                 </li>
-                <li class="current">
-                    <a href="#"><img th:src="@{img/icons/menu/layout.png}" alt="" />一级菜单</a>
+                <li>
+                    <a href="#"><img th:src="@{img/icons/menu/layout.png}" alt="" />系统管理</a>
                     <ul>
-                        <li class="current">
-                            <a href="javascript:void(0)" onclick="goToPage(this)">默认主页</a>
+                        <li>
+                            <a href="javascript:void(0)" onclick="goToPage(this)">用户管理</a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)" onclick="goToPage(this)">Forms</a>
+                            <a href="javascript:void(0)" onclick="goToPage(this)">角色管理</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" th:attr="src=@{/sys/menu}"
+                               onclick="goToPage(this)">资源管理</a>
                         </li>
                     </ul>
                 </li>
@@ -59,17 +63,17 @@
                         <li><a href="#">Fake menu #1</a></li>
                         <li><a href="#">Fake menu #2</a></li>
                         <li><a href="#">Fake menu #3</a>
-                        <ul>
-                            <li><a href="#">Fake menu #1</a></li>
-                            <li><a href="#">Fake menu #2</a></li>
-                            <li><a href="#">Fake menu #3</a>
-                                <ul>
-                                    <li><a href="#">Fake menu #1</a></li>
-                                    <li><a href="#">Fake menu #2</a></li>
-                                    <li><a href="#">Fake menu #3</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                            <ul>
+                                <li><a href="#">Fake menu #1</a></li>
+                                <li><a href="#">Fake menu #2</a></li>
+                                <li><a href="#">Fake menu #3</a>
+                                    <ul>
+                                        <li><a href="#">Fake menu #1</a></li>
+                                        <li><a href="#">Fake menu #2</a></li>
+                                        <li><a href="#">Fake menu #3</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
@@ -77,8 +81,9 @@
         </div>
 
         <!-- content 主页-->
-        <div id="content" class="white">
-            <iframe name="myiframe" id="myrame" th:src="@{/dashboard}" frameborder="0" align="left" width="200" height="200" scrolling="no">
+        <div style="width: 100%;">
+            <iframe name="myiframe" id="myiframe" th:src="@{/dashboard}"
+                    frameborder="0" align="left" width="99%" height="800px" scrolling="auto">
                 <p>你的浏览器不支持iframe标签</p>
             </iframe>
         </div>
@@ -86,7 +91,23 @@
     <script th:inline="javascript">
 
         function goToPage(which) {
-            console.log($(which));
+            var goWhere = $(which).attr("src");
+            $("#myiframe").attr("src",goWhere);
+            var currentLiTag = $(which).parent("li")[0];//当前li标签
+            var liTags = $(which).parent("li").parent("ul").find("li");//当前同级所有li标签
+            $.each(liTags,function (index,tag) {
+                if(tag !== currentLiTag){
+                    var current_y = $(tag).hasClass("current");
+                    if(current_y){
+                        $(tag).removeClass("current");
+                    }
+                }else{
+                    var current_n = $(tag).hasClass("current");
+                    if(!current_n){
+                        $(tag).addClass("current");
+                    }
+                }
+            })
         }
 
     </script>

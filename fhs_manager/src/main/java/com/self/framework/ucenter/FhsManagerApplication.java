@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.self"})
 @EnableJpaRepositories(repositoryFactoryBeanClass = BaseDaoFactoryBean.class)
-public class FhsUcenterApplication {
+public class FhsManagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FhsUcenterApplication.class, args);
+        SpringApplication.run(FhsManagerApplication.class, args);
     }
 }

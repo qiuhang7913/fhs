@@ -8,6 +8,8 @@ package com.self.framework.constant;
 public class BusinessCommonConstamt {
     public static final Integer ZERO_CODE = 0;
 
+    public static final String ZERO_STRING_CODE = "0";
+
     public static final Integer ONE_CODE = 1;
 
     public static final String EMPTY_STR = " ";

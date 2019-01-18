@@ -4,6 +4,9 @@ import org.bouncycastle.util.encoders.UrlBase64;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * @des url base64加解密
+ */
 public class UrlBase64Crypto {
 	public final static String ENCODING = "UTF-8";
 
