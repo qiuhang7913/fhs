@@ -3,6 +3,7 @@
     <head>
         <title>主页</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
         <!--css引入-->
         <link rel="stylesheet" th:href="@{/css/min.css}" />
         <link rel="stylesheet" th:href="@{/content/settings/style.css}" />
@@ -66,158 +67,74 @@
 
     </body>
     <script th:inline="javascript">
-        $(function () {
-            var basePath = '[[@{/}]]';
-            // var treeData = [{
-            //         text:"Parent 1",
-            //         nodes: [
-            //             {
-            //                 text:"Child 1",
-            //                 nodes: [
-            //                     {
-            //                         text:"Grandchild 1"
-            //                     },
-            //                     {
-            //                         text:"Grandchild 2"
-            //                     }
-            //                 ]
-            //             },
-            //             {
-            //                 text:"Child 2"
-            //             }
-            //         ]
-            //     }];
+        //var basePath = [[@{/}]];
+        var headers = {};
+        headers['X-CSRF-TOKEN'] = [[${_csrf.token}]];
+        var paramMap = {
+            "rows":15,
+            "page":1,
+            "sortOrder":"asc",
+            "between":{},
+            "parentId":'1000011'
+        };
+        var columns = [
+            {
+                checkbox: true,
+                visible: true                  //是否显示复选框
+            },
+            {
+                field: 'name',
+                title: '资源名称'
+            },
+            {
+                field: 'url',
+                title: "资源地址"
+            },
+            {
+                filed: 'type',
+                title: '资源类型',
+                formatter: function(value,row,index) {
+                    if(row.type === 1){
+                        return "菜单"
+                    }else{
+                        return "连接"
+                    }
+                },
+            },
+            {
+                filed: 'status',
+                title: '资源状态',
+                formatter: function(value,row,index) {
+                    if(row.type === 1){
+                        return "启用"
+                    }else{
+                        return "禁用"
+                    }
+                },
+            }
+        ]
 
+        $(function () {
             $.ajax({
                 url:"/sys/menu/obtainTreeData",
                 dataType:"json",
                 type:"post",
+                headers : headers,
                 data:{},
                 success:function(rvData){
-                    console.log(rvData);
                     initBootstrapTreeview("tree", rvData.result);
                 },
                 error:function(err){
 
                 }
             });
-
-            var data =
-                {
-                    "total": 21,
-                    "rows":
-                        [
-                            {
-                                "id": 0,
-                                "name": "Item 0",
-                                "price": "$0"
-                            },
-                            {
-                                "id": 1,
-                                "name": "Item 1",
-                                "price": "$1"
-                            },
-                            {
-                                "id": 2,
-                                "name": "Item 2",
-                                "price": "$2"
-                            },
-                            {
-                                "id": 3,
-                                "name": "Item 3",
-                                "price": "$3"
-                            },
-                            {
-                                "id": 4,
-                                "name": "Item 4",
-                                "price": "$4"
-                            },
-                            {
-                                "id": 5,
-                                "name": "Item 5",
-                                "price": "$5"
-                            },
-                            {
-                                "id": 6,
-                                "name": "Item 6",
-                                "price": "$6"
-                            },
-                            {
-                                "id": 7,
-                                "name": "Item 7",
-                                "price": "$7"
-                            },
-                            {
-                                "id": 8,
-                                "name": "Item 8",
-                                "price": "$8"
-                            },
-                            {
-                                "id": 9,
-                                "name": "Item 9",
-                                "price": "$9"
-                            },
-                            {
-                                "id": 10,
-                                "name": "Item 10",
-                                "price": "$10"
-                            },
-                            {
-                                "id": 11,
-                                "name": "Item 11",
-                                "price": "$11"
-                            },
-                            {
-                                "id": 12,
-                                "name": "Item 12",
-                                "price": "$12"
-                            },
-                            {
-                                "id": 13,
-                                "name": "Item 13",
-                                "price": "$13"
-                            },
-                            {
-                                "id": 14,
-                                "name": "Item 14",
-                                "price": "$14"
-                            },
-                            {
-                                "id": 15,
-                                "name": "Item 15",
-                                "price": "$15"
-                            },
-                            {
-                                "id": 16,
-                                "name": "Item 16",
-                                "price": "$16"
-                            },
-                            {
-                                "id": 17,
-                                "name": "Item 17",
-                                "price": "$17"
-                            },
-                            {
-                                "id": 18,
-                                "name": "Item 18",
-                                "price": "$18"
-                            },
-                            {
-                                "id": 19,
-                                "name": "Item 19",
-                                "price": "$19"
-                            },
-                            {
-                                "id": 20,
-                                "name": "Item 20",
-                                "price": "$20"
-                            }
-                        ]
-                }
-
-
-            initBootstrapTable('dataTable', '/data_table.json',{});
-
-        })
+            initBootstrapTable('dataTable', '/sys/menu/list', columns, paramMap, headers);
+        });
+        
+        function onClickTree(data) {
+            console.log(data);
+            paramMap.parentId = data.treeId;
+            reloadBootstrapTable('dataTable', '/sys/menu/list', columns, paramMap, headers)
+        }
     </script>
 </html>

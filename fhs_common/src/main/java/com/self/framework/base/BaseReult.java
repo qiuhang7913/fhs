@@ -12,10 +12,6 @@ import java.io.Serializable;
  * @author qiuhang
  * @version v1.0
  */
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class BaseReult implements Serializable {
 
     /**
@@ -27,4 +23,20 @@ public class BaseReult implements Serializable {
      * 返回操作描述
      */
     private String describe;
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
 }

@@ -21,6 +21,8 @@ public class TreeNode implements Serializable {
     /** 列表树节点上的标识 */
     private String treeId;
 
+    private String treeParentId;
+
     /** 结合全局enableLinks选项为列表树节点指定URL */
     private String href;
 
@@ -30,9 +32,10 @@ public class TreeNode implements Serializable {
     public TreeNode(){
 
     }
-    public TreeNode(String text, String treeId, String href){
+    public TreeNode(String text, String treeId, String treeParentId, String href){
         this.text = text;
         this.treeId = treeId;
+        this.treeParentId = treeParentId;
         this.href = href;
         this.nodes = new ArrayList<>();
     }

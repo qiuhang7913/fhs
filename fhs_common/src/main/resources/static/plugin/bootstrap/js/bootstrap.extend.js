@@ -51,7 +51,7 @@ function initBootstrapTreeview(domId, treeData){
             data:treeData,
             showCheckbox: true,   //是否显示复选框
             highlightSelected: true,    //是否高亮选中
-            multiSelect: true,    //多选
+            multiSelect: false,    //多选
             levels : 2,
             enableLinks : true,//必须在节点属性给出href属性
             color: "#010A0E",
@@ -71,78 +71,85 @@ function initBootstrapTreeview(domId, treeData){
 
             },
             onNodeSelected: function (event, data) {//节点被点击
-
+                if(typeof onClickTree === 'function'){
+                    onClickTree(data);
+                }
             }
         });
 }
 
 /**
- * 初始化bootstrap列表
+ *
  * @param domId
- * @param reqPath
- * @param params
+ */
+function reloadBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId) {
+    $('#' + domId).bootstrapTable('destroy');
+    initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId)
+}
+
+/**
+ * 初始化bootstrap列表
+ * @param domId [require] 需要渲染的元素id
+ * @param reqPath [require] 请求数据的地址
+ * @param columns [require] 表头信息
+ * @param paramsExtend [require] 查询参数
+ * @param headers [require]
  * @param toolBarDomId
  */
-function initBootstrapTable(domId, reqPath, params, toolBarDomId){
-    var toolbar = (typeof (toolBarDomId) !== 'undefined') ? '#' + toolBarDomId : '#toolbar';
+function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId){
     $('#'+ domId).bootstrapTable({
         url: reqPath,////请求后台的URL（*）
         // data : data,
-        method: 'get', //请求方式（*）
-        toolbar: toolbar,//工具按钮用哪个容器
-        striped: true,                      //是否显示行间隔色
-        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-        pagination: true,                   //是否显示分页（*）
-        sortable: true,                     //是否启用排序
-        sortOrder: "asc",                   //排序方式
-        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
-        pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
-        pageSize: 15,                       //每页的记录行数（*）
-        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-        search: false,                      //是否显示表格搜索
-        showColumns: true,                  //是否显示所有的列（选择显示的列）
-        showRefresh: true,                  //是否显示刷新按钮
-        minimumCountColumns: 2,             //最少允许的列数
-        clickToSelect: true,                //是否启用点击选中行
+        method: 'post', //请求方式（*）
+        toolbar: (typeof (toolBarDomId) !== 'undefined') ? '#' + toolBarDomId : '#toolbar',//工具按钮用哪个容器
+        striped: true,                    //是否显示行间隔色
+        cache: false,                     //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        pagination: true,                 //是否显示分页（*）
+        sortable: true,                   //是否启用排序
+        sort: 'createTime',
+        sortOrder: "asc",                 //排序方式
+        sidePagination: "server",         //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                    //初始化加载第一页，默认第一页,并记录
+        pageSize: 15,                     //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],      //可供选择的每页的行数（*）
+        search: false,                    //是否显示表格搜索
+        showColumns: true,                //是否显示所有的列（选择显示的列）
+        showRefresh: true,                //是否显示刷新按钮
+        minimumCountColumns: 3,           //最少允许的列数
+        clickToSelect: true,              //是否启用点击选中行
         height: 800,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-        uniqueId: "ID",                   //每一行的唯一标识，一般为主键列
-        showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
-        cardView: false,                    //是否显示详细视图
-        detailView: false,                  //是否显示父子表
+        uniqueId: "id",                   //每一行的唯一标识，一般为主键列
+        showToggle: true,                 //是否显示详细视图和列表视图的切换按钮
+        cardView: false,                  //是否显示详细视图
+        detailView: false,                //是否显示父子表
+        columns: columns,                 //列
+        ajaxOptions:{
+            headers: headers
+        },
         queryParams : function (params) {
             //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
             var temp = {
                 rows: params.limit,                         //页面大小
                 page: (params.offset / params.limit) + 1,   //页码
                 sort: params.sort,      //排序列名
-                sortOrder: params.order //排位命令（desc，asc）
+                sortOrder: params.order, //排位命令（desc，asc）
             };
+            $.each(paramsExtend,function(key,value){
+                temp[key] = value;
+            });
             return temp;
         },
-        columns:[
-            {
-                checkbox: true,
-                visible: true                  //是否显示复选框
-            },
-            {
-                field: 'name',
-                title: '姓名'
-            },
-            {
-                field: 'price',
-                title: '价钱'
-            },
-            {
-                field:'id',
-                title:"id"
-            }
-        ],
+
         onLoadSuccess: function (data) {
-            console.log(data);
+            if(data.code !== 200){
+                alert(data.describe);
+            }
         },
+
         onLoadError: function () {
 
         },
+
         onDblClickRow: function (row, $element) {
 
         }

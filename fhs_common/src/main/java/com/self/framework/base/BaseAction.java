@@ -1,17 +1,21 @@
 package com.self.framework.base;
 
+import com.alibaba.fastjson.JSON;
 import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.constant.HttpCodeConstant;
 import com.self.framework.http.HttpResult;
+import com.self.framework.http.PageResult;
+import com.self.framework.utils.ConvertDataUtil;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,10 +53,25 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
 
     @RequestMapping(value = "list", method = {RequestMethod.POST})
     @ResponseBody
-    public HttpResult<List> add(@Valid @RequestBody T obj, HttpServletRequest request){
-        List queryDataList = baseService.queryList(obj);
-        return ObjectCheckUtil.checkIsNullOrEmpty(queryDataList) ? HttpResult.aOtherResult(HttpCodeConstant.HTTP_ERROR_CODE, HttpCodeConstant.HTTP_OK_ERROR_DESCRIBE, new ArrayList<>())
-                                                                    :
-                                                                    HttpResult.aOtherResult(HttpCodeConstant.HTTP_OK_CODE, HttpCodeConstant.HTTP_OK_CODE_DESCRIBE, queryDataList);
+    public PageResult<T> list(@RequestBody String obj, HttpServletRequest request){
+        PageResult<T> pageResult = new PageResult<>();
+        try {
+            ParameterizedType ptClass = (ParameterizedType) this.getClass().getGenericSuperclass();
+            Type actualTypeArgument = ptClass.getActualTypeArguments()[0];//获取当前泛型类型
+            T t = JSON.parseObject(obj, actualTypeArgument);//手动序列化当前类
+            Page<T> pageData = baseService.queryListHasPagingAndSort(t, (t.getPage()-1) * t.getRows(),t.getRows(), BusinessCommonConstamt.ZERO_CODE, "sort");
+
+            if (!ObjectCheckUtil.checkIsNullOrEmpty(pageData)){
+                pageResult.setCode(HttpCodeConstant.HTTP_OK_CODE);
+                pageResult.setDescribe(HttpCodeConstant.HTTP_OK_CODE_DESCRIBE);
+                pageResult.setTotal(pageData.getNumber());
+                pageResult.setRows(pageData.getContent());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            pageResult.setCode(HttpCodeConstant.HTTP_ERROR_CODE);
+            pageResult.setDescribe(HttpCodeConstant.HTTP_OK_ERROR_DESCRIBE);
+        }
+        return pageResult;
     }
 }

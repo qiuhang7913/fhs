@@ -35,7 +35,7 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenuResource> implements
      * @return
      */
     private List<TreeNode> getTreeNodeSon(TreeNode root){
-        String sql = "SELECT m.name,m.id,m.url FROM menu m WHERE m.parent_id = :parentId ORDER BY sort ASC";
+        String sql = "SELECT m.name, m.id, m.parent_id as parentId, m.url FROM menu m WHERE m.parent_id = :parentId ORDER BY sort ASC";
         List<Map<String,Object>> queryDatas = menuDao.findOther(sql, new HashMap<String, Object>() {{
             put("parentId", root.getTreeId());
         }});
@@ -44,7 +44,8 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenuResource> implements
             TreeNode treeNode = new TreeNode(
                     ConvertDataUtil.convertStr(data.get("name")),
                     ConvertDataUtil.convertStr(data.get("id")),
-                    ConvertDataUtil.convertStr(data.get("url"))
+                    ConvertDataUtil.convertStr(data.get("parentId")),
+                    ConvertDataUtil.convertStr("#")
             );
             treeNodes.add(treeNode);
         });

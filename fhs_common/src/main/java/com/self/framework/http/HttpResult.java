@@ -16,7 +16,9 @@ import java.util.Map;
  * @version v.1.0
  */
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class HttpResult<T> extends BaseReult {
 
     private T result;

@@ -1,11 +1,14 @@
 package com.self.framework.ucenter.action;
 
 import com.self.framework.base.BaseAction;
+import com.self.framework.http.HttpResult;
 import com.self.framework.ucenter.bean.TestBean;
 import com.self.framework.ucenter.service.TestService;
 import com.self.framework.utils.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 

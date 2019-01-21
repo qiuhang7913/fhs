@@ -48,7 +48,7 @@ public class SysMenuResource extends BaseBean {
     private Integer sort;//资源排序
 
     @Column(name = "status")
-    private String status;//状态
+    private Integer status;//状态
 
     @OneToMany(mappedBy = "menuId", cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @NoSpecificationQuery

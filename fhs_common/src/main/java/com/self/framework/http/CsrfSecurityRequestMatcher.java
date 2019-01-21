@@ -3,7 +3,6 @@ package com.self.framework.http;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 

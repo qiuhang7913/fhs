@@ -35,9 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		RequestMatcher requestMatcher = new CsrfSecurityRequestMatcher();
-		((CsrfSecurityRequestMatcher) requestMatcher).setAllowRes(Arrays.asList("/sys/menu/obtainTreeData"));
-		http.csrf().requireCsrfProtectionMatcher(requestMatcher);
+//		RequestMatcher requestMatcher = new CsrfSecurityRequestMatcher();
+//		((CsrfSecurityRequestMatcher) requestMatcher).setAllowRes(Arrays.asList("/sys/menu/obtainTreeData"));
+//		http.csrf().requireCsrfProtectionMatcher(requestMatcher);
 		http.authorizeRequests()
 				// 所有用户均可访问的资源
 				.antMatchers( "/favicon.ico",

@@ -13,7 +13,7 @@ import java.util.List;
  * @version v1.0
  * @param <T>
  */
-public interface BaseService<T extends BaseBean> {
+public interface BaseService<T> {
     String DEFAULT_SORT_FILE = "updateTime";//默认排序字段
     Integer DEFAULT_SORT_TYPE = BusinessCommonConstamt.ZERO_CODE;//默认排序字段
     String DEFAULT_NOW_DATE = DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L6);
