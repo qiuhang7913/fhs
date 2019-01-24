@@ -13,6 +13,8 @@
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrapValidator.css}" />
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-treeview.min.css}" />
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-table.min.css}" />
+        <link rel="stylesheet" th:href="@{/plugin/iziModal/css/izi_modal.css}" />
+
         <script th:src="@{/plugin/bootstrap/js/jquery.min.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/bootstrap/js/bootstrap-table.min.js}" type="text/javascript"></script>
@@ -20,13 +22,15 @@
         <script th:src="@{/plugin/bootstrap/js/bootstrapValidator.min.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/bootstrap/js/bootstrap-treeview.min.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/bootstrap/js/bootstrap.extend.js}" type="text/javascript"></script>
+        <script th:src="@{/plugin/iziModal/js/izi_modal.js}" type="text/javascript"></script>
+        <script th:src="@{/plugin/iziModal/js/izi_modal_extend.js}" type="text/javascript"></script>
 
         <!--js引入-->
-
-        <style type="text/css">
-        </style>
+        <script></script>
     </head>
     <body>
+        <div style="clear:both"></div>
+
         <div id="content" class="white" >
             <h1><img th:src="@{/img/icons/posts.png}" alt="" />资源管理</h1>
             <div>
@@ -40,7 +44,7 @@
                         <div class="title">
                             资源列表
                         </div>
-                        <div class="content" style="width: 99% !important;">
+                        <div id="bodyContent" class="content" style="width: 99% !important;">
                             <div style="clear: both"></div>
                             <table id="dataTable"></table>
                         </div>
@@ -51,13 +55,13 @@
 
         <!-- 列表操作按钮 -->
         <div id="toolbar" class="btn-group">
-            <button id="btn_add" type="button" class="btn btn-default" onclick="addRes();">
+            <button id="btn_add" type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
              </button>
             <!--<button id="btn_delete" type="button" class="btn btn-default" onclick="batchUploadShow();">-->
                 <!--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>批量上传-->
             <!--</button>-->
-            <button id="btn_edit" type="button" class="btn btn-default" onclick="editRes();">
+            <button id="btn_edit" type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>选择修改
             </button>
             <button id="btn_delete" type="button" class="btn btn-default" onclick="delRes();">
@@ -65,19 +69,20 @@
             </button>
         </div>
 
+        <div id="modal">
+
+        </div>
     </body>
     <script th:inline="javascript">
         //var basePath = [[@{/}]];
-        var headers = {};
-        headers['X-CSRF-TOKEN'] = [[${_csrf.token}]];
-        var paramMap = {
-            "rows":15,
-            "page":1,
-            "sortOrder":"asc",
-            "between":{},
-            "parentId":'1000011'
-        };
-        var columns = [
+
+        //列表初始化参数信息
+        myBootstrapTable.domId = 'dataTable';
+        myBootstrapTable.reqUrl = '/sys/menu/list';
+        myBootstrapTable.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
+        myBootstrapTable.reqParamMap['parentId'] = '0';
+        myBootstrapTable.toolBarDomId = 'toolbar';
+        myBootstrapTable.tableColumns =  [
             {
                 checkbox: true,
                 visible: true                  //是否显示复选框
@@ -112,14 +117,42 @@
                     }
                 },
             }
-        ]
+        ];
+
+        myIZIMoal.title = '新增/编辑资源';
+        myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add';
 
         $(function () {
+            loadTreeData();//加载所有菜单树数据
+            myBootstrapTable.init();//初始化列表插件
+            myIZIMoal.init();//初始化模态窗口插件
+            initPageEvent();
+        });
+
+        function initPageEvent() {
+            //绑定新增资源
+            $("#btn_add").on('click', function (event) {
+                event.preventDefault();
+                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add';
+                myIZIMoal.subtitle = '新增资源';
+                myIZIMoal.open(event);
+            });
+
+            //绑定编辑资源
+            $("#btn_edit").on('click', function (event) {
+                event.preventDefault();
+                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=update';
+                myIZIMoal.subtitle = '编辑资源';
+                myIZIMoal.open(event);
+            });
+        }
+
+        function loadTreeData() {
             $.ajax({
                 url:"/sys/menu/obtainTreeData",
                 dataType:"json",
                 type:"post",
-                headers : headers,
+                headers : myBootstrapTable.headers,
                 data:{},
                 success:function(rvData){
                     initBootstrapTreeview("tree", rvData.result);
@@ -128,13 +161,22 @@
 
                 }
             });
-            initBootstrapTable('dataTable', '/sys/menu/list', columns, paramMap, headers);
-        });
+        }
         
-        function onClickTree(data) {
-            console.log(data);
-            paramMap.parentId = data.treeId;
-            reloadBootstrapTable('dataTable', '/sys/menu/list', columns, paramMap, headers)
+        /**
+         * 关闭模态窗口触发 【固定回调方法】
+         */
+        function closedIZIModalFunc(e) {
+            console.log("com in closed");
+        }
+        
+        /**
+         * 树的节点点击出触发 【固定回调方法】
+         * @param data
+         */
+        function onClickTreeFunc(data) {
+            myBootstrapTable.reqParamMap['parentId'] = data.treeId;
+            myBootstrapTable.reload();
         }
     </script>
 </html>

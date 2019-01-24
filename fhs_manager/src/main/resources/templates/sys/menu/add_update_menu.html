@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+新增编辑页面
+    <span>[[${param.action}]]</span>
+</body>
+<script th:inline="javascript">
+    var action = [[${param.action}]]
+    console.log(action);
+    if (action === 'add'){
+
+    } else if (action === 'update'){
+
+    }
+</script>
+</html>

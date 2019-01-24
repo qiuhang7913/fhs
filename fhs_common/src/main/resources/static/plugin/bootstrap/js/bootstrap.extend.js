@@ -71,8 +71,8 @@ function initBootstrapTreeview(domId, treeData){
 
             },
             onNodeSelected: function (event, data) {//节点被点击
-                if(typeof onClickTree === 'function'){
-                    onClickTree(data);
+                if(typeof (onClickTreeFunc) === 'function'){
+                    onClickTreeFunc(data);
                 }
             }
         });
@@ -80,6 +80,133 @@ function initBootstrapTreeview(domId, treeData){
 
 /**
  *
+ * @param title
+ * @param width
+ * @param url
+ * @param subTilel
+ */
+function initMyIZIModal(title, width, url, subTitle){
+    $("#modal").iziModal({
+        title: title,
+        subtitle: typeof (subTitle) === 'undefined'? '' : subTitle,
+        headerColor: "#9C9EA0",
+        overlayColor: "rgba(0, 0, 0, 0.4)",
+        width: width,
+        iframe: true,
+        iframeURL: url
+    });
+}
+
+/**
+ *
+ * @type {{headerColor: string, init: myIZIMoal.init, subtitle: string, width: number, iframe: boolean, title: string, overlayColor: string, iframeURL: string}}
+ */
+var myIZIMoal = {
+    domId : 'modal',
+    title: '',
+    subtitle: '',
+    headerColor: "#8D8D8D",
+    width: 600,
+    url: '',
+    init : function () {
+        if (this.domId.length === 0) {
+            alert("ERROR,找不到相关渲染的dom!")
+            return null;
+        }
+
+        if (this.url.length === 0) {
+            alert("ERROR,找不到相关请求页面!")
+            return null;
+        }
+        $("#" + this.domId).iziModal({
+            title: this.title,
+            subtitle: this.subtitle,
+            headerColor: this.headerColor,
+            overlayColor: "rgba(0, 0, 0, 0.4)",
+            width: this.width,
+            iframe: true,
+            iframeURL: this.url
+            //更多属性详情见:http://www.jq22.com/jquery-info8627
+        });
+    },
+    open : function (event) {
+        $('#modal').iziModal('destroy');//销毁模态窗口。
+        $("#" + this.domId).iziModal({
+            title: this.title,
+            subtitle: this.subtitle,
+            headerColor: this.headerColor,
+            overlayColor: "rgba(0, 0, 0, 0.4)",
+            width: this.width,
+            iframe: true,
+            iframeURL: this.url
+            //更多属性详情见:http://www.jq22.com/jquery-info8627
+        });
+        $("#" + this.domId).iziModal('open', event);
+        //openIZIModal(this.domId, this.title, this.subtitle, this.headerColor, this.url, event);
+        $(document).on('closed', '#' + this.domId, function (e) {
+            if (typeof (closedIZIModalFunc) === "function"){
+                closedIZIModalFunc(e);
+            }
+        });
+    }
+};
+
+
+function openIZIModal(domId, title, subtitle, headerColor, width, url, event) {
+    $('#' + domId).iziModal('destroy');//销毁模态窗口。
+    initIZIModal(domId, title, subtitle, headerColor, width, url);
+    $("#" + domId).iziModal('open', event);
+}
+
+/**
+ * @desc 封装bootstrap列表插件
+ *       提供int, reload, refresh 封装方法
+ * @type {{headers: {}, init: myBootstrapTable.init, tableColumns: Array, reload: myBootstrapTable.reload, toolBarDomId: string, domId: string, reqUrl: string, reqParamMap: {sortOrder: string, page: number, rows: number, between: {}}}}
+ */
+var myBootstrapTable = {
+    domId : '',
+    reqUrl : '',
+    headers : {},//header信息
+    reqParamMap : {
+        "rows":15,//默认页数据
+        "page":1,//默认当先首页
+        "sortOrder":"asc",//排序
+        "between":{},
+    },
+    tableColumns : [],
+    toolBarDomId : '',
+    init : function () {
+        if (this.domId.length === 0) {
+            alert("ERROR,找不到相关dom!")
+            return null;
+        }
+        if (this.reqUrl.length === 0){
+            alert("ERROR,找不到相关请求数据地址!")
+            return null;
+        }
+        initBootstrapTable(this.domId, this.reqUrl, this.tableColumns,this.reqParamMap, this.headers, this.toolBarDomId);
+    },
+    reload: function () {
+        if (this.domId.length === 0) {
+            alert("ERROR,找不到相关dom!")
+            return null;
+        }
+        if (this.reqUrl.length === 0){
+            alert("ERROR,找不到相关请求数据地址!")
+            return null;
+        }
+        reloadBootstrapTable(this.domId, this.reqUrl, this.tableColumns,this.reqParamMap, this.headers, this.toolBarDomId);
+    },
+    refresh:function () {
+        
+    },
+    clickRow:function (data) {
+        console.log(data);
+    }
+};
+
+/**
+ * 重新加载bootstrap列表
  * @param domId
  */
 function reloadBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId) {
@@ -117,7 +244,7 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         showRefresh: true,                //是否显示刷新按钮
         minimumCountColumns: 3,           //最少允许的列数
         clickToSelect: true,              //是否启用点击选中行
-        height: 800,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+        height: 700,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
         uniqueId: "id",                   //每一行的唯一标识，一般为主键列
         showToggle: true,                 //是否显示详细视图和列表视图的切换按钮
         cardView: false,                  //是否显示详细视图
@@ -151,7 +278,7 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         },
 
         onDblClickRow: function (row, $element) {
-
+            myBootstrapTable.clickRow(row);
         }
     });
 }
