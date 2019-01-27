@@ -99,4 +99,8 @@ public class BaseBean implements Serializable {
     public void setSortOrder(String sortOrder) {
         this.sortOrder = sortOrder;
     }
+
+    public static void main(String[] args) {
+
+    }
 }

@@ -25,27 +25,33 @@ import java.util.Map;
  * @author qiuhang
  * @version v1.0
  */
-public class BaseAction<T extends BaseBean> extends SuperAction {
+public class BaseAction<T extends BaseBean> extends SuperAction<T> {
 
     /** service 操作 */
     @Autowired
     private BaseService<T> baseService;
 
-    @RequestMapping(value = "add", consumes="application/json", method = {RequestMethod.POST})
+    @RequestMapping(value = "addOrUpdate", method = {RequestMethod.POST})
     @ResponseBody
-    public HttpResult<Map> add(@Valid @RequestBody T obj){
-        Integer addCode = baseService.add(obj);
+    public HttpResult<Map> addOrUpdate(@RequestBody String obj){
+        Integer addCode = baseService.addOrUpdata(this.transformationRequestParam(obj,true));
         if (addCode == BusinessCommonConstamt.ZERO_CODE){
             return HttpResult.errorResult();
         }
         return HttpResult.okResult();
     }
 
-    @RequestMapping(value = "update", consumes="application/json", method = {RequestMethod.POST})
+    /**
+     * 删除操作
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "del", method = {RequestMethod.DELETE})
     @ResponseBody
-    public HttpResult<Map> update(@Valid @RequestBody T obj){
-        Integer addCode = baseService.update(obj);
-        if (addCode == BusinessCommonConstamt.ZERO_CODE){
+    public HttpResult<Map> delete(List<String> ids){
+        try {
+            baseService.delete(ids);
+        }catch (Exception e){
             return HttpResult.errorResult();
         }
         return HttpResult.okResult();
@@ -56,9 +62,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     public PageResult<T> list(@RequestBody String obj, HttpServletRequest request){
         PageResult<T> pageResult = new PageResult<>();
         try {
-            ParameterizedType ptClass = (ParameterizedType) this.getClass().getGenericSuperclass();
-            Type actualTypeArgument = ptClass.getActualTypeArguments()[0];//获取当前泛型类型
-            T t = JSON.parseObject(obj, actualTypeArgument);//手动序列化当前类
+            T t = this.transformationRequestParam(obj, false);//手动序列化当前类
             Page<T> pageData = baseService.queryListHasPagingAndSort(t, (t.getPage()-1) * t.getRows(),t.getRows(), BusinessCommonConstamt.ZERO_CODE, "sort");
 
             if (!ObjectCheckUtil.checkIsNullOrEmpty(pageData)){

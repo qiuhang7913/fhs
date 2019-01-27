@@ -75,6 +75,7 @@
     </body>
     <script th:inline="javascript">
         //var basePath = [[@{/}]];
+        var currentParentId = 0;
 
         //列表初始化参数信息
         myBootstrapTable.domId = 'dataTable';
@@ -133,7 +134,7 @@
             //绑定新增资源
             $("#btn_add").on('click', function (event) {
                 event.preventDefault();
-                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add';
+                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add&parentId=' + currentParentId;
                 myIZIMoal.subtitle = '新增资源';
                 myIZIMoal.open(event);
             });
@@ -141,7 +142,7 @@
             //绑定编辑资源
             $("#btn_edit").on('click', function (event) {
                 event.preventDefault();
-                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=update';
+                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=update&parentId=' + currentParentId;
                 myIZIMoal.subtitle = '编辑资源';
                 myIZIMoal.open(event);
             });
@@ -176,6 +177,7 @@
          */
         function onClickTreeFunc(data) {
             myBootstrapTable.reqParamMap['parentId'] = data.treeId;
+            currentParentId = data.treeId;
             myBootstrapTable.reload();
         }
     </script>

@@ -53,7 +53,7 @@ function initBootstrapTreeview(domId, treeData){
             highlightSelected: true,    //是否高亮选中
             multiSelect: false,    //多选
             levels : 2,
-            enableLinks : true,//必须在节点属性给出href属性
+            enableLinks : false,//必须在节点属性给出href属性
             color: "#010A0E",
             onNodeChecked : function (event,node) {
                 var selectNodes = getChildNodeIdArr(node); //获取所有子节点

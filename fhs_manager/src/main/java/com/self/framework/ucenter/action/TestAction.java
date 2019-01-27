@@ -1,7 +1,10 @@
 package com.self.framework.ucenter.action;
 
+import com.alibaba.fastjson.JSON;
 import com.self.framework.base.BaseAction;
+import com.self.framework.base.BaseBean;
 import com.self.framework.http.HttpResult;
+import com.self.framework.ucenter.bean.SysMenuResource;
 import com.self.framework.ucenter.bean.TestBean;
 import com.self.framework.ucenter.service.TestService;
 import com.self.framework.utils.ReflectUtil;
@@ -23,26 +26,10 @@ public class TestAction extends BaseAction<TestBean> {
     @Autowired
     private TestService testService;
 
-    @RequestMapping("test")
-    @ResponseBody
-    public Map<String,Object> test0(HttpServletRequest request){
-        TestBean bean = new TestBean();
-        bean.setDes("bbbb");
-        testService.add(bean);
-        return new HashMap<String, Object>(){{
-            put("result","ok");
-        }};
-    }
-
     public static void main(String[] args) {
-        TestBean bean = new TestBean();
-        bean.setDes("bbbb");
-        try {
-            System.out.println(ReflectUtil.reflectObjObtainFileMethod(bean,"des").invoke(bean));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        String testStr = "{\"icon\":\"111\",\"name\":\"123\",\"sort\":\"2\",\"type\":\"0\",\"url\":\"#\", \"createTime\":\"wwww\"}";
+        BaseBean parse = JSON.parseObject(testStr, BaseBean.class);
+        System.out.println(parse.getCreateTime());
     }
 }
 

@@ -2,15 +2,126 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>资源新增修改页面</title>
+
+    <!--js 插件引入-->
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrapValidator.css}" />
+
+    <script th:src="@{/plugin/bootstrap/js/jquery.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrapValidator.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.extend.js}" type="text/javascript"></script>
+
+    <script th:src="@{/js/myUtil_1.2.1.js}"></script>
 </head>
-<body>
-新增编辑页面
-    <span>[[${param.action}]]</span>
+<body style="width: 99%">
+    <div style="width: 88%; margin-top: 2%; margin-left: 3%">
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <label for="res_name" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源名称：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="res_name" placeholder="请输入资源名称">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="res_icon" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源图标：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="res_icon" placeholder="请输入资源图标" style="width: 50%">
+                <label>资源图标为bootstrap所支持的Glyphicons字体图标.<a href="javascript:openNewWindowTab('https://v3.bootcss.com/components/#glyphicons')">【案例见】</a></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="res_type" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源类型：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <select class="form-control" id="res_type">
+                    <option value="">请选择</option>
+                    <option th:value="0">菜单</option>
+                    <option th:value="1">连接</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="res_url" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源连接：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important; width: 60%">
+                <input type="text" class="form-control" id="res_url" placeholder="请输入资源连接">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="res_type" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源状态：</label>
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox" style="float: left"><label><input type="checkbox" name="res_type" value="0">启用&nbsp;&nbsp;&nbsp;</label></div>
+                <div class="checkbox" style="float: left"><label><input type="checkbox" name="res_type" value="1">禁用&nbsp;&nbsp;&nbsp;</label></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="res_sort" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源排序：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="res_sort" placeholder="请输入资源排序值">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-top: 5%">
+                <span style="margin-left: 20%"></span>
+                <button type="submit" id="btn_ok" class="btn btn-default">提交</button>
+                <span style="margin-left: 20%"></span>
+                <button type="reset" id="btn_reset" class="btn btn-default">重置</button>
+            </div>
+        </div>
+    </form>
+    </div>
 </body>
 <script th:inline="javascript">
-    var action = [[${param.action}]]
+    var action = [[${param.action}]];
+    var parentId = [[${param.parentId}]];
     console.log(action);
+    
+    $(function(){
+        initPageEvent();
+    });
+    
+    function initPageEvent() {
+        //资源类型
+        $("#res_type").on('change', function (event) {
+            event.preventDefault();
+            $("#res_url").removeAttr('readonly');
+            var value = $(this).val();
+            if (parseInt(value) === 0){
+                $("#res_url").val("#");
+                $("#res_url").attr('readonly','readonly');
+            }
+        });
+
+        //提交绑定
+        $("#btn_ok").on('click', function (event) {
+            event.preventDefault();
+            var sysResBean = {
+                icon:$("#res_icon").val(),
+                name:$("#res_name").val(),
+                url:$("#res_url").val(),
+                type:$("#res_type").val(),
+                parentId:parentId[0],
+                sort:$("#res_sort").val(),
+                status:$("input[type='checkbox'][name='res_type']:checked").val()
+            };
+            console.log(sysResBean);
+            ajaxSub.url = '/sys/menu/addOrUpdate';
+            ajaxSub.postData = sysResBean;
+            ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
+            ajaxSub.rvFunc = function (rvData) {
+                console.log(rvData);
+                window.parent.myBootstrapTable.reload();
+            };
+            ajaxSub.addOrUpdateData();
+        });
+    }
+    
     if (action === 'add'){
 
     } else if (action === 'update'){

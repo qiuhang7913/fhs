@@ -1,5 +1,6 @@
 package com.self.framework.config;
 
+import com.alibaba.fastjson.JSON;
 import com.self.framework.http.CsrfSecurityRequestMatcher;
 import com.self.framework.spring.extend.security.Md5PasswordEncoder;
 import com.self.framework.ucenter.service.CustomUserDetailsService;

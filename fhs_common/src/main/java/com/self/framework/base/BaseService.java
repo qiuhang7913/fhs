@@ -19,22 +19,16 @@ public interface BaseService<T> {
     String DEFAULT_NOW_DATE = DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L6);
 
     /**
-     * @des 添加方法
+     * @des 添加/更新方法
      * @return
      */
-    Integer add(T v);
-
-    /**
-     * @des 更新方法
-     * @return
-     */
-    Integer update(T v);
+    Integer addOrUpdata(T v);
 
     /**
      * @des 删除方法
      * @return
      */
-    void delete(Object id);
+    void delete(List id);
 
     /**
      * @des 列表查询 支持分页和排序

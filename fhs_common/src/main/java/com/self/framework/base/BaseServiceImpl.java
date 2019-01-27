@@ -1,9 +1,12 @@
 package com.self.framework.base;
 
+import com.alibaba.fastjson.JSON;
 import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.spring.extend.jpa.SpecificationQueryExtend;
 import com.self.framework.utils.ConvertDataUtil;
 import com.self.framework.utils.ObjectCheckUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import java.util.Optional;
  * @param <T>
  */
 public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     protected BaseDao<T> baseDao;
@@ -28,27 +32,23 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer add(T v) {
+    public Integer addOrUpdata(T v) {
         v.setCreateTime(DEFAULT_NOW_DATE);
         v.setCreateUser("qiuhang");
-        T addWho = baseDao.save(v);
+        T one = this.findOne(v);
+        if (!ObjectCheckUtil.checkIsNullOrEmpty(one)){
+            v.setUpdateTime(DEFAULT_NOW_DATE);
+            v.setUpdateUser("qiuhang");
+        }
+        T addWho = baseDao.saveAndFlush(v);
         return ObjectCheckUtil.checkIsNullOrEmpty(addWho) ? 0 : 1;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer update(T v) {
-        v.setUpdateTime(DEFAULT_NOW_DATE);
-        v.setCreateUser("qiuhang");
-        T updateWho = baseDao.saveAndFlush(v);
-        return ObjectCheckUtil.checkIsNullOrEmpty(updateWho) ? 0 : 1;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(Object id) {
+    public void delete(List id) {
         if (!ObjectCheckUtil.checkIsNullOrEmpty(id)) {
-            baseDao.deleteById(ConvertDataUtil.convertStr(id));
+            baseDao.deleteAll(id);
         }
     }
 
@@ -80,7 +80,13 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
     public T findOne(T v) {
         Example<T> of = Example.of(v);
         Optional<T> one = baseDao.findOne(of);
-        return one.get();
+        try {
+            return one.get();
+        }catch (Exception e){
+            logger.error("数据查询错误,查询参数为["+ JSON.toJSONString(v) +"]",e);
+            return null;
+        }
+
     }
 
 }
