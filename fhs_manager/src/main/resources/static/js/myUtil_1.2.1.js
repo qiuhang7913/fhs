@@ -172,39 +172,57 @@ var ordinarySub = {
  */
 var ajaxSub = {
 
-	url : '',
-	rvFunc : function (rvData) {
+	postUrl : '',
+
+	getUrl : '',
+
+	delUrl : '',
+
+	rvPostFunc : function (rvData) {
 		
 	},
 
-	postData : {},
+	rvGetFunc : function (rvData) {
+
+	},
+
+	rvDelFunc : function (rvData) {
+
+	},
+
+	reqData : {},
 
 	headers : {},
 
 	// 获取数据
 	getData : function() {
 		$.ajax({
-			url : ajaxSub.url,
+			url : ajaxSub.getUrl,
 			type : 'GET',
 			async : true,
-			data : ajaxSub.postData,
-			contentType: "application/json;charset=utf-8",
+			//data : JSON.stringify(ajaxSub.reqData),
+			//contentType: "application/json;charset=utf-8",
 			dataType : 'json',
 			success : function(data) {
-				this.rvFunc(data);
+				ajaxSub.rvGetFunc(data);
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(XMLHttpRequest);
+				alert(XMLHttpRequest.responseText);
 			}
 		});
 	},
 	// 添加数据
-	addOrUpdateData : function() {
+	postData : function() {
+		if (ajaxSub.postUrl.length === 0){
+			console.log("error!");
+			return;
+		}
 		$.ajax({
-			url : ajaxSub.url,
-			type : 'post',
+			url : ajaxSub.postUrl,
+			type : 'POST',
 			async : true,
-			data : JSON.stringify(ajaxSub.postData),
+			data : JSON.stringify(ajaxSub.reqData),
 			contentType: "application/json;charset=utf-8",
 			dataType : 'json',
 			beforeSend:function(XMLHttpRequest){
@@ -213,21 +231,22 @@ var ajaxSub = {
 				})
 			},
 			success : function(data) {
-				ajaxSub.rvFunc(data);
+				ajaxSub.rvPostFunc(data);
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(XMLHttpRequest);
-				alert(XMLHttpRequest.responseJSON);
+				alert(XMLHttpRequest.responseText);
 			}
 		});
 	},
 
 	delData : function() {
-		alert(ajaxSub.url);
 		$.ajax({
-			url : ajaxSub.url,
-			type : 'delete',
-			async : false,
+			url : ajaxSub.delUrl,
+			type : 'DELETE',
+			data : JSON.stringify(ajaxSub.reqData),
+			contentType: "application/json;charset=utf-8",
+			async : true,
 			dataType : 'json',
 			beforeSend:function(XMLHttpRequest){
 				$.each(ajaxSub.headers, function (key, value) {
@@ -235,7 +254,7 @@ var ajaxSub = {
 				})
 			},
 			success : function(data) {
-				ajaxSub.rv = data;
+				ajaxSub.rvDelFunc(data)
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(XMLHttpRequest);

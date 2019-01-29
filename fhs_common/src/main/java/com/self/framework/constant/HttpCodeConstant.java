@@ -1,7 +1,5 @@
 package com.self.framework.constant;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 /**
  * @des HTTP 相应信息常量
  * @author qiuhang

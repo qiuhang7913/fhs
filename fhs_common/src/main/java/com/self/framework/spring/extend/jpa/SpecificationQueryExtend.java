@@ -3,6 +3,7 @@ package com.self.framework.spring.extend.jpa;
 import com.self.framework.annotation.*;
 import com.self.framework.base.BaseBean;
 import com.self.framework.constant.BusinessCommonConstamt;
+import com.self.framework.exception.BusinessException;
 import com.self.framework.utils.ConvertDataUtil;
 import com.self.framework.utils.ObjectCheckUtil;
 import com.self.framework.utils.ReflectUtil;
@@ -114,9 +115,6 @@ public class SpecificationQueryExtend<T> {
                 if (!ObjectCheckUtil.checkIsNullOrEmpty(obj)){
                     Class<?> clz = obj.getClass();
                     Field[] fields = clz.getDeclaredFields();
-                    if (!clz.getSuperclass().getName().equals(BASE_BEAN_CLASS_NAME)){//当前对象父类必须为父类
-                        logger.error("未继承BaseBean!");
-                    }
                     for (Field field : fields) {
                         field.setAccessible(true);
                         try {
@@ -168,6 +166,7 @@ public class SpecificationQueryExtend<T> {
 
                                 } catch (Exception e) {
                                     logger.error("当前字段{}one to one 异常!!", field.getName());
+                                    throw new BusinessException("error!");
                                 }
                             }else{
                                 Predicate equal = cb.equal(root.get(field.getName()).as(ReflectUtil.reflectObjObtainFileClassType(obj, field.getName())),
@@ -176,6 +175,7 @@ public class SpecificationQueryExtend<T> {
                             }
                         } catch (Exception e) {
                             logger.error("出现反射异常!", e);
+                            throw new BusinessException("error!");
                         }
                     }
                 }

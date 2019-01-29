@@ -13,7 +13,7 @@ import java.util.List;
  * @version v1.0
  * @param <T>
  */
-public interface BaseService<T> {
+public interface BaseService<T extends BaseBean> {
     String DEFAULT_SORT_FILE = "updateTime";//默认排序字段
     Integer DEFAULT_SORT_TYPE = BusinessCommonConstamt.ZERO_CODE;//默认排序字段
     String DEFAULT_NOW_DATE = DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L6);
@@ -28,7 +28,7 @@ public interface BaseService<T> {
      * @des 删除方法
      * @return
      */
-    void delete(List id);
+    void delete(List<String> id);
 
     /**
      * @des 列表查询 支持分页和排序
@@ -54,4 +54,12 @@ public interface BaseService<T> {
      * @return
      */
     T findOne(T v);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    T findOneById(String id);
+
 }

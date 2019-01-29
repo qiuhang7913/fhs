@@ -4,16 +4,13 @@
         <title>主页</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-        <!--css引入-->
-        <link rel="stylesheet" th:href="@{/css/min.css}" />
-        <link rel="stylesheet" th:href="@{/content/settings/style.css}" />
-
         <!--js 插件引入-->
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap.min.css}" />
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrapValidator.css}" />
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-treeview.min.css}" />
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-table.min.css}" />
         <link rel="stylesheet" th:href="@{/plugin/iziModal/css/izi_modal.css}" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 
         <script th:src="@{/plugin/bootstrap/js/jquery.min.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
@@ -24,33 +21,15 @@
         <script th:src="@{/plugin/bootstrap/js/bootstrap.extend.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/iziModal/js/izi_modal.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/iziModal/js/izi_modal_extend.js}" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
         <!--js引入-->
         <script th:src="@{/js/myUtil_1.2.1.js}"></script>
     </head>
     <body>
         <div style="clear:both"></div>
-
-        <div id="content" class="white" >
-            <h1><img th:src="@{/img/icons/posts.png}" alt="" />资源管理</h1>
-            <div>
-                <div style="float: left; width: 20%">
-                    <div class="bloc" style="margin-top: 32% !important;">
-                        <div id="tree"></div>
-                    </div>
-                </div>
-                <div style="float: left; width: 66%; margin-left: 2%">
-                    <div class="bloc" style="margin-top: 10% !important;">
-                        <div class="title">
-                            资源列表
-                        </div>
-                        <div id="bodyContent" class="content" style="width: 99% !important;">
-                            <div style="clear: both"></div>
-                            <table id="dataTable"></table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div style="width: 98%; margin-left: 1%">
+            <table id="dataTable" ></table>
         </div>
 
         <!-- 列表操作按钮 -->
@@ -58,6 +37,9 @@
             <button id="btn_add" type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
              </button>
+            <button id="btn_add2" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>快捷新增
+            </button>
             <!--<button id="btn_delete" type="button" class="btn btn-default" onclick="batchUploadShow();">-->
                 <!--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>批量上传-->
             <!--</button>-->
@@ -74,72 +56,49 @@
         </div>
     </body>
     <script th:inline="javascript">
-        //var basePath = [[@{/}]];
-        var currentParentId = 0;
+        var menuId = [[${param.menuId}]];
 
         //列表初始化参数信息
         myBootstrapTable.domId = 'dataTable';
-        myBootstrapTable.reqUrl = '/sys/menu/list';
+        myBootstrapTable.reqUrl = '/sys/menuFunc/list';
         myBootstrapTable.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
-        myBootstrapTable.reqParamMap['parentId'] = '0';
         myBootstrapTable.toolBarDomId = 'toolbar';
-        myBootstrapTable.sort = "sort";
-        myBootstrapTable.tableColumns =  [
-            {
-                checkbox: true,
-                visible: true                  //是否显示复选框
-            },
-            {
-                field: 'name',
-                title: '资源名称'
-            },
-            {
-                field: 'url',
-                title: "资源地址"
-            },
-            {
-                field: 'icon',
-                title: "图标"
-            },
-            {
-                filed: 'type',
-                title: '资源类型',
-                formatter: function(value,row,index) {
-                    if(row.type === 1){
-                        return "菜单"
-                    }else{
-                        return "连接"
-                    }
+        myBootstrapTable.reqParamMap['menuId'] = menuId[0];
+        myBootstrapTable.tableColumns = [
+                {
+                    checkbox: true,
+                    visible: true                  //是否显示复选框
+                },
+                {
+                    field: 'funcType',
+                    title: '动作类型',
+                    formatter: function(value,row,index) {
+                        if(value === 0){
+                            return "新增"
+                        }else if (value === 1) {
+                            return "修改"
+                        }else if (value === 2){
+                            return "删除"
+                        }else {
+                            return "查询"
+                        }
+                    },
+                },
+                {
+                    field: 'funcName',
+                    title: "动作名称"
+                },
+                {
+                    field: 'funcDes',
+                    title: '动作描述'
                 }
-            },
-            {
-                filed: 'status',
-                title: '资源状态',
-                formatter: function(value,row,index) {
-                    if(row.type === 1){
-                        return "启用"
-                    }else{
-                        return "禁用"
-                    }
-                },
-            },
-            {
-                filed: 'id',
-                title: '操作',
-                formatter: function(value,row,index) {
-                    if (row.type !== 1){
-                        return '<a href="javascript:void(0)" onclick="goResFuncPage(\'' + row.id + '\')">资源动作</a>'
-                    }
-                    return '<a href="javascript:void(0)">无</a>'
-                },
-            }
         ];
 
-        myIZIMoal.title = '新增/编辑资源';
-        myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add';
+        myIZIMoal.title = '新增/编辑资源动作';
+        myIZIMoal.url =  '/sys/menuFunc?go=add_update_menu_func&action=add';
+        myIZIMoal.width = 300;
 
         $(function () {
-            loadTreeData();//加载所有菜单树数据
             myBootstrapTable.init();//初始化列表插件
             myIZIMoal.init();//初始化模态窗口插件
             initPageEvent();
@@ -149,22 +108,47 @@
             //绑定新增资源
             $("#btn_add").on('click', function (event) {
                 event.preventDefault();
-                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add&parentId=' + currentParentId;
-                myIZIMoal.subtitle = '新增资源';
+                myIZIMoal.url =  '/sys/menu?go=add_update_menu_func&action=add&sysResId=' + menuId;
+                myIZIMoal.subtitle = '新增资源动作';
                 myIZIMoal.open(event);
             });
 
             //绑定编辑资源
             $("#btn_edit").on('click', function (event) {
                 event.preventDefault();
-                var datas = myBootstrapTable.obtainSelectRowData()
+                var datas = myBootstrapTable.obtainSelectRowData();
                 if (datas.length !== 1){
                     alert("请正确选择需要修改的数据")
                     return;
                 }
-                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=update&parentId=' + currentParentId + "&sysResId=" + datas[0].id;
+                myIZIMoal.url =  '/sys/menu?go=add_update_menu_func&action=update&sysResId=' + menuId + "&sysResMenuFuncId=" + datas[0].id;
                 myIZIMoal.subtitle = '编辑资源';
                 myIZIMoal.open(event);
+            });
+
+            $("#btn_add2").on('click', function (event) {
+                event.preventDefault();
+                $.confirm({
+                    title: '是否快捷添加',
+                    content: '快捷添加则自动默认添加所有动作!',
+                    buttons: {
+                        confirm: {
+                            text: '确认',
+                            action: function () {
+                                ajaxSub.postUrl = '/sys/menuFunc/addAll/' + menuId;
+                                ajaxSub.reqData = {};
+                                ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
+                                ajaxSub.postData();
+                                ajaxSub.rvPostFunc = function (data) {
+                                    myBootstrapTable.reload();
+                                }
+                            }
+                        },
+                        cancel: {
+                            text: '取消'
+                        }
+                    }
+                });
             });
 
             //绑定删除资源
@@ -177,7 +161,7 @@
                 var ids = [];
                 $.each(datas,function (index,data) {
                     ids.push(data.id);
-                    ajaxSub.delUrl = '/sys/menu/del';
+                    ajaxSub.delUrl = '/sys/menuFunc/del';
                     ajaxSub.reqData = ids;
                     ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
                     ajaxSub.delData();
@@ -188,40 +172,13 @@
             });
 
         }
-        
-        /**
-         * 跳转页面到资源动作页面
-         */
-        function goResFuncPage(menuId) {
-            myIZIMoal.url =  '/sys/menu?go=list_menu_func&menuId=' + menuId;
-            myIZIMoal.title = "资源动作管理"
-            myIZIMoal.subtitle = '';
-            myIZIMoal.open();
-        }
-        
-        function loadTreeData() {
-            ajaxSub.getUrl = '/sys/menu/obtainTreeData';
-            ajaxSub.getData();
-            ajaxSub.rvGetFunc = function (rvData) {
-                initBootstrapTreeview("tree", rvData.result);
-            }
-        }
-        
+
         /**
          * 关闭模态窗口触发 【固定回调方法】
          */
         function closedIZIModalFunc(e) {
             console.log("com in closed");
         }
-        
-        /**
-         * 树的节点点击出触发 【固定回调方法】
-         * @param data
-         */
-        function onClickTreeFunc(data) {
-            myBootstrapTable.reqParamMap['parentId'] = data.treeId;
-            currentParentId = data.treeId;
-            myBootstrapTable.reload();
-        }
+
     </script>
 </html>

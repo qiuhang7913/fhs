@@ -2,6 +2,7 @@ package com.self.framework.base;
 
 import com.alibaba.fastjson.JSON;
 import com.self.framework.constant.BusinessCommonConstamt;
+import com.self.framework.exception.BusinessException;
 import com.self.framework.spring.extend.jpa.SpecificationQueryExtend;
 import com.self.framework.utils.ConvertDataUtil;
 import com.self.framework.utils.ObjectCheckUtil;
@@ -33,12 +34,14 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer addOrUpdata(T v) {
-        v.setCreateTime(DEFAULT_NOW_DATE);
-        v.setCreateUser("qiuhang");
         T one = this.findOne(v);
         if (!ObjectCheckUtil.checkIsNullOrEmpty(one)){
+            v = one;
             v.setUpdateTime(DEFAULT_NOW_DATE);
             v.setUpdateUser("qiuhang");
+        }else{
+            v.setCreateTime(DEFAULT_NOW_DATE);
+            v.setCreateUser("qiuhang");
         }
         T addWho = baseDao.saveAndFlush(v);
         return ObjectCheckUtil.checkIsNullOrEmpty(addWho) ? 0 : 1;
@@ -46,18 +49,21 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(List id) {
-        if (!ObjectCheckUtil.checkIsNullOrEmpty(id)) {
-            baseDao.deleteAll(id);
+    public void delete(List<String> ids) {
+        if (!ObjectCheckUtil.checkIsNullOrEmpty(ids)) {
+            ids.forEach(id -> {
+                try {
+                    baseDao.deleteById(id);
+                }catch (Exception e){
+                    throw new BusinessException(e.getMessage());
+                }
+            });
         }
     }
 
     @Override
-    public Page<T> queryListHasPagingAndSort(T v, Integer pageStart, Integer pageEnd, Integer sortType, String... sortFiled) {
-//        if (ObjectCheckUtil.checkIsNullOrEmpty(v)){
-//            return new PageImpl<>(new ArrayList<>());
-//        }
-        Sort sort = new Sort(sortType.equals(BusinessCommonConstamt.ZERO_CODE ) ? Sort.Direction.DESC : Sort.Direction.ASC, sortFiled);
+    public Page<T> queryListHasPagingAndSort(T v, Integer pageStart, Integer pageEnd, Integer sortType, String ... sortFiled) {
+        Sort sort = new Sort(sortType.equals(BusinessCommonConstamt.ZERO_CODE) ? Sort.Direction.DESC : Sort.Direction.ASC, sortFiled);
         PageRequest of = PageRequest.of(pageStart, pageEnd, sort);
         Page<T> all = baseDao.findAll(querySqlBuild.getWhereClause(v), of);
         return all;
@@ -83,10 +89,13 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
         try {
             return one.get();
         }catch (Exception e){
-            logger.error("数据查询错误,查询参数为["+ JSON.toJSONString(v) +"]",e);
+            logger.error("数据查询错误,查询参数为{}",JSON.toJSONString(v));
             return null;
         }
-
     }
 
+    @Override
+    public T findOneById(String id) {
+        return baseDao.findById(id).get();
+    }
 }

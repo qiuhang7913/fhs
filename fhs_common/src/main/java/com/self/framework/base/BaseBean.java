@@ -1,6 +1,7 @@
 package com.self.framework.base;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
  * @author qiuhang
  * @version v1.0
  */
+@MappedSuperclass
 public class BaseBean implements Serializable {
 
     @Column(name = "create_time")
@@ -34,7 +36,10 @@ public class BaseBean implements Serializable {
     private Integer page;
 
     @Transient
-    private String sortOrder;
+    private String sortFiled;
+
+    @Transient
+    private Integer sortOrder;
 
     public String getCreateTime() {
         return createTime;
@@ -92,15 +97,19 @@ public class BaseBean implements Serializable {
         this.page = page;
     }
 
-    public String getSortOrder() {
+    public Integer getSortOrder() {
         return sortOrder;
     }
 
-    public void setSortOrder(String sortOrder) {
+    public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
     }
 
-    public static void main(String[] args) {
+    public String getSortFiled() {
+        return sortFiled;
+    }
 
+    public void setSortFiled(String sortFiled) {
+        this.sortFiled = sortFiled;
     }
 }

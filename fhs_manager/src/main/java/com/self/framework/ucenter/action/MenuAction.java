@@ -22,7 +22,7 @@ public class MenuAction extends BaseAction<SysMenuResource> {
     @Autowired
     private MenuService menuService;
 
-    @RequestMapping(value = "obtainTreeData", method = RequestMethod.POST)
+    @RequestMapping(value = "obtainTreeData", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult<List<TreeNode>> obtainTreeData(HttpServletRequest request){
         List<TreeNode> treeNode = menuService.findMenuTreeData();

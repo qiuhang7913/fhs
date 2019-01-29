@@ -23,7 +23,7 @@ public class FastJSONConfig {
 
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
 
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
 
         fastConverter.setFastJsonConfig(fastJsonConfig);
 

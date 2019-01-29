@@ -142,12 +142,14 @@ var myIZIMoal = {
             //更多属性详情见:http://www.jq22.com/jquery-info8627
         });
         $("#" + this.domId).iziModal('open', event);
-        //openIZIModal(this.domId, this.title, this.subtitle, this.headerColor, this.url, event);
         $(document).on('closed', '#' + this.domId, function (e) {
             if (typeof (closedIZIModalFunc) === "function"){
                 closedIZIModalFunc(e);
             }
         });
+    },
+    close:function () {
+        $("#" + this.domId).iziModal('close');
     }
 };
 
@@ -165,16 +167,23 @@ function openIZIModal(domId, title, subtitle, headerColor, width, url, event) {
  */
 var myBootstrapTable = {
     domId : '',
+
     reqUrl : '',
+
     headers : {},//header信息
+
     reqParamMap : {
-        "rows":15,//默认页数据
-        "page":1,//默认当先首页
-        "sortOrder":"asc",//排序
         "between":{},
     },
+
     tableColumns : [],
+
     toolBarDomId : '',
+
+    sort : 'createTime',
+
+    sortOrder : '0',
+
     init : function () {
         if (this.domId.length === 0) {
             alert("ERROR,找不到相关dom!")
@@ -184,8 +193,9 @@ var myBootstrapTable = {
             alert("ERROR,找不到相关请求数据地址!")
             return null;
         }
-        initBootstrapTable(this.domId, this.reqUrl, this.tableColumns,this.reqParamMap, this.headers, this.toolBarDomId);
+        initBootstrapTable(this.domId, this.reqUrl, this.tableColumns, this.reqParamMap, this.headers, this.toolBarDomId, this.sort, this.sortOrder);
     },
+
     reload: function () {
         if (this.domId.length === 0) {
             alert("ERROR,找不到相关dom!")
@@ -195,13 +205,19 @@ var myBootstrapTable = {
             alert("ERROR,找不到相关请求数据地址!")
             return null;
         }
-        reloadBootstrapTable(this.domId, this.reqUrl, this.tableColumns,this.reqParamMap, this.headers, this.toolBarDomId);
+        reloadBootstrapTable(this.domId, this.reqUrl, this.tableColumns, this.reqParamMap, this.headers, this.toolBarDomId, this.sort, this.sortOrder);
     },
+
     refresh:function () {
         
     },
+
     clickRow:function (data) {
         console.log(data);
+    },
+
+    obtainSelectRowData:function () {
+        return $("#"+ myBootstrapTable.domId).bootstrapTable('getSelections');
     }
 };
 
@@ -209,9 +225,9 @@ var myBootstrapTable = {
  * 重新加载bootstrap列表
  * @param domId
  */
-function reloadBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId) {
+function reloadBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId, sort, sortOrder) {
     $('#' + domId).bootstrapTable('destroy');
-    initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId)
+    initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId, sort, sortOrder)
 }
 
 /**
@@ -223,7 +239,7 @@ function reloadBootstrapTable(domId, reqPath, columns, paramsExtend, headers, to
  * @param headers [require]
  * @param toolBarDomId
  */
-function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId){
+function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, toolBarDomId, sort, sortOrder){
     $('#'+ domId).bootstrapTable({
         url: reqPath,////请求后台的URL（*）
         // data : data,
@@ -233,8 +249,8 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         cache: false,                     //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
         pagination: true,                 //是否显示分页（*）
         sortable: true,                   //是否启用排序
-        sort: 'createTime',
-        sortOrder: "asc",                 //排序方式
+        sortName:sort,
+        sortOrder:sortOrder,
         sidePagination: "server",         //分页方式：client客户端分页，server服务端分页（*）
         pageNumber: 1,                    //初始化加载第一页，默认第一页,并记录
         pageSize: 15,                     //每页的记录行数（*）
@@ -242,10 +258,10 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         search: false,                    //是否显示表格搜索
         showColumns: true,                //是否显示所有的列（选择显示的列）
         showRefresh: true,                //是否显示刷新按钮
-        minimumCountColumns: 3,           //最少允许的列数
+        minimumCountColumns: 4,           //最少允许的列数
         clickToSelect: true,              //是否启用点击选中行
         height: 700,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-        uniqueId: "id",                   //每一行的唯一标识，一般为主键列
+        uniqueId: "no",                   //每一行的唯一标识，一般为主键列
         showToggle: true,                 //是否显示详细视图和列表视图的切换按钮
         cardView: false,                  //是否显示详细视图
         detailView: false,                //是否显示父子表
@@ -258,7 +274,7 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
             var temp = {
                 rows: params.limit,                         //页面大小
                 page: (params.offset / params.limit) + 1,   //页码
-                sort: params.sort,      //排序列名
+                sortFiled: params.sort,      //排序列名
                 sortOrder: params.order, //排位命令（desc，asc）
             };
             $.each(paramsExtend,function(key,value){
@@ -268,8 +284,9 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         },
 
         onLoadSuccess: function (data) {
+            console.log(data)
             if(data.code !== 200){
-                alert(data.describe);
+                //alert(data.describe);
             }
         },
 

@@ -1,5 +1,6 @@
 package com.self.framework.ucenter.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "menu")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class SysMenuResource extends BaseBean {
     /**
      *  菜单id

@@ -1,5 +1,6 @@
 package com.self.framework.ucenter.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
 import com.self.framework.constant.BusinessCommonConstamt;
@@ -15,12 +16,8 @@ import java.util.*;
 /**
  * @des 用户实体
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 @Entity(name = "user")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class SysUser extends BaseBean implements UserDetails {
 
     /**
@@ -66,7 +63,7 @@ public class SysUser extends BaseBean implements UserDetails {
     private Integer type;//用户类型
 
     @Column(name = "is_delete")
-    private Integer is_delete;//是否被删除
+    private Integer isDelete;//是否被删除
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
@@ -130,4 +127,116 @@ public class SysUser extends BaseBean implements UserDetails {
         return true;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public Integer getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Integer birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public List<SysRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<SysRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
 }

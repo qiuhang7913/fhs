@@ -54,8 +54,8 @@
         <div class="form-group">
             <label for="res_type" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源状态：</label>
             <div class="col-sm-offset-2 col-sm-10">
-                <div class="checkbox" style="float: left"><label><input type="checkbox" name="res_type" value="0">启用&nbsp;&nbsp;&nbsp;</label></div>
-                <div class="checkbox" style="float: left"><label><input type="checkbox" name="res_type" value="1">禁用&nbsp;&nbsp;&nbsp;</label></div>
+                <div class="checkbox" style="float: left"><label><input type="radio" name="res_type" value="0" checked="checked">启用&nbsp;&nbsp;&nbsp;</label></div>
+                <div class="checkbox" style="float: left"><label><input type="radio" name="res_type" value="1">禁用&nbsp;&nbsp;&nbsp;</label></div>
             </div>
         </div>
 
@@ -80,9 +80,44 @@
 <script th:inline="javascript">
     var action = [[${param.action}]];
     var parentId = [[${param.parentId}]];
+    var sysResId = [[${param.sysResId}]];
     console.log(action);
-    
+
+    //****************************************** ajax 后台交互初始化定义 start
+    ajaxSub.postUrl = '/sys/menu/addOrUpdate';
+    ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
+    ajaxSub.rvPostFunc = function (rvData) {
+        if (rvData.code === 200){
+            window.parent.myBootstrapTable.reload();
+            window.parent.myIZIMoal.close();
+        }else{
+            console.log(rvData);
+            alert("错误")
+        }
+    };
+
+    ajaxSub.rvGetFunc = function (rvData) {
+        console.log(rvData);
+        var sysResBean = rvData.result;
+        //数据回显
+        $("#res_icon").val(sysResBean.icon);
+        $("#res_name").val(sysResBean.name);
+        $("#res_url").val(sysResBean.url);
+        $("#res_type option[value='"+sysResBean.type+ "']").attr("selected","selected");
+        $("#res_sort").val(sysResBean.sort);
+        $("input[type='radio'][name='res_type'][value='"+sysResBean.type+"']").attr("checked","checked");
+    };
+    //****************************************** ajax 后台交互初始化定义 end
+
     $(function(){
+        if (action[0] === 'add'){//新增页面
+            //.... do somethings;
+        } else if (action[0] === 'update'){//修改页面
+            if(sysResId != null && sysResId.length > 0){
+                ajaxSub.getUrl = '/sys/menu/obtainOne/' + sysResId[0];
+                ajaxSub.getData();
+            }
+        }
         initPageEvent();
     });
     
@@ -108,24 +143,12 @@
                 type:$("#res_type").val(),
                 parentId:parentId[0],
                 sort:$("#res_sort").val(),
-                status:$("input[type='checkbox'][name='res_type']:checked").val()
+                status:$("input[type='radio'][name='res_type']:checked").val()
             };
-            console.log(sysResBean);
-            ajaxSub.url = '/sys/menu/addOrUpdate';
-            ajaxSub.postData = sysResBean;
-            ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
-            ajaxSub.rvFunc = function (rvData) {
-                console.log(rvData);
-                window.parent.myBootstrapTable.reload();
-            };
-            ajaxSub.addOrUpdateData();
+            ajaxSub.reqData = sysResBean;
+            ajaxSub.postData();
         });
     }
-    
-    if (action === 'add'){
 
-    } else if (action === 'update'){
-
-    }
 </script>
 </html>

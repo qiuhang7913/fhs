@@ -1,5 +1,6 @@
 package com.self.framework.ucenter.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "role")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class SysRole extends BaseBean {
 
     /**

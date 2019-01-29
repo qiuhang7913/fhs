@@ -11,6 +11,8 @@ import javax.validation.ValidatorFactory;
 
 /**
  * @des hibernate 参数校验配置
+ * @author qiuhang
+ * @version v1.0
  */
 @Configuration
 public class ValidatorConfiguration {

@@ -1,5 +1,6 @@
 package com.self.framework.ucenter.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.annotation.Like;
 import com.self.framework.base.BaseBean;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity(name = "test_table")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class TestBean extends BaseBean {
     @Id
     @GenericGenerator(name = "user-uuid", strategy = "uuid")

@@ -1,5 +1,6 @@
 package com.self.framework.ucenter.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.base.BaseBean;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,9 +18,10 @@ import javax.persistence.Id;
  */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "menu_func")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class SysMenuResourceFunc extends BaseBean {
 
     /**
@@ -41,6 +43,45 @@ public class SysMenuResourceFunc extends BaseBean {
     private String funcName;//方法名
 
     @Column(name = "func_des")
-    private Integer funcDes;//方法备注描述
+    private String funcDes;//方法备注描述
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
+
+    public Integer getFuncType() {
+        return funcType;
+    }
+
+    public void setFuncType(Integer funcType) {
+        this.funcType = funcType;
+    }
+
+    public String getFuncName() {
+        return funcName;
+    }
+
+    public void setFuncName(String funcName) {
+        this.funcName = funcName;
+    }
+
+    public String getFuncDes() {
+        return funcDes;
+    }
+
+    public void setFuncDes(String funcDes) {
+        this.funcDes = funcDes;
+    }
 }

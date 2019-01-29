@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.xml.bind.ValidationException;
 
+/**
+ * @des 全局错误封装
+ * @author qiuhang
+ * @version v1.0
+ */
 @ControllerAdvice
 @Component
 public class HttpGlobalExceptionHandler {
