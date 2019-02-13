@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
 import com.self.framework.constant.BusinessCommonConstamt;
+import com.self.framework.utils.ObjectCheckUtil;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +33,7 @@ public class SysUser extends BaseBean implements UserDetails {
     @Column(name = "real_name")
     private String realName;//真实姓名
 
-    @Column(name = "login_name")
+    @Column(name = "login_name", unique = true)
     private String loginName;//登录名
 
     @Column(name = "password")
@@ -42,7 +43,7 @@ public class SysUser extends BaseBean implements UserDetails {
     private Integer sex;//性别
 
     @Column(name = "birthday")
-    private Integer birthday;//生日
+    private String birthday;//生日
 
     @Column(name = "address")
     private String address;//详细地址
@@ -60,12 +61,12 @@ public class SysUser extends BaseBean implements UserDetails {
     private Integer status;//用户状态
 
     @Column(name = "type")
-    private Integer type;//用户类型
+    private Integer type = 1;//用户类型
 
     @Column(name = "is_delete")
-    private Integer isDelete;//是否被删除
+    private Integer isDelete = 0;//是否被删除
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
             @JoinColumn(name = "role_id", referencedColumnName = "id" ) }) //被控方表字段名
     @NoSpecificationQuery
@@ -76,6 +77,9 @@ public class SysUser extends BaseBean implements UserDetails {
         List<GrantedAuthority> auths = new ArrayList<>();
         Set<String> authResources = new HashSet<>();
         List<SysRole> userRoleBeans = this.getUserRoles();//用户权限
+        if (ObjectCheckUtil.checkIsNullOrEmpty(userRoleBeans)){
+            return new ArrayList<>();
+        }
         //权限资源
         userRoleBeans.stream().map(SysRole::getSysMenuResources).forEach(sysMenuResources -> sysMenuResources.forEach(sysMenuResource -> {
             String name = sysMenuResource.getName();//资源名称
@@ -168,11 +172,11 @@ public class SysUser extends BaseBean implements UserDetails {
         this.sex = sex;
     }
 
-    public Integer getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Integer birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户新增修改页面</title>
+
+    <!--js 插件引入-->
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrapValidator.css}" />
+
+    <script th:src="@{/plugin/bootstrap/js/jquery.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrapValidator.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.extend.js}" type="text/javascript"></script>
+
+    <script th:src="@{/js/myUtil_1.2.1.js}"></script>
+</head>
+<body style="width: 99%">
+    <div style="width: 90%; margin-top: 2%; margin-left: 3%">
+    <form id="form" role="form" class="form-horizontal"
+          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+        <div class="form-group">
+            <label for="real_name" class="col-sm-2 control-label" style="float: left; margin-top: 1%">姓名：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="real_name" name="real_name" placeholder="请输入姓名"
+                       required data-bv-notempty-message="真实姓名不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="login_name" class="col-sm-2 control-label" style="float: left; margin-top: 1%">账号：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="login_name" name="login_name" placeholder="请输入账号"
+                       required data-bv-notempty-message="账号不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="col-sm-2 control-label" style="float: left; margin-top: 1%">密码：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码"
+                       required data-bv-notempty-message="密码不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="sex" class="col-sm-2 control-label" style="float: left; margin-top: 1%">性别：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <select class="form-control" id="sex" name="sex" data-bv-notempty data-bv-notempty-message="请选择">
+                    <option value="">请选择</option>
+                    <option th:value="0">男</option>
+                    <option th:value="1">女</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="birthday" class="col-sm-2 control-label" style="float: left; margin-top: 1%">生日：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="birthday" name="birthday" placeholder="生日"
+                       required data-bv-notempty-message="生日不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" style="float: left; margin-top: 1%">地址信息：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <div style="margin-top: 5%;">
+                    <label style="float: left;" class="control-label">省:</label>
+                    <select class="form-control" id="province" name="province" style="float: left; width: 60%;">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+                <div style="clear: both"></div>
+                <div style="margin-top: 5%;">
+                    <label style="float: left;">市:</label>
+                    <select class="form-control" id="city" name="city" style="float: left; width: 60%;">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+                <div style="clear: both"></div>
+                <div style="margin-top: 5%;">
+                    <label style="float: left;">区:</label>
+                    <select class="form-control" id="area" name="area" style="float: left; width: 60%;">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address" class="col-sm-2 control-label" style="float: left; margin-top: 1%">详细地址：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important; width: 60%;">
+                <input type="text" class="form-control" id="address" name="address" placeholder="请输入详细地址">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="status" class="col-sm-2 control-label" style="float: left; margin-top: 1%">用户状态：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <select class="form-control" id="status" name="status"
+                        data-bv-notempty data-bv-notempty-message="请选择">
+                    <option value="">请选择</option>
+                    <option th:value="1">启用</option>
+                    <option th:value="2">停用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-top: 5%">
+                <span style="margin-left: 20%"></span>
+                <button type="button" id="btn_ok" class="btn btn-default">提交</button>
+                <span style="margin-left: 20%"></span>
+                <button type="reset" id="btn_reset" class="btn btn-default">重置</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</body>
+<script th:inline="javascript">
+    var action = [[${param.action}]];
+    var sysUserId = [[${param.sysUserId}]];
+    var allCityDatas = {};
+    var allAreaDatas = {};
+
+    //****************************************** ajax 后台交互初始化定义 start
+    ajaxSub.postUrl = '/sys/user/addOrUpdate';
+    ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
+    ajaxSub.rvPostFunc = function (rvData) {
+        if (rvData.code === 200){
+            debugger;
+            window.parent.myBootstrapTable.reload();
+            window.parent.myIZIMoal.close();
+        }else{
+            Ealert0("错误",1);
+        }
+    };
+
+    ajaxSub.rvGetFunc = function (rvData) {
+        console.log(rvData);
+        var sysUserBean = rvData.result;
+        //数据回显
+        $("#real_name").val(sysUserBean.realName);
+        $("#login_name").val(sysUserBean.loginName);
+        $("#password").val(sysUserBean.password);
+        $("#sex option[value='"+sysUserBean.sex+"']").attr("selected","selected");
+        $("#birthday").val(sysUserBean.birthday);
+        $("#province").prepend('<option value="000000" selected="selected">'+sysUserBean.province+'</option>');
+        $("#city").prepend('<option value="000000" selected="selected">'+sysUserBean.city+'</option>');
+        $("#area").prepend('<option value="000000" selected="selected">'+sysUserBean.area+'</option>');
+        $("#address").val(sysUserBean.address);
+        $("#status option[value='"+sysUserBean.status+"']").attr("selected","selected");
+    };
+    //****************************************** ajax 后台交互初始化定义 end
+
+    $(function(){
+        if (action[0] === 'add'){//新增页面
+            //.... do somethings;
+        } else if (action[0] === 'update'){//修改页面
+            if(sysUserId != null && sysUserId.length > 0){
+                ajaxSub.getUrl = '/sys/user/obtainOne/' + sysUserId[0];
+                ajaxSub.getData();
+            }
+        }
+        initPageEvent();
+    });
+    
+    function initPageEvent() {
+        //获取中国地址信息
+        $.get('/china.json',{},function (chinaData) {
+            var provinces = chinaData.children;
+            var insertHtml = '<option value="">请选择</option>';
+            $.each(provinces,function (index,province) {
+                insertHtml = insertHtml + '<option value="'+province.id+'">'+province.name+'</option>';
+                allCityDatas[province.id] = province.children;
+            });
+            $("#province").empty();
+            $("#province").append(insertHtml);
+        });
+
+        //省下拉绑定
+        $("#province").on('change',function (event) {
+            event.preventDefault();
+            var insertHtml = '<option value="">请选择</option>';
+            var proId = $(this).val();
+            var citys = allCityDatas[proId];
+            $.each(citys,function (index,city) {
+                insertHtml = insertHtml + '<option value="'+city.id+'">'+city.name+'</option>';
+                allAreaDatas[city.id] = city.children;
+            });
+            $("#city").empty();
+            $("#city").append(insertHtml);
+        });
+
+        //市下拉绑定
+        $("#city").on('change',function (event) {
+            event.preventDefault();
+            var insertHtml = '<option value="">请选择</option>';
+            var cityId = $(this).val();
+            debugger;
+            var areas = allAreaDatas[cityId];
+            $.each(areas,function (index,area) {
+                insertHtml = insertHtml + '<option value="'+area.id+'">'+area.name+'</option>';
+            });
+            $("#area").empty();
+            $("#area").append(insertHtml);
+        });
+
+        //提交绑定
+        $("#btn_ok").on('click', function (event) {
+            event.preventDefault();
+            var flag = isVlidator("form");
+            if (!flag){
+                return;
+            }
+            var sysUserBean = {
+                realName: $("#real_name").val(),
+                loginName: $("#login_name").val(),
+                password : $("#password").val(),
+                sex : $("#sex").val(),
+                birthday: $("#birthday").val(),
+                address : $("#address").val(),
+                province : $("#province").val() === '' ? '' : $("#province option:selected").text(),
+                city : $("#city").val() === '' ? '' : $("#city option:selected").text(),
+                area : $("#area").val() === '' ? '' : $("#area option:selected").text(),
+                status : $("#status").val(),
+                type : 1, //目前所有后台添加的后管用户都为普通用户,
+                id : sysUserId[0]
+            };
+            ajaxSub.reqData = sysUserBean;
+            ajaxSub.postData();
+        });
+    }
+
+</script>
+</html>

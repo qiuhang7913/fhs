@@ -64,7 +64,7 @@ public class SysMenuResource extends BaseBean {
     @Min(value = 0, message = "状态最小只能0")
     private Integer status;//状态
 
-    @OneToMany(mappedBy = "menuId", cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "menuId", cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @NoSpecificationQuery
     private List<SysMenuResourceFunc> sysMenuResourceFuncs;
 

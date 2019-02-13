@@ -16,19 +16,26 @@
     <script th:src="@{/js/myUtil_1.2.1.js}"></script>
 </head>
 <body style="width: 99%">
+    <div id="formResponseTips" style="width: 88%; margin-top: 2%; margin-left: 3%"></div>
     <div style="width: 88%; margin-top: 2%; margin-left: 3%">
-    <form role="form" class="form-horizontal">
+    <form id="form" role="form" class="form-horizontal"
+          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
         <div class="form-group">
             <label for="func_name" class="col-sm-2 control-label" style="float: left; margin-top: 1%">动作名称：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important; width: 60%;">
-                <input type="text" class="form-control" id="func_name" placeholder="请输入动作名称">
+                <input type="text" class="form-control" id="func_name" name="func_name" placeholder="请输入动作名称"
+                       required data-bv-notempty-message="动作名称不能为空!"
+                       data-bv-remote="true" data-bv-remote-url='/sys/menuFunc/checkFuncName' data-bv-remote-message="当前动作已经存在">
             </div>
         </div>
 
         <div class="form-group">
             <label for="func_type" class="col-sm-2 control-label" style="float: left; margin-top: 1%">动作类型：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
-                <select class="form-control" id="func_type" th:placeholder="请选择动作类型">
+                <select class="form-control" id="func_type" name="func_type" th:placeholder="请选择动作类型"
+                        data-bv-notempty data-bv-notempty-message="请选择" >
                     <option value="">请选择</option>
                     <option th:value="0">增加</option>
                     <option th:value="1">修改</option>
@@ -41,14 +48,14 @@
         <div class="form-group">
             <label for="func_des" class="col-sm-2 control-label" style="float: left; margin-top: 1%">动作描述：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important; width: 60%">
-                <input type="text" class="form-control" id="func_des" placeholder="请输入动作描述">
+                <input type="text" class="form-control" id="func_des" name="func_des" placeholder="请输入动作描述">
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10" style="margin-top: 5%">
                 <span style="margin-left: 20%"></span>
-                <button type="submit" id="btn_ok" class="btn btn-default">提交</button>
+                <button type="button" id="btn_ok" class="btn btn-default">提交</button>
                 <span style="margin-left: 20%"></span>
                 <button type="reset" id="btn_reset" class="btn btn-default">重置</button>
             </div>
@@ -66,23 +73,22 @@
     ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
     ajaxSub.rvPostFunc = function (rvData) {
         if (rvData.code === 200){
+            Ealert("formResponseTips",0,"修改成功!",1, 5000);
             window.parent.myBootstrapTable.reload();
         }else{
-            console.log(rvData);
-            alert("错误")
+            //console.log(rvData);
+            Ealert("formResponseTips",0,"修改失败["+rvData.describe+"]!",1, 5000);
         }
     };
 
     ajaxSub.rvGetFunc = function (rvData) {
-        console.log(rvData);
         var sysResMenuFunBean = rvData.result;
+        var checkFuncNameUrl = '/sys/menuFunc/checkFuncName?func_id=' + sysResMenuFuncId[0];
+        $("#func_name").attr('data-bv-remote-url', checkFuncNameUrl);
         //数据回显
-        // $("#res_icon").val(sysResBean.icon);
-        // $("#res_name").val(sysResBean.name);
-        // $("#res_url").val(sysResBean.url);
-        // $("#res_type option[value='"+sysResBean.type+ "']").attr("selected","selected");
-        // $("#res_sort").val(sysResBean.sort);
-        // $("input[type='radio'][name='res_type'][value='"+sysResBean.type+"']").attr("checked","checked");
+        $("#func_name").val(sysResMenuFunBean.funcName);
+        $("#func_type option[value='"+sysResMenuFunBean.funcType+ "']").attr("selected","selected");
+        $("#func_des").val(sysResMenuFunBean.funcDes);
     };
     //****************************************** ajax 后台交互初始化定义 end
 
@@ -90,6 +96,7 @@
         if (action[0] === 'add'){//新增页面
             //.... do somethings;
         } else if (action[0] === 'update'){//修改页面
+
             if(sysResMenuFuncId != null && sysResMenuFuncId.length > 0){
                 ajaxSub.getUrl = '/sys/menuFunc/obtainOne/' + sysResMenuFuncId[0];
                 ajaxSub.getData();
@@ -102,14 +109,19 @@
         //提交绑定
         $("#btn_ok").on('click', function (event) {
             event.preventDefault();
+            var flag = isVlidator("form");
+            if (!flag){
+                return;
+            }
             var sysResMenuFuncBean = {
-                icon:$("#func_name").val(),
-                name:$("#func_type").val(),
-                url:$("#func_des").val(),
-                menuId:sysResId
+                funcName:$("#func_name").val(),
+                funcType:$("#func_type").val(),
+                funcDes:$("#func_des").val(),
+                id:sysResMenuFuncId !== null ?sysResMenuFuncId[0] : 0,
+                menuId:sysResId[0]
             };
             ajaxSub.reqData = sysResMenuFuncBean;
-            ajaxSub.addOrUpdateData();
+            ajaxSub.postData();
         });
     }
 

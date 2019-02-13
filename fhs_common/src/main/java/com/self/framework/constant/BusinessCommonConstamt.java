@@ -32,4 +32,6 @@ public class BusinessCommonConstamt {
     public static final String SYS_MENU_RESOURCE_FUNC_FIND_FLAG = "find";
     public static final Integer SYS_MENU_RESOURCE_FUNC_FIND_CODE = 3;
 
+    public static final String DEFALUT_USER_PASSWORD = "defalutPass";
+
 }

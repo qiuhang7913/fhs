@@ -39,17 +39,19 @@
             <ul>
                 <li class="current">
                     <a th:href="@{/index}">
-                        <img src="img/icons/menu/inbox.png" alt="" />主页
+                        <img src="img/icons/menu/inbox.png" alt="" />首页
                     </a>
                 </li>
                 <li>
                     <a href="#"><img th:src="@{img/icons/menu/layout.png}" alt="" />系统管理</a>
                     <ul>
                         <li>
-                            <a href="javascript:void(0)" onclick="goToPage(this)">用户管理</a>
+                            <a href="javascript:void(0)" th:attr="src=@{'/sys/user?go=list_user'}"
+                               onclick="goToPage(this)">用户管理</a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)" onclick="goToPage(this)">角色管理</a>
+                            <a href="javascript:void(0)" th:attr="src=@{'/sys/role?go=list_role'}"
+                               onclick="goToPage(this)">角色管理</a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" th:attr="src=@{'/sys/menu?go=list_menu'}"

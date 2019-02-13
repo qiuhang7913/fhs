@@ -1,39 +1,39 @@
 /* ############################ js tool script by qh ########################### */
-/* ############################ ¸öÈËweb¹¤×÷ÀÛ¼ÆËùÊô ########################### */
+/* ############################ ä¸ªäººwebå·¥ä½œç´¯è®¡æ‰€å± ########################### */
 
 /**
- * @describe Ìæ»»×Ö·û´®ÖĞÎÄ±àÂë
- * @remark ÔİÊ±ÓÃÓÚ½â¾öajax Ìá½»ºóÌ¨·Çutf-8ÖĞÎÄÂÒÂë
+ * @describe æ›¿æ¢å­—ç¬¦ä¸²ä¸­æ–‡ç¼–ç 
+ * @remark æš‚æ—¶ç”¨äºè§£å†³ajax æäº¤åå°éutf-8ä¸­æ–‡ä¹±ç 
  * @since v1.2
- * @param str | ´æÔÚÖĞÎÄµÄ×Ö·û´®
- * @return 
+ * @param str | å­˜åœ¨ä¸­æ–‡çš„å­—ç¬¦ä¸²
+ * @return
  */
 function hasCN_changeEncode(str){
-	var reg = /([^\u0000-\u00FF])/g,	
-	rv = str.replace( reg , function($){return encodeURIComponent($);}) ;	
-	return rv;
+    var reg = /([^\u0000-\u00FF])/g,
+        rv = str.replace( reg , function($){return encodeURIComponent($);}) ;
+    return rv;
 }
 
 
 /**
- * @describe »ñÈ¡Ëæ»ú×Ö·û´®
- * @param randomFlag-ÊÇ·ñÈÎÒâ³¤¶È 
- * @param min|ÈÎÒâ³¤¶È×îĞ¡Î»[if(randomFlag true) ¹Ì¶¨Î»Êı] 
- * @param max|ÈÎÒâ³¤¶È×î´óÎ»
+ * @describe è·å–éšæœºå­—ç¬¦ä¸²
+ * @param randomFlag-æ˜¯å¦ä»»æ„é•¿åº¦
+ * @param min|ä»»æ„é•¿åº¦æœ€å°ä½[if(randomFlag true) å›ºå®šä½æ•°]
+ * @param max|ä»»æ„é•¿åº¦æœ€å¤§ä½
  * @author qh
  * @since v1.2
- * @return Ëæ»ú×Ö·û´®
+ * @return éšæœºå­—ç¬¦ä¸²
  */
 function randomWord(randomFlag, min, max){
     var str = "",
-    range = min,
-    arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
- 
-    // Ëæ»ú²úÉú
+        range = min,
+        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+    // éšæœºäº§ç”Ÿ
     if(randomFlag){
         range = getRandom(min, max);
     }
-    
+
     for(var i=0; i<range; i++){
         pos = Math.round(Math.random() * (arr.length-1));
         str += arr[pos];
@@ -42,343 +42,413 @@ function randomWord(randomFlag, min, max){
 }
 
 /**
- * @describe »ñÈ¡Ëæ»úÊı
- * @param min|×îĞ¡Êı
- * @param max|×î´óÊı
+ * @describe è·å–éšæœºæ•°
+ * @param min|æœ€å°æ•°
+ * @param max|æœ€å¤§æ•°
  * @author qh
- * @since v1.1.3 
- * @return ·µ»ØÔÚ´«ÈëµÄ×î´óºÍ×îĞ¡ÖµÖ®¼äµÄËæ»úÊı
+ * @since v1.1.3
+ * @return è¿”å›åœ¨ä¼ å…¥çš„æœ€å¤§å’Œæœ€å°å€¼ä¹‹é—´çš„éšæœºæ•°
  */
 function getRandom(min, max) {
-	var range = max - min;
-	var random = Math.random();// ½á¹ûÎª0-1¼äµÄÒ»¸öËæ»úÊı(°üÀ¨0,²»°üÀ¨1)
-	return (min + Math.round(random * range));// ·µ»ØÕûÊı
+    var range = max - min;
+    var random = Math.random();// ç»“æœä¸º0-1é—´çš„ä¸€ä¸ªéšæœºæ•°(åŒ…æ‹¬0,ä¸åŒ…æ‹¬1)
+    return (min + Math.round(random * range));// è¿”å›æ•´æ•°
 }
 
 /**
- * @describe ¶Ô±È×Ö·û´®ÊÇ·ñÒÔÁíÍâÒ»¸öÎª½áÎ² 
- * @param s|±»¶Ô±ÈµÄ×Ö·û´® 
+ * @describe å¯¹æ¯”å­—ç¬¦ä¸²æ˜¯å¦ä»¥å¦å¤–ä¸€ä¸ªä¸ºç»“å°¾
+ * @param s|è¢«å¯¹æ¯”çš„å­—ç¬¦ä¸²
  * @example hello.endWith(lo)
  * @since v1.1.2
  * @return true or false
  */
 String.prototype.endWith = function(s) {
-	if (s == null || s === "" || this.length === 0 || s.length > this.length)
-		return false;
-	if (this.substring(this.length - s.length) === s)
-		return true;
-	else
-		return false;
-	return true;
+    if (s == null || s === "" || this.length === 0 || s.length > this.length)
+        return false;
+    if (this.substring(this.length - s.length) === s)
+        return true;
+    else
+        return false;
+    return true;
 };
 
 /**
- * @describe ¶Ô±È×Ö·û´®ÊÇ·ñÒÔÁíÍâÒ»¸öÎª¿ªÍ· 
- * @param s|±»¶Ô±ÈµÄ×Ö·û´® 
- * @example hello.startWith(he) 
+ * @describe å¯¹æ¯”å­—ç¬¦ä¸²æ˜¯å¦ä»¥å¦å¤–ä¸€ä¸ªä¸ºå¼€å¤´
+ * @param s|è¢«å¯¹æ¯”çš„å­—ç¬¦ä¸²
+ * @example hello.startWith(he)
  * @since v1.1.2
  * @return true or false
  */
 String.prototype.startWith = function(s) {
-	if (s == null || s === "" || this.length === 0 || s.length > this.length)
-		return false;
-	if (this.substr(0, s.length) === s)
-		return true;
-	else
-		return false;
-	return true;
+    if (s == null || s === "" || this.length === 0 || s.length > this.length)
+        return false;
+    if (this.substr(0, s.length) === s)
+        return true;
+    else
+        return false;
+    return true;
 };
 
 /**
- * @describe ¶Ô±È×Ö·û´®ÊÇ·ñºÍÁíÍâÒ»¸öÏàµÈ (²»Çø·Ö´óĞ¡Ğ´)!
- * @param s|±»¶Ô±ÈµÄ×Ö·û´® 
+ * @describe å¯¹æ¯”å­—ç¬¦ä¸²æ˜¯å¦å’Œå¦å¤–ä¸€ä¸ªç›¸ç­‰ (ä¸åŒºåˆ†å¤§å°å†™)!
+ * @param s|è¢«å¯¹æ¯”çš„å­—ç¬¦ä¸²
  * @example hello.equals(hello) data:2016/8/22
  * @since v1.1.2
  * @return true or false
  */
 
 String.prototype.equals = function(s) {
-	if (this === "" || s === ""){
-		return false;
-	}
-	var str1 = this.toLowerCase();
-	var str2 = s.toLowerCase();
-	if (str1 === str2) {
-		return true;
-	}
-	return false;
+    if (this === "" || s === ""){
+        return false;
+    }
+    var str1 = this.toLowerCase();
+    var str2 = s.toLowerCase();
+    if (str1 === str2) {
+        return true;
+    }
+    return false;
 };
 
 /**
- * @describe ·Çajax post/getÌá½»
+ * æç¤ºå¼¹æ¡†
+ * @param text
+ * @param type
+ * @constructor
+ */
+function Ealert0(text,type) {
+    var type = type === 1 ? "red" : "green"
+    $.alert({
+        type:type,
+        title: 'ç³»ç»Ÿæç¤º',
+        content: text,
+        icon:'glyphicon glyphicon-info-sign',
+        buttons:{
+            confirm:{
+                text:"ç¡®å®š"
+            }
+        }
+    });
+}
+
+/**
+ *
+ * @param title
+ * @param content
+ * @param action
+ * @constructor
+ */
+function Econfirm(title, content, action) {
+    $.confirm({
+        title: title,
+        content: content,
+        buttons: {
+            confirm: {
+                text: 'ç¡®è®¤',
+                action: action
+            },
+            cancel: {
+                text: 'å–æ¶ˆ'
+            }
+        }
+    });
+}
+
+/**
+ *
+ * @param title
+ * @param content
+ * @param action
+ * @constructor
+ */
+function EconfirmPrompt(title, submitText, content, action) {
+    $.confirm({
+        title: title,
+        content: content,
+        buttons: {
+            formSubmit: {
+                text: submitText,
+                action: action
+            },
+            cancel: {
+                text: 'å–æ¶ˆ'
+            }
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+    });
+}
+
+/**
+ * @describe éajax post/getæäº¤
  * @date 2017/6/6
- * @example ordinarySub.url = ""; |ÇëÇóµØÖ·(±ØĞë)
- *			ajaxSub.postData = {}; | ÇëÇó²ÎÊı
- *			ordinarySub.init("/test/say/hello","get"); | Ìá½»ÇëÇó
+ * @example ordinarySub.url = ""; |è¯·æ±‚åœ°å€(å¿…é¡»)
+ *			ajaxSub.postData = {}; | è¯·æ±‚å‚æ•°
+ *			ordinarySub.init("/test/say/hello","get"); | æäº¤è¯·æ±‚
  * @since v1.2.1
  */
 var ordinarySub = {
-		url : '',
-		postData : {},
-		
-		init : function(action){
-			if(null == url && url.length == 0){
-				console.log("Î´»ñÈ¡ÇëÇóµØÖ·");
-			}
-			
-			if("get".equals(action)){
-				this.get();
-			}
-			
-			if("post".equals(action)){
-				this.post();
-			}
-		},
+    url : '',
+    postData : {},
 
-		post : function(){
-		    var ofm = document.createElement("FORM");
-		    ofm.method = "POST";
-		    ofm.action = this.url+"?timestamp="+(new Date().getTime());
-		    ofm.style.display = "none";
-		    for(var key in this.postData) {
-				var tmp = document.createElement("INPUT");
-				tmp.type = "hidden";
-				tmp.name = key;
-				tmp.value = this.postData[key];
-				ofm.appendChild(tmp);
-		    }
-		    document.body.appendChild(ofm);
-		    ofm.submit();
-		},
+    init : function(action){
+        if(null == url && url.length == 0){
+            console.log("æœªè·å–è¯·æ±‚åœ°å€");
+        }
 
-		get : function(){
-			var finalUrl = this.url;
-			for(var key in this.postData) {
-				finalUrl = finalUrl + "&key=" + this.postData[key];
-			}
-			window.location.replace(finalUrl+"&timestamp="+(new Date().getTime()));
-		}
+        if("get".equals(action)){
+            this.get();
+        }
+
+        if("post".equals(action)){
+            this.post();
+        }
+    },
+
+    post : function(){
+        var ofm = document.createElement("FORM");
+        ofm.method = "POST";
+        ofm.action = this.url+"?timestamp="+(new Date().getTime());
+        ofm.style.display = "none";
+        for(var key in this.postData) {
+            var tmp = document.createElement("INPUT");
+            tmp.type = "hidden";
+            tmp.name = key;
+            tmp.value = this.postData[key];
+            ofm.appendChild(tmp);
+        }
+        document.body.appendChild(ofm);
+        ofm.submit();
+    },
+
+    get : function(){
+        var finalUrl = this.url;
+        for(var key in this.postData) {
+            finalUrl = finalUrl + "&key=" + this.postData[key];
+        }
+        window.location.replace(finalUrl+"&timestamp="+(new Date().getTime()));
+    }
 };
 
 /**
- * @describe ajax½»»¥Êı¾İ 
+ * @describe ajaxäº¤äº’æ•°æ®
  * @data 2016/8/22
- * @updateDate 2017/5/27 
- * @example ajaxSub.url = ""; | ÇëÇóµØÖ·
- * 			ajaxSub.postData = {}; | ÇëÇó²ÎÊı
- * 			ajaxSub.init("get"); | Ìá½»ÇëÇó
- * 			ajaxSub.rv | ÇëÇó½á¹û
- * @since v1.1:Ö§³Ö¼òµ¥µÄ²éÑ¯£¬É¾³ı£¬ĞŞ¸Ä£¬Ìí¼Ó£¬Ä£ºı²éÑ¯Êı¾İ 
+ * @updateDate 2017/5/27
+ * @example ajaxSub.url = ""; | è¯·æ±‚åœ°å€
+ * 			ajaxSub.postData = {}; | è¯·æ±‚å‚æ•°
+ * 			ajaxSub.init("get"); | æäº¤è¯·æ±‚
+ * 			ajaxSub.rv | è¯·æ±‚ç»“æœ
+ * @since v1.1:æ”¯æŒç®€å•çš„æŸ¥è¯¢ï¼Œåˆ é™¤ï¼Œä¿®æ”¹ï¼Œæ·»åŠ ï¼Œæ¨¡ç³ŠæŸ¥è¯¢æ•°æ®
  */
 var ajaxSub = {
 
-	postUrl : '',
+    postUrl : '',
 
-	getUrl : '',
+    getUrl : '',
 
-	delUrl : '',
+    delUrl : '',
 
-	rvPostFunc : function (rvData) {
-		
-	},
+    rvPostFunc : function (rvData) {
 
-	rvGetFunc : function (rvData) {
+    },
 
-	},
+    rvGetFunc : function (rvData) {
 
-	rvDelFunc : function (rvData) {
+    },
 
-	},
+    rvDelFunc : function (rvData) {
 
-	reqData : {},
+    },
 
-	headers : {},
+    reqData : {},
 
-	// »ñÈ¡Êı¾İ
-	getData : function() {
-		$.ajax({
-			url : ajaxSub.getUrl,
-			type : 'GET',
-			async : true,
-			//data : JSON.stringify(ajaxSub.reqData),
-			//contentType: "application/json;charset=utf-8",
-			dataType : 'json',
-			success : function(data) {
-				ajaxSub.rvGetFunc(data);
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				console.log(XMLHttpRequest);
-				alert(XMLHttpRequest.responseText);
-			}
-		});
-	},
-	// Ìí¼ÓÊı¾İ
-	postData : function() {
-		if (ajaxSub.postUrl.length === 0){
-			console.log("error!");
-			return;
-		}
-		$.ajax({
-			url : ajaxSub.postUrl,
-			type : 'POST',
-			async : true,
-			data : JSON.stringify(ajaxSub.reqData),
-			contentType: "application/json;charset=utf-8",
-			dataType : 'json',
-			beforeSend:function(XMLHttpRequest){
-				$.each(ajaxSub.headers, function (key, value) {
-					XMLHttpRequest.setRequestHeader(key, value);
-				})
-			},
-			success : function(data) {
-				ajaxSub.rvPostFunc(data);
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				console.log(XMLHttpRequest);
-				alert(XMLHttpRequest.responseText);
-			}
-		});
-	},
+    headers : {},
 
-	delData : function() {
-		$.ajax({
-			url : ajaxSub.delUrl,
-			type : 'DELETE',
-			data : JSON.stringify(ajaxSub.reqData),
-			contentType: "application/json;charset=utf-8",
-			async : true,
-			dataType : 'json',
-			beforeSend:function(XMLHttpRequest){
-				$.each(ajaxSub.headers, function (key, value) {
-					XMLHttpRequest.setRequestHeader(key, value);
-				})
-			},
-			success : function(data) {
-				ajaxSub.rvDelFunc(data)
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				console.log(XMLHttpRequest);
-				alert(XMLHttpRequest.responseJSON);
-			}
-		});
-	},
+    // è·å–æ•°æ®
+    getData : function() {
+        $.ajax({
+            url : ajaxSub.getUrl,
+            type : 'GET',
+            async : true,
+            //data : JSON.stringify(ajaxSub.reqData),
+            //contentType: "application/json;charset=utf-8",
+            dataType : 'json',
+            success : function(data) {
+                ajaxSub.rvGetFunc(data);
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    },
+    // æ·»åŠ æ•°æ®
+    postData : function() {
+        if (ajaxSub.postUrl.length === 0){
+            console.log("error!");
+            return;
+        }
+        $.ajax({
+            url : ajaxSub.postUrl,
+            type : 'POST',
+            async : true,
+            data : JSON.stringify(ajaxSub.reqData),
+            contentType: "application/json;charset=utf-8",
+            dataType : 'json',
+            beforeSend:function(XMLHttpRequest){
+                $.each(ajaxSub.headers, function (key, value) {
+                    XMLHttpRequest.setRequestHeader(key, value);
+                })
+            },
+            success : function(data) {
+                ajaxSub.rvPostFunc(data);
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    },
 
-	// Ä£ºı²éÑ¯
-	listData : function() {
-		$.ajax({
-			url : ajaxSub.url,
-			type : 'PATCH',
-			async : true,
-			data : {
-				_method : 'PATCH',
-				name : 'ÕÅÈı'
-			},
-			dataType : 'json',
-			success : function(data) {
-				alert(data);
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				alert("ERROR");
-				alert(XMLHttpRequest.status);
-				alert(XMLHttpRequest.readyState);
-				alert(textStatus);
-			}
-		});
-	}
+    delData : function() {
+        $.ajax({
+            url : ajaxSub.delUrl,
+            type : 'DELETE',
+            data : JSON.stringify(ajaxSub.reqData),
+            contentType: "application/json;charset=utf-8",
+            async : true,
+            dataType : 'json',
+            beforeSend:function(XMLHttpRequest){
+                $.each(ajaxSub.headers, function (key, value) {
+                    XMLHttpRequest.setRequestHeader(key, value);
+                })
+            },
+            success : function(data) {
+                ajaxSub.rvDelFunc(data)
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    },
+
+    // æ¨¡ç³ŠæŸ¥è¯¢
+    listData : function() {
+        $.ajax({
+            url : ajaxSub.url,
+            type : 'PATCH',
+            async : true,
+            data : {
+                _method : 'PATCH',
+                name : 'å¼ ä¸‰'
+            },
+            dataType : 'json',
+            success : function(data) {
+                alert(data);
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
 };
 
 /**
- * @describe ¾ÓÖĞ´ò¿ªÒ»¸öĞÂµÄ´°¿Ú
- * @param url | Á´½Ó
- * @param name | ´°¿ÚÃû³Æ
- * @param iWidth | ´°¿Ú³¤¶È
- * @param iHeight | ´°¿Ú¸ßµÍ
+ * @describe å±…ä¸­æ‰“å¼€ä¸€ä¸ªæ–°çš„çª—å£
+ * @param url | é“¾æ¥
+ * @param name | çª—å£åç§°
+ * @param iWidth | çª—å£é•¿åº¦
+ * @param iHeight | çª—å£é«˜ä½
  * @since v1.2
  */
 function openNewWindow(url, name, iWidth, iHeight) {
-	var url; // ×ªÏòÍøÒ³µÄµØÖ·;
-	var name; // ÍøÒ³Ãû³Æ£¬¿ÉÎª¿Õ;
-	var iWidth; // µ¯³ö´°¿ÚµÄ¿í¶È;
-	var iHeight; // µ¯³ö´°¿ÚµÄ¸ß¶È;
-	var iTop = (window.screen.availHeight - 30 - iHeight) / 2; // »ñµÃ´°¿ÚµÄ´¹Ö±Î»ÖÃ;
-	var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; // »ñµÃ´°¿ÚµÄË®Æ½Î»ÖÃ;
-	window.open(
-				url,
-				name,
-				'height='
-				+ iHeight
-				+ ',,innerHeight='
-				+ iHeight
-				+ ',width='
-				+ iWidth
-				+ ',innerWidth='
-				+ iWidth
-				+ ',top='
-				+ iTop
-				+ ',left='
-				+ iLeft
-				+ ',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'
-				);
+    var url; // è½¬å‘ç½‘é¡µçš„åœ°å€;
+    var name; // ç½‘é¡µåç§°ï¼Œå¯ä¸ºç©º;
+    var iWidth; // å¼¹å‡ºçª—å£çš„å®½åº¦;
+    var iHeight; // å¼¹å‡ºçª—å£çš„é«˜åº¦;
+    var iTop = (window.screen.availHeight - 30 - iHeight) / 2; // è·å¾—çª—å£çš„å‚ç›´ä½ç½®;
+    var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; // è·å¾—çª—å£çš„æ°´å¹³ä½ç½®;
+    window.open(
+        url,
+        name,
+        'height='
+        + iHeight
+        + ',,innerHeight='
+        + iHeight
+        + ',width='
+        + iWidth
+        + ',innerWidth='
+        + iWidth
+        + ',top='
+        + iTop
+        + ',left='
+        + iLeft
+        + ',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'
+    );
 
 }
 
 /**
- * @describe ´ò¿ªÒ»¸öĞÂµÄä¯ÀÀÆ÷±êÇ©Ò³
- * @param src | Á´½Ó
+ * @describe æ‰“å¼€ä¸€ä¸ªæ–°çš„æµè§ˆå™¨æ ‡ç­¾é¡µ
+ * @param src | é“¾æ¥
  * @since v1.2
  */
 function openNewWindowTab(src){
-	$('body').append('<a href="" id="gotoNewTab" target="_blank"></a>');
+    $('body').append('<a href="" id="gotoNewTab" target="_blank"></a>');
 
-	$('#gotoNewTab').attr('href', src);
-	$('#gotoNewTab').get(0).click();
+    $('#gotoNewTab').attr('href', src);
+    $('#gotoNewTab').get(0).click();
 }
 
 /**
- * @describe ÑéÖ¤Âë¼ÆÊ±Æ÷ 
- * @param obj|¼ÆÊ±¶ÔÏó 
- * @param number|¼ÆÊ±Ê±¼ä 
- * @param timer|¼ÆÊ±Æ÷±¾Éí¶ÔÏó£¬³õÊ¼´«ÈçnullÖµ¼´¿É 
+ * @describe éªŒè¯ç è®¡æ—¶å™¨
+ * @param obj|è®¡æ—¶å¯¹è±¡
+ * @param number|è®¡æ—¶æ—¶é—´
+ * @param timer|è®¡æ—¶å™¨æœ¬èº«å¯¹è±¡ï¼Œåˆå§‹ä¼ å¦‚nullå€¼å³å¯
  * @example settime(&("#btnId"), 90, null)
- * @since: v1.1.3 
+ * @since: v1.1.3
  *
  */
 function settime(obj, number, timer) {
-	if (number == 0) {
-		obj.removeAttribute("disabled");
-		obj.text = "";
-		obj.innerHTML = "»ñÈ¡ÑéÖ¤Âë";
-		number = 90;
-		return;
-	} else {
-		obj.setAttribute("disabled", true);
-		obj.innerHTML = "ÇëÉÔºó...(" + number + "Ãë)";
-		number--;
-	}
-	timer = setTimeout(function() {
-		settime(obj, number, timer);
-	}, 1000);
+    if (number == 0) {
+        obj.removeAttribute("disabled");
+        obj.text = "";
+        obj.innerHTML = "è·å–éªŒè¯ç ";
+        number = 90;
+        return;
+    } else {
+        obj.setAttribute("disabled", true);
+        obj.innerHTML = "è¯·ç¨å...(" + number + "ç§’)";
+        number--;
+    }
+    timer = setTimeout(function() {
+        settime(obj, number, timer);
+    }, 1000);
 }
 
-/**********************************ÓĞ¹ØÍ¼Æ¬²å¼şÉÏ´«start(²¢Î´ÍêÉÆ,´ıĞŞ¸Ä)**************************************/
+/**********************************æœ‰å…³å›¾ç‰‡æ’ä»¶ä¸Šä¼ start(å¹¶æœªå®Œå–„,å¾…ä¿®æ”¹)**************************************/
 /* ######################## sine v1.2 ############################# */
-/* ######################## alert v1.2.1 [1.ĞŞ¸ÄÎŞ·¨É¾³ıÎÄ¼şbug] ############################# */
+/* ######################## alert v1.2.1 [1.ä¿®æ”¹æ— æ³•åˆ é™¤æ–‡ä»¶bug] ############################# */
 
-/*	Ê¹ÓÃ·½·¨example£º
+/*	ä½¿ç”¨æ–¹æ³•exampleï¼š
 	[dom]:
     <div id="add_img">
-    	´æ·Å»ØÏÔÍ¼Æ¬
+    	å­˜æ”¾å›æ˜¾å›¾ç‰‡
 	</div>
 	<div style="display: none">
 		<form id="uploadForm" method="post" enctype="multipart/form-data">
-			<!-- ÎÄ¼şÉÏ´«input -->
+			<!-- æ–‡ä»¶ä¸Šä¼ input -->
 			<input id="file1" type="file" onchange="preview(this,'60', false, 'add_img', 'count')" name="uploadImg" multiple="multiple" />
 			<span id="fAliase"></span>
 		</form>
-		<span id="count" val="0" ></span> <!-- ÓÃÓÚÉÏ´«ÎÄ¼şµ±Ç°Ìí¼ÓÍ¼Æ¬µã»÷´ÎÊı¼ÆÊı -->
+		<span id="count" val="0" ></span> <!-- ç”¨äºä¸Šä¼ æ–‡ä»¶å½“å‰æ·»åŠ å›¾ç‰‡ç‚¹å‡»æ¬¡æ•°è®¡æ•° -->
 	</div>
 	<div id="recordDelFileName" style="display: none">
-		ÓÃÓÚÁÙÊ±¼ÇÂ¼±»É¾³ıµÄÎÄ¼ş
+		ç”¨äºä¸´æ—¶è®°å½•è¢«åˆ é™¤çš„æ–‡ä»¶
 	</div>
 
 	[js]:
@@ -394,204 +464,204 @@ function settime(obj, number, timer) {
 
 
 /**
- * ¼ì²éµ±Ç°ËùÓĞÎÄ¼şĞÅÏ¢£¬¼ìË÷É¸Ñ¡³öĞèÒªÉÏ´«µÄÎÄ¼şĞÅÏ¢
- * @param formDomId ĞèÒªÉÏ´«µÄform±íµ¥µÄdomId
- * @param delFileDomId É¾³ıµÄÎÄ¼şÁÙÊ±¼ÇÂ¼domId
+ * æ£€æŸ¥å½“å‰æ‰€æœ‰æ–‡ä»¶ä¿¡æ¯ï¼Œæ£€ç´¢ç­›é€‰å‡ºéœ€è¦ä¸Šä¼ çš„æ–‡ä»¶ä¿¡æ¯
+ * @param formDomId éœ€è¦ä¸Šä¼ çš„formè¡¨å•çš„domId
+ * @param delFileDomId åˆ é™¤çš„æ–‡ä»¶ä¸´æ—¶è®°å½•domId
  */
 function checkFileGetNeedFile(formDomId, delFileDomId){
-	var files = $("#"+formDomId).find("input[type='file']");
-	var recordDelFileNames = $("#"+delFileDomId).text();
-	
-	var newFiles = [];
-	var needFiles = [];
-	
-	//É¸Ñ¡³ö¿ÕÎÄ¼ş
-	$.each(files,function(index,file){
-		if(file.files.length > 0){//ÓĞÎÄ¼ş
-			$.each(file.files, function(index,file2){
-				newFiles.push(file2);
-			});
-		}
-	});
-	
-	console.log(newFiles);
-	//É¸Ñ¡³ö±»É¾³ıµÄÎÄ¼ş
-	$.each(newFiles,function(index, newFile){
-		var fileName = newFile.name;
-		if(recordDelFileNames.indexOf(fileName) == -1){
-			needFiles.push(newFile);
-		}
-	});
-	
-	$.each(files,function(index,file){
-		file.remove();
-	});
-	var form = new FormData($('#'+formDomId)[0]);
-	$.each(needFiles,function(index,needFile){
-		form.append(needFile.name, needFile);
-	});
-	console.log(needFiles);
-	return form;
+    var files = $("#"+formDomId).find("input[type='file']");
+    var recordDelFileNames = $("#"+delFileDomId).text();
+
+    var newFiles = [];
+    var needFiles = [];
+
+    //ç­›é€‰å‡ºç©ºæ–‡ä»¶
+    $.each(files,function(index,file){
+        if(file.files.length > 0){//æœ‰æ–‡ä»¶
+            $.each(file.files, function(index,file2){
+                newFiles.push(file2);
+            });
+        }
+    });
+
+    console.log(newFiles);
+    //ç­›é€‰å‡ºè¢«åˆ é™¤çš„æ–‡ä»¶
+    $.each(newFiles,function(index, newFile){
+        var fileName = newFile.name;
+        if(recordDelFileNames.indexOf(fileName) == -1){
+            needFiles.push(newFile);
+        }
+    });
+
+    $.each(files,function(index,file){
+        file.remove();
+    });
+    var form = new FormData($('#'+formDomId)[0]);
+    $.each(needFiles,function(index,needFile){
+        form.append(needFile.name, needFile);
+    });
+    console.log(needFiles);
+    return form;
 }
 
 /**
- * ÉÏ´«Í¼Æ¬Ñ¡ÔñÍ¼Æ¬ºó»ØÏÔ
+ * ä¸Šä¼ å›¾ç‰‡é€‰æ‹©å›¾ç‰‡åå›æ˜¾
  * @param file
- * @param imgSize ¿ØÖÆ»ØÏÔÍ¼Æ¬¿í¸ß
- * @param flag  ¿ØÖÆÊÇ·ñ×·¼ÓÍ¼Æ¬±ğÃû
- * @param backDisplayImgDomId Í¼Æ¬»ØÏÔµ½ÄÇ¸ödomµÄdomId
- * @param countDomId Í³¼ÆdomId
- * @param delFileLogDomId ±»É¾³ıÎÄ¼şµÄÁÙÊ±¼ÇÂ¼domId
+ * @param imgSize æ§åˆ¶å›æ˜¾å›¾ç‰‡å®½é«˜
+ * @param flag  æ§åˆ¶æ˜¯å¦è¿½åŠ å›¾ç‰‡åˆ«å
+ * @param backDisplayImgDomId å›¾ç‰‡å›æ˜¾åˆ°é‚£ä¸ªdomçš„domId
+ * @param countDomId ç»Ÿè®¡domId
+ * @param delFileLogDomId è¢«åˆ é™¤æ–‡ä»¶çš„ä¸´æ—¶è®°å½•domId
  */
 function preview(file, imgSize, flag, backDisplayImgDomId, countDomId, delFileLogDomId) {
-	//console.log("count:" + count);
-	//Êı¾İ°²È«»ñÈ¡Ğ£Ñé
-	if(!file.files && file.files.length == 0){
-		return
-	}
-	
-	var total = 0;
-	
-	var count = parseInt($("#"+countDomId).attr("val"));
-	
-	for ( var i = 0; i < file.files.length; i++) {
-		//console.log("i:" + i);
-		//console.log("i+count:" + (i+count));
-		if(!file.files[i]){
-			break;
-		}
-		
-		var current_file = file.files[i];
-		
-		total = ((i+1)+count);
-		
-		addImg_callback_display(total,current_file, imgSize, flag, backDisplayImgDomId, delFileLogDomId);
+    //console.log("count:" + count);
+    //æ•°æ®å®‰å…¨è·å–æ ¡éªŒ
+    if(!file.files && file.files.length == 0){
+        return
+    }
 
-	}
-	
-	$("#"+countDomId).attr("val",total);
-	count++;
+    var total = 0;
+
+    var count = parseInt($("#"+countDomId).attr("val"));
+
+    for ( var i = 0; i < file.files.length; i++) {
+        //console.log("i:" + i);
+        //console.log("i+count:" + (i+count));
+        if(!file.files[i]){
+            break;
+        }
+
+        var current_file = file.files[i];
+
+        total = ((i+1)+count);
+
+        addImg_callback_display(total,current_file, imgSize, flag, backDisplayImgDomId, delFileLogDomId);
+
+    }
+
+    $("#"+countDomId).attr("val",total);
+    count++;
 }
 
 /**
- * Ìí¼ÓÍ¼Æ¬»ØÏÔÍ¼Æ¬
- * @param current_id µ±Ç°Í¼Æ¬id
- * @param current_file µ±Ç°ÎÄ¼şĞÅÏ¢
- * @param imgSize ¿ØÖÆÍ¼Æ¬´óĞ¡
- * @param flag ¿ØÖÆÊÇ·ñÏÔÊ¾±ğÃû¸¡²ã
- * @param backDisplayImgDomId Í¼Æ¬»ØÏÔµ½ÄÇ¸ödomµÄdomId
+ * æ·»åŠ å›¾ç‰‡å›æ˜¾å›¾ç‰‡
+ * @param current_id å½“å‰å›¾ç‰‡id
+ * @param current_file å½“å‰æ–‡ä»¶ä¿¡æ¯
+ * @param imgSize æ§åˆ¶å›¾ç‰‡å¤§å°
+ * @param flag æ§åˆ¶æ˜¯å¦æ˜¾ç¤ºåˆ«åæµ®å±‚
+ * @param backDisplayImgDomId å›¾ç‰‡å›æ˜¾åˆ°é‚£ä¸ªdomçš„domId
  */
 function addImg_callback_display(current_id, current_file, imgSize, flag, backDisplayImgDomId, delFileLogDomId){
-	//console.log(backDisplayImgDomId);
-	var fileName =  current_file.name;//ÎÄ¼şÃû³Æ
-	var fileSize =  current_file.size;//ÎÄ¼ş´óĞ¡
-	var fileLastModifiedData = current_file.lastModifiedDate;//×îºóĞŞ¸ÄÊ±¼ä
-	
-	var reader = new FileReader();
-	reader.onload = function(evt) {
-		//console.log(evt);
-		//console.log(id);
-		$("#"+ backDisplayImgDomId).append(
-				function(){
-						var html = 	'<div id="img_' + current_id + '" class="pull-left margin-left4 image-mask-box" >'
-						+ '<img src="' + evt.target.result + '" height="'+imgSize+'" width="'+imgSize+'"  title = '+ fileName +' ' 
-						+ 'onmouseover="imgMouseOver(\'span_delete_'+ current_id +'\')" />';
-						//img ±êÇ©½áÊø
-						if(flag){
-							html = html + '<input type="text" id="span_des_'+ current_id +'" class="image-mask-compile" value="üc“ôİ”ÈëĞÅÏ¢" '
-							+ 'onfocus="imgAddAliase_focus(this)"'
-							+ 'onchange="imgAddAliase_change(this)" />';
-						}
-						//ÊäÈëÎÄ¼şÃû³ÆĞÅÏ¢±êÇ©½áÊø
-						html = html + '<span id="span_delete_'+ current_id +'" hidden="true" class="image-mask-delete" '
-						+ 'onmouseout="imgMouseOut(this)" '
-						+ 'onclick="imgDelete(this, \'' +fileName+ '\', \'' + delFileLogDomId + '\')">É¾³ı</span>' 
-						//É¾³ı¸¡²ã±êÇ©½áÊø
-						+ '</div>';
-						return html;
-					}
-				);
-	};
-	reader.readAsDataURL(current_file);
+    //console.log(backDisplayImgDomId);
+    var fileName =  current_file.name;//æ–‡ä»¶åç§°
+    var fileSize =  current_file.size;//æ–‡ä»¶å¤§å°
+    var fileLastModifiedData = current_file.lastModifiedDate;//æœ€åä¿®æ”¹æ—¶é—´
+
+    var reader = new FileReader();
+    reader.onload = function(evt) {
+        //console.log(evt);
+        //console.log(id);
+        $("#"+ backDisplayImgDomId).append(
+            function(){
+                var html = 	'<div id="img_' + current_id + '" class="pull-left margin-left4 image-mask-box" >'
+                    + '<img src="' + evt.target.result + '" height="'+imgSize+'" width="'+imgSize+'"  title = '+ fileName +' '
+                    + 'onmouseover="imgMouseOver(\'span_delete_'+ current_id +'\')" />';
+                //img æ ‡ç­¾ç»“æŸ
+                if(flag){
+                    html = html + '<input type="text" id="span_des_'+ current_id +'" class="image-mask-compile" value="é»æ“Šè¼¸å…¥ä¿¡æ¯" '
+                        + 'onfocus="imgAddAliase_focus(this)"'
+                        + 'onchange="imgAddAliase_change(this)" />';
+                }
+                //è¾“å…¥æ–‡ä»¶åç§°ä¿¡æ¯æ ‡ç­¾ç»“æŸ
+                html = html + '<span id="span_delete_'+ current_id +'" hidden="true" class="image-mask-delete" '
+                    + 'onmouseout="imgMouseOut(this)" '
+                    + 'onclick="imgDelete(this, \'' +fileName+ '\', \'' + delFileLogDomId + '\')">åˆ é™¤</span>'
+                    //åˆ é™¤æµ®å±‚æ ‡ç­¾ç»“æŸ
+                    + '</div>';
+                return html;
+            }
+        );
+    };
+    reader.readAsDataURL(current_file);
 }
 
 /**
- * Êó±êÒÆÈë
+ * é¼ æ ‡ç§»å…¥
  * @param which
  */
 function imgMouseOver(which){
-	//console.log(which);
-	if($("#" + which).attr("hidden")){
-		$("#" + which).attr("hidden", false);
-	}
+    //console.log(which);
+    if($("#" + which).attr("hidden")){
+        $("#" + which).attr("hidden", false);
+    }
 }
 
 /**
- * Êó±êÒÆ³ö
+ * é¼ æ ‡ç§»å‡º
  * @param which
  */
 function imgMouseOut(which){
-	if(!$(which).attr("hidden")){
-		$(which).attr("hidden", true);
-	}
+    if(!$(which).attr("hidden")){
+        $(which).attr("hidden", true);
+    }
 }
 
 /**
- * Í¼Æ¬É¾³ı
+ * å›¾ç‰‡åˆ é™¤
  * @param which
  */
 function imgDelete(which, fileName, delFileLogDomId){
-	//Çå³ıimg
-	var delete_id = $(which).attr("id").replace("span_delete_","img_");
-	//console.log(delete_id);
-	$("#" + delete_id).remove();
-	
-	//Çå³ıÎÄ¼ş±ğÃû
-	var input_id = $(which).attr("id").replace("span_delete_","fAliases");
-	//console.log(input_id);
-	if(!(typeof($("#" + input_id).val())  == 'undefined')){
-		$("#" + input_id).remove();
-	}
-	
-	//¼ÇÂ¼É¾³ı
-	$("#"+delFileLogDomId).append(fileName);
+    //æ¸…é™¤img
+    var delete_id = $(which).attr("id").replace("span_delete_","img_");
+    //console.log(delete_id);
+    $("#" + delete_id).remove();
+
+    //æ¸…é™¤æ–‡ä»¶åˆ«å
+    var input_id = $(which).attr("id").replace("span_delete_","fAliases");
+    //console.log(input_id);
+    if(!(typeof($("#" + input_id).val())  == 'undefined')){
+        $("#" + input_id).remove();
+    }
+
+    //è®°å½•åˆ é™¤
+    $("#"+delFileLogDomId).append(fileName);
 }
 
 /**
- * ĞŞ¸ÄÎÄ¼ş±ğÃû
+ * ä¿®æ”¹æ–‡ä»¶åˆ«å
  * @param which
  */
 function imgAddAliase_change(which){
-	var fAliaseName = $(which).val();
-	var input_id = $(which).attr("id").replace("span_des_","fAliases");
-	//console.log(input_id);
-	if($("#" + input_id).val() != $(which).val()){
-		$("#" + input_id).remove();
-		$("#fAliase").append('<input id="' +input_id+ '" type="text" style="text-align: center;" name="fAliase" value="' + fAliaseName + '" /> ');
-	}
+    var fAliaseName = $(which).val();
+    var input_id = $(which).attr("id").replace("span_des_","fAliases");
+    //console.log(input_id);
+    if($("#" + input_id).val() != $(which).val()){
+        $("#" + input_id).remove();
+        $("#fAliase").append('<input id="' +input_id+ '" type="text" style="text-align: center;" name="fAliase" value="' + fAliaseName + '" /> ');
+    }
 }
 
 /**
- * ĞŞ¸ÄÎÄ¼ş±ğÃû¾Û½¹
+ * ä¿®æ”¹æ–‡ä»¶åˆ«åèšç„¦
  * @param which
  */
 function imgAddAliase_focus(which){
-	$(which).val("");
+    $(which).val("");
 }
 
-/**********************************ÓĞ¹ØÍ¼Æ¬ÉÏ´«end**************************************/
+/**********************************æœ‰å…³å›¾ç‰‡ä¸Šä¼ end**************************************/
 
 /**
- * ¶¨Òå²ÎÊı¶ÔÏóÊ¾Àı·½·¨,²ÎÕÕÊ¹ÓÃ!
+ * å®šä¹‰å‚æ•°å¯¹è±¡ç¤ºä¾‹æ–¹æ³•,å‚ç…§ä½¿ç”¨!
  */
-function par_obj(auth_rdn,res,ptype,pip,acc_name){ //²ÎÊı¶ÔÏó
-	this.auth_rdn=auth_rdn; 
-	this.res=res; 
-	this.ptype=ptype; 
-	this.pip = pip;
-	this.acc_name = acc_name;
-	this.show = function show(){  
-	         alert("[subPar:]" + " [auth_rdn:" + this.auth_rdn + "] [res:" +this.res + "] [ptype:" + this.ptype + "] [pip:" +this.pip + "] [acc_name:" +this.acc_name+ "]");  
-	        };
-	return this; 
-} 
+function par_obj(auth_rdn,res,ptype,pip,acc_name){ //å‚æ•°å¯¹è±¡
+    this.auth_rdn=auth_rdn;
+    this.res=res;
+    this.ptype=ptype;
+    this.pip = pip;
+    this.acc_name = acc_name;
+    this.show = function show(){
+        alert("[subPar:]" + " [auth_rdn:" + this.auth_rdn + "] [res:" +this.res + "] [ptype:" + this.ptype + "] [pip:" +this.pip + "] [acc_name:" +this.acc_name+ "]");
+    };
+    return this;
+}

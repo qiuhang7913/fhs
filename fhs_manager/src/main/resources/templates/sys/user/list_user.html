@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>资源菜单主页</title>
+        <title>后管用户主页</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
         <!--css引入-->
@@ -14,6 +14,7 @@
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-treeview.min.css}" />
         <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-table.min.css}" />
         <link rel="stylesheet" th:href="@{/plugin/iziModal/css/izi_modal.css}" />
+        <link rel="stylesheet" th:href="@{/plugin/jquery-confirm/jquery-confirm.min.css}">
 
         <script th:src="@{/plugin/bootstrap/js/jquery.min.js}" type="text/javascript"></script>
         <script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
@@ -33,22 +34,15 @@
         <div style="clear:both"></div>
 
         <div id="content" class="white" >
-            <h1><img th:src="@{/img/icons/posts.png}" alt="" />资源管理</h1>
+            <h1><img th:src="@{/img/icons/posts.png}" alt="" />用户管理</h1>
             <div>
-                <div style="float: left; width: 20%">
-                    <div class="bloc" style="margin-top: 32% !important;">
-                        <div id="tree"></div>
+                <div class="bloc" style="margin-top: 8%">
+                    <div class="title">
+                        资源列表
                     </div>
-                </div>
-                <div style="float: left; width: 66%; margin-left: 2%">
-                    <div class="bloc" style="margin-top: 10% !important;">
-                        <div class="title">
-                            资源列表
-                        </div>
-                        <div id="bodyContent" class="content" style="width: 99% !important;">
-                            <div style="clear: both"></div>
-                            <table id="dataTable"></table>
-                        </div>
+                    <div id="bodyContent" class="content" style="width: 99% !important;">
+                        <div style="clear: both"></div>
+                        <table id="dataTable"></table>
                     </div>
                 </div>
             </div>
@@ -71,114 +65,141 @@
         </div>
 
         <div id="modal">
+        </div>
 
+        <div style="display: none">
+            <form id="powerRaisingForm">
+                <div class="form-group">
+                    <label>备注:</label>
+                    <textarea id="remarks" class="name form-control" cols="2" rows="3" required></textarea>
+                </div>
+            </form>
         </div>
     </body>
     <script th:inline="javascript">
-        //var basePath = [[@{/}]];
-        var currentParentId = 0;
-
         //列表初始化参数信息
         myBootstrapTable.domId = 'dataTable';
-        myBootstrapTable.reqUrl = '/sys/menu/list';
+        myBootstrapTable.reqUrl = '/sys/user/list';
         myBootstrapTable.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
-        myBootstrapTable.reqParamMap['parentId'] = '0';
         myBootstrapTable.toolBarDomId = 'toolbar';
-        myBootstrapTable.sort = "sort";
+        myBootstrapTable.reqParamMap['isDelete'] = 0;
+        // myBootstrapTable.sort = "sort";
         myBootstrapTable.tableColumns =  [
             {
                 checkbox: true,
                 visible: true                  //是否显示复选框
             },
             {
-                field: 'name',
-                title: '资源名称'
+                field: 'loginName',
+                title: '登录名'
             },
             {
-                field: 'url',
-                title: "资源地址"
-            },
-            {
-                field: 'icon',
-                title: "图标"
-            },
-            {
-                filed: 'type',
-                title: '资源类型',
+                field: 'sex',
+                title: "性别",
                 formatter: function(value,row,index) {
-                    if(row.type === 1){
-                        return "菜单"
+                    if(value === 1){
+                        return "女"
                     }else{
-                        return "连接"
+                        return "男"
                     }
                 }
             },
             {
+                field: 'birthday',
+                title: "生日"
+            },
+            {
+                filed: 'address',
+                title: '地址信息',
+                formatter: function(value,row,index) {
+                    var pro = row.province === null ? "" : row.province + "-";
+                    var city = row.city === null ? "" : row.city + "-";
+                    var area = row.area === null ? "" : row.area + "&nbsp;&nbsp;&nbsp;";
+                    var address = row.address === null ? "" : row.address;
+                    return  pro + city + area + address;
+                }
+            },
+            {
                 filed: 'status',
-                title: '资源状态',
+                title: '用户状态',
                 formatter: function(value,row,index) {
                     if(row.type === 1){
                         return "启用"
                     }else{
                         return "禁用"
                     }
-                },
+                }
+            },
+            {
+                filed: 'createTime',
+                title: '创建时间',
+                formatter: function(value,row,index) {
+                    return row.createTime;
+                }
+            },
+            {
+                filed: 'type',
+                title: '是否为超管',
+                formatter: function(value,row,index) {
+                    console.log(row);
+                    if (row.type === 1){
+                        return '非超管<a href="javascript:void(0)" onclick="powerRaising(\''+row.id+'\')">(提权)</a>';
+                    }else{
+                        return "超管"
+                    }
+                }
             },
             {
                 filed: 'id',
                 title: '操作',
                 formatter: function(value,row,index) {
-                    if (row.type !== 1){
-                        return '<a href="javascript:void(0)" onclick="goResFuncPage(\'' + row.id + '\')">资源动作</a>'
-                    }
                     return '<a href="javascript:void(0)">无</a>'
-                },
+                }
             }
         ];
 
-        myIZIMoal.title = '新增/编辑资源';
-        myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add';
+        myIZIMoal.title = '新增/编辑用户';
+        myIZIMoal.url =  '/sys/user?go=add_update_user&action=add';
 
         $(function () {
-            loadTreeData();//加载所有菜单树数据
             myBootstrapTable.init();//初始化列表插件
             myIZIMoal.init();//初始化模态窗口插件
             initPageEvent();
         });
 
         function initPageEvent() {
-            //绑定新增资源
+            //绑定新增用户
             $("#btn_add").on('click', function (event) {
                 event.preventDefault();
-                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=add&parentId=' + currentParentId;
-                myIZIMoal.subtitle = '新增资源';
+                myIZIMoal.url =  '/sys/user?go=add_update_user&action=add';
+                myIZIMoal.subtitle = '新增用户';
                 myIZIMoal.open(event);
             });
 
-            //绑定编辑资源
+            //绑定编辑用户
             $("#btn_edit").on('click', function (event) {
                 event.preventDefault();
-                var datas = myBootstrapTable.obtainSelectRowData()
+                var datas = myBootstrapTable.obtainSelectRowData();
                 if (datas.length !== 1){
-                    alert("请正确选择需要修改的数据")
+                    Ealert0("请正确选择需要修改的数据",1);
                     return;
                 }
-                myIZIMoal.url =  '/sys/menu?go=add_update_menu&action=update&parentId=' + currentParentId + "&sysResId=" + datas[0].id;
-                myIZIMoal.subtitle = '编辑资源';
+                myIZIMoal.url =  '/sys/user?go=add_update_user&action=update&sysUserId=' + datas[0].id;
+                myIZIMoal.subtitle = '编辑用户';
                 myIZIMoal.open(event);
             });
 
-            //绑定删除资源
+            //绑定删除用户
             $("#btn_delete").on('click', function (event) {
                 var datas = myBootstrapTable.obtainSelectRowData()
                 if (datas.length === 0){
-                    alert("请正确选择需要删除的数据")
+                    Ealert0("请正确选择需要删除的数据")
                     return;
                 }
                 var ids = [];
                 $.each(datas,function (index,data) {
                     ids.push(data.id);
-                    ajaxSub.delUrl = '/sys/menu/del';
+                    ajaxSub.delUrl = '/sys/user/del';
                     ajaxSub.reqData = ids;
                     ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
                     ajaxSub.delData();
@@ -187,25 +208,21 @@
                     }
                 })
             });
+        }
 
-        }
-        
         /**
-         * 跳转页面到资源动作页面
+         * 提权
          */
-        function goResFuncPage(menuId) {
-            myIZIMoal.url =  '/sys/menu?go=list_menu_func&menuId=' + menuId;
-            myIZIMoal.title = "资源动作管理"
-            myIZIMoal.subtitle = '';
-            myIZIMoal.open();
-        }
-        
-        function loadTreeData() {
-            ajaxSub.getUrl = '/sys/menu/obtainTreeData';
-            ajaxSub.getData();
-            ajaxSub.rvGetFunc = function (rvData) {
-                initBootstrapTreeview("tree", rvData.result);
-            }
+        function powerRaising(id) {
+            var okFunc = function(){
+                var formHtml = $("#powerRaisingForm").html();
+                console.log(formHtml);
+                var submitOkFunc = function(){
+
+                };
+                EconfirmPrompt("提权!","提交", formHtml, submitOkFunc);
+            };
+            Econfirm('是否进行提权操作', '请注意,将普通用户提权为超管用户后被提升的用户将会拥有系统所有权限!', okFunc);
         }
         
         /**
@@ -213,16 +230,6 @@
          */
         function closedIZIModalFunc(e) {
             console.log("com in closed");
-        }
-        
-        /**
-         * 树的节点点击出触发 【固定回调方法】
-         * @param data
-         */
-        function onClickTreeFunc(data) {
-            myBootstrapTable.reqParamMap['parentId'] = data.treeId;
-            currentParentId = data.treeId;
-            myBootstrapTable.reload();
         }
     </script>
 </html>

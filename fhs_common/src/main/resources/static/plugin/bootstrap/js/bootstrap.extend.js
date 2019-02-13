@@ -129,7 +129,7 @@ var myIZIMoal = {
             //更多属性详情见:http://www.jq22.com/jquery-info8627
         });
     },
-    open : function (event) {
+    open : function (which) {
         $('#modal').iziModal('destroy');//销毁模态窗口。
         $("#" + this.domId).iziModal({
             title: this.title,
@@ -141,7 +141,7 @@ var myIZIMoal = {
             iframeURL: this.url
             //更多属性详情见:http://www.jq22.com/jquery-info8627
         });
-        $("#" + this.domId).iziModal('open', event);
+        $("#" + this.domId).iziModal('open', which);
         $(document).on('closed', '#' + this.domId, function (e) {
             if (typeof (closedIZIModalFunc) === "function"){
                 closedIZIModalFunc(e);

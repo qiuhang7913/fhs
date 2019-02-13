@@ -4,13 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.self.framework.base.BaseBean;
 import com.self.framework.base.BaseDao;
 import com.self.framework.base.BaseServiceImpl;
+import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.ucenter.bean.SysUser;
 import com.self.framework.ucenter.dao.UserDao;
 import com.self.framework.ucenter.service.UserSevice;
+import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -25,6 +29,7 @@ public class UserServiceImpl extends BaseServiceImpl<SysUser> implements UserSev
     @Autowired
     private UserDao userDao;
 
+    @Override
     public SysUser loadUserByLoginName(String loginName) {
         SysUser sysUser = new SysUser();
         sysUser.setLoginName(loginName);
@@ -37,4 +42,16 @@ public class UserServiceImpl extends BaseServiceImpl<SysUser> implements UserSev
         }
     }
 
+    @Override
+    public boolean deleteUser(List<String> ids){
+        List<SysUser> sysUsers = new ArrayList<>();
+        ids.forEach(id -> {
+            SysUser sysUser = userDao.findById(id).get();
+            sysUser.setIsDelete(USER_IS_DELTE_Y);
+            sysUsers.add(sysUser);
+        });
+
+        List<SysUser> rvSysUsers = userDao.saveAll(sysUsers);
+        return ObjectCheckUtil.checkIsNullOrEmpty(rvSysUsers);
+    }
 }
