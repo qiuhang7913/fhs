@@ -50,7 +50,6 @@ public class BaseAction<T extends BaseBean> extends SuperAction<T> {
     @ResponseBody
     public HttpResult<T> obtainOne(@PathVariable(value = "id" ) String id){
         T one = baseService.findOneById(id);
-        System.out.println(one.toString());
         if (!ObjectCheckUtil.checkIsNullOrEmpty(one)){
             return HttpResult.okOtherDataResult(one);
         }
@@ -80,7 +79,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction<T> {
             if (!ObjectCheckUtil.checkIsNullOrEmpty(pageData)){
                 pageResult.setCode(HttpCodeConstant.HTTP_OK_CODE);
                 pageResult.setDescribe(HttpCodeConstant.HTTP_OK_CODE_DESCRIBE);
-                pageResult.setTotal(pageData.getNumber());
+                pageResult.setTotal(pageData.getTotalElements());
                 pageResult.setRows(pageData.getContent());
             }
         }catch (Exception e){

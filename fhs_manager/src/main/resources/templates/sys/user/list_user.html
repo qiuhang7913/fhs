@@ -141,7 +141,6 @@
                 filed: 'type',
                 title: '是否为超管',
                 formatter: function(value,row,index) {
-                    console.log(row);
                     if (row.type === 1){
                         return '非超管<a href="javascript:void(0)" onclick="powerRaising(\''+row.id+'\')">(提权)</a>';
                     }else{
@@ -153,7 +152,12 @@
                 filed: 'id',
                 title: '操作',
                 formatter: function(value,row,index) {
-                    return '<a href="javascript:void(0)">无</a>'
+                    if (row.type === 1){
+                        return '<a href="javascript:void(0)" onclick="goUserRolePage(\''+row.id+'\')">用户角色</a>';
+                    }else{
+                        return "无"
+                    }
+                    //return '<a href="javascript:void(0)">无</a>'
                 }
             }
         ];
@@ -172,6 +176,7 @@
             $("#btn_add").on('click', function (event) {
                 event.preventDefault();
                 myIZIMoal.url =  '/sys/user?go=add_update_user&action=add';
+                myIZIMoal.title = '新增/编辑用户';
                 myIZIMoal.subtitle = '新增用户';
                 myIZIMoal.open(event);
             });
@@ -185,6 +190,7 @@
                     return;
                 }
                 myIZIMoal.url =  '/sys/user?go=add_update_user&action=update&sysUserId=' + datas[0].id;
+                myIZIMoal.title = '新增/编辑用户';
                 myIZIMoal.subtitle = '编辑用户';
                 myIZIMoal.open(event);
             });
@@ -209,7 +215,16 @@
                 })
             });
         }
-
+        
+        function goUserRolePage(id) {
+            // myIZIMoal.url =  '/sys/user?go=list_user_role&id=' + id;
+            // myIZIMoal.title = "用户角色";
+            // myIZIMoal.subtitle = '用户角色列表页';
+            // myIZIMoal.open(null);
+            window.location.href = '/sys/user?go=list_user_role&id=' + id;
+            //$("#myiframe", parent.document).attr("src", ');
+        }
+        
         /**
          * 提权
          */

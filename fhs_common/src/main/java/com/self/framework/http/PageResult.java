@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageResult<T> extends BaseReult {
-    private Integer total;
+    private Long total;
 
     private List<T> rows;
 }

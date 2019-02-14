@@ -46,7 +46,7 @@
         <div class="form-group">
             <label for="role_des" class="col-sm-2 control-label" style="float: left; margin-top: 1%">角色描述：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
-                <input type="password" class="form-control" id="role_des" name="role_des" placeholder="请输入角色描述"
+                <input type="text" class="form-control" id="role_des" name="role_des" placeholder="请输入角色描述"
                        required data-bv-notempty-message="角色描述不能为空!">
             </div>
         </div>
@@ -57,8 +57,8 @@
                 <select class="form-control" id="status" name="status"
                         data-bv-notempty data-bv-notempty-message="请选择">
                     <option value="">请选择</option>
-                    <option th:value="1">启用</option>
-                    <option th:value="2">停用</option>
+                    <option th:value="0">启用</option>
+                    <option th:value="1">停用</option>
                 </select>
             </div>
         </div>
@@ -76,16 +76,13 @@
 </body>
 <script th:inline="javascript">
     var action = [[${param.action}]];
-    var sysUserId = [[${param.sysUserId}]];
-    var allCityDatas = {};
-    var allAreaDatas = {};
+    var sysRoleId = [[${param.sysRoleId}]];
 
     //****************************************** ajax 后台交互初始化定义 start
-    ajaxSub.postUrl = '/sys/user/addOrUpdate';
+    ajaxSub.postUrl = '/sys/role/addOrUpdateNew';
     ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
     ajaxSub.rvPostFunc = function (rvData) {
         if (rvData.code === 200){
-            debugger;
             window.parent.myBootstrapTable.reload();
             window.parent.myIZIMoal.close();
         }else{
@@ -94,19 +91,34 @@
     };
 
     ajaxSub.rvGetFunc = function (rvData) {
-        console.log(rvData);
-        var sysUserBean = rvData.result;
+        var sysRoleBean = rvData.result;
         //数据回显
-        $("#real_name").val(sysUserBean.realName);
-        $("#login_name").val(sysUserBean.loginName);
-        $("#password").val(sysUserBean.password);
-        $("#sex option[value='"+sysUserBean.sex+"']").attr("selected","selected");
-        $("#birthday").val(sysUserBean.birthday);
-        $("#province").prepend('<option value="000000" selected="selected">'+sysUserBean.province+'</option>');
-        $("#city").prepend('<option value="000000" selected="selected">'+sysUserBean.city+'</option>');
-        $("#area").prepend('<option value="000000" selected="selected">'+sysUserBean.area+'</option>');
-        $("#address").val(sysUserBean.address);
-        $("#status option[value='"+sysUserBean.status+"']").attr("selected","selected");
+        $("#role_name").val(sysRoleBean.roleName);
+        $("#role_des").val(sysRoleBean.roleDes);
+        $("#status option[value='" + sysRoleBean.status + "']").attr("selected","selected");
+        var roleCurrMenus = sysRoleBean.sysMenuResources;
+        var roleCurrMenuIds = [];
+        var roleCurrMenuFuncs = [];
+        $.each(roleCurrMenus,function (index,currMenu) {
+            roleCurrMenuIds.push(currMenu.id);
+            roleCurrMenuFuncs = currMenu.sysMenuResFuncIds;
+        });
+        //选中资源
+        var allRoleMenus = $("#dataTable").bootstrapTable('getData');
+        $.each(allRoleMenus,function (index, roleMenu) {
+            var hasIndex = $.inArray(roleMenu.id, roleCurrMenuIds);
+            if (hasIndex >= 0){
+                $("#dataTable").bootstrapTable('check', parseInt(index));
+            }else{
+                $("#dataTable").bootstrapTable('uncheck', parseInt(index));
+            }
+        });
+        ///选中资源动作
+        $.each(roleCurrMenuIds,function (index,menuId) {
+           $.each(roleCurrMenuFuncs,function (index,func) {
+               $("input[type='checkbox'][name='func_"+menuId+"'][value='"+func.id+"']").attr("checked",true)
+           });
+        });
     };
     //****************************************** ajax 后台交互初始化定义 end
 
@@ -116,9 +128,9 @@
         if (action[0] === 'add'){//新增页面
             //.... do somethings;
         } else if (action[0] === 'update'){//修改页面
-            if(sysUserId != null && sysUserId.length > 0){
-                //ajaxSub.getUrl = '/sys/user/obtainOne/' + sysUserId[0];
-                //ajaxSub.getData();
+            if(sysRoleId != null && sysRoleId.length > 0){
+                ajaxSub.getUrl = '/sys/role/obtainOne/' + sysRoleId[0];
+                ajaxSub.getData();
             }
         }
         initPageEvent();
@@ -132,21 +144,30 @@
             if (!flag){
                 return;
             }
-            var sysUserBean = {
-                realName: $("#real_name").val(),
-                loginName: $("#login_name").val(),
-                password : $("#password").val(),
-                sex : $("#sex").val(),
-                birthday: $("#birthday").val(),
-                address : $("#address").val(),
-                province : $("#province").val() === '' ? '' : $("#province option:selected").text(),
-                city : $("#city").val() === '' ? '' : $("#city option:selected").text(),
-                area : $("#area").val() === '' ? '' : $("#area option:selected").text(),
+            var currSelectRoleRes = $("#dataTable").bootstrapTable('getSelections');
+            var newCurrSelectRoleRes = [];
+            $.each(currSelectRoleRes,function (index,roleRes){
+                var newRoleRes =  {};
+                var selectRoleFuncsDom = $("input[type='checkbox'][name='func_"+roleRes.id+"']:checked");
+                var newRoleResFuncs = [];
+                $.each(selectRoleFuncsDom,function (index, funcsDom) {
+                    var newRoleResFunc = {};
+                    newRoleResFunc['id'] = $(funcsDom).val();
+                    newRoleResFuncs.push(newRoleResFunc);
+                });
+                newRoleRes['id'] = roleRes.id;
+                newRoleRes['sysMenuResourceFuncs'] = newRoleResFuncs;
+                newCurrSelectRoleRes.push(newRoleRes);
+            });
+            var sysRoleBean = {
+                roleName: $("#role_name").val(),
+                roleDes : $("#role_des").val(),
                 status : $("#status").val(),
-                type : 1, //目前所有后台添加的后管用户都为普通用户,
-                id : sysUserId[0]
+                sysMenuResources : newCurrSelectRoleRes,
+                id : sysRoleId[0]
             };
-            ajaxSub.reqData = sysUserBean;
+
+            ajaxSub.reqData = sysRoleBean;
             ajaxSub.postData();
         });
     }
@@ -160,7 +181,7 @@
             type : 'POST',
             data : {},
             contentType: "application/json;charset=utf-8",
-            async : true,
+            async : false,
             dataType : 'json',
             beforeSend:function(XMLHttpRequest){
                 XMLHttpRequest.setRequestHeader('X-CSRF-TOKEN', [[${_csrf.token}]]);
@@ -179,12 +200,12 @@
      */
     function initBootstrapGuidTreeTable(data) {
         $("#dataTable").bootstrapTable({
-            data:data,
+            data: data,
             idField: 'id',
             dataType:'json',
             columns: [
                 { field: 'check',  checkbox: true, formatter: function (value, row, index) {
-                        if (row.check == true) {
+                        if (row.check === true) {
                             //设置选中
                             return {  checked: true };
                         }
@@ -193,8 +214,11 @@
                         }
                     }
                 },
-                {field: 'name',  title: '名称' },
-                { field: 'status',  title: '状态', sortable: true,  align: 'center'  },
+                { field: 'name',  title: '名称' },
+                { field: 'status',  title: '状态', sortable: true,  align: 'center', formatter:function(value,row,index){
+                        return value === 0 ? "启用" : "禁用";
+                    }
+                },
                 { field: 'funcs', title: '资源动作', align: 'center', formatter:function (funcs,row,index) {
                         console.log(funcs);
                         var html = "";
@@ -205,12 +229,10 @@
                     }
                 }
             ],
-
             //在哪一列展开树形
             treeShowField: 'name',
             //指定父id列
             parentIdField: 'pid',
-
             onResetView: function(data) {
                 //console.log('load');
                 $("#dataTable").treegrid({
@@ -223,35 +245,28 @@
                         $("#dataTable").bootstrapTable('resetWidth');
                     }
                 });
-
                 //只展开树形的第一级节点
                 $("#dataTable").treegrid('getRootNodes').treegrid('expand');
-
             },
             onCheck:function(row){
                 var datas = $("#dataTable").bootstrapTable('getData');
                 // 勾选子类
                 selectChilds(datas,row,"id","pid",true);
-
                 // 勾选父类
                 selectParentChecked(datas,row,"id","pid")
-
                 // 刷新数据
                 $("#dataTable").bootstrapTable('load', datas);
             },
-
             onUncheck:function(row){
                 var datas = $("#dataTable").bootstrapTable('getData');
                 selectChilds(datas,row,"id","pid",false);
                 $("#dataTable").bootstrapTable('load', datas);
             },
             onLoadSuccess: function (data) {
-                console.log(data)
                 if(data.code !== 200){
-                    //alert(data.describe);
+                    Ealert0(data.describe,1);
                 }
             }
-            // bootstrap-table-treetreegrid.js 插件配置 -- end
         });
     }
     /**
@@ -263,7 +278,7 @@
      */
     function selectChilds(datas,row,id,pid,checked) {
         for(var i in datas){
-            if(datas[i][pid] == row[id]){
+            if(datas[i][pid] === row[id]){
                 datas[i].check=checked;
                 selectChilds(datas,datas[i],id,pid,checked);
             };
@@ -279,10 +294,10 @@
      */
     function selectParentChecked(datas,row,id,pid){
         for(var i in datas){
-            if(datas[i][id] == row[pid]){
+            if(datas[i][id] === row[pid]){
                 datas[i].check=true;
                 selectParentChecked(datas,datas[i],id,pid);
-            };
+            }
         }
     }
 </script>

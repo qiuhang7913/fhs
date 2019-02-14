@@ -3,10 +3,7 @@ package com.self.framework.ucenter.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -21,6 +18,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "role")
+@ToString
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class SysRole extends BaseBean {
 
@@ -40,10 +38,10 @@ public class SysRole extends BaseBean {
     private String roleDes;//角色描述
 
     @Column(name = "status")
-    private String status;//状态
+    private Integer status = 0;//状态
 
     @Column(name = "is_delete")
-    private Integer is_delete;//是否被删除
+    private Integer is_delete = 0;//是否被删除
 
     @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @NoSpecificationQuery

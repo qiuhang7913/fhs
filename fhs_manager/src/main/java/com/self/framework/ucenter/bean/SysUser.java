@@ -61,7 +61,7 @@ public class SysUser extends BaseBean implements UserDetails {
     private Integer status;//用户状态
 
     @Column(name = "type")
-    private Integer type = 1;//用户类型
+    private Integer type;//用户类型
 
     @Column(name = "is_delete")
     private Integer isDelete = 0;//是否被删除

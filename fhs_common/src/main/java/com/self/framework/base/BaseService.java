@@ -25,6 +25,12 @@ public interface BaseService<T extends BaseBean> {
     Integer addOrUpdata(T v);
 
     /**
+     * @des 添加/更新方法
+     * @return T
+     */
+    T addOrUpdataReturn(T v);
+
+    /**
      * @des 删除方法
      * @return
      */

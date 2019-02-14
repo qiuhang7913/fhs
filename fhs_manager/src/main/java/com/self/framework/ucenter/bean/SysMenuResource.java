@@ -14,6 +14,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @des 用户实体
@@ -72,4 +73,7 @@ public class SysMenuResource extends BaseBean {
     @ManyToMany(mappedBy = "sysMenuResources", fetch = FetchType.LAZY)
     @NoSpecificationQuery
     private List<SysRole> userRoles;
+
+    @Transient
+    private List<Map> sysMenuResFuncIds;
 }

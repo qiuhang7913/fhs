@@ -284,7 +284,8 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         },
 
         onLoadSuccess: function (data) {
-            console.log(data)
+            console.log("列表数据为:" );
+            console.log(data);
             if(data.code !== 200){
                 //alert(data.describe);
             }

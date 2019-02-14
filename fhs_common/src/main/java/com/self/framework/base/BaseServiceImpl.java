@@ -5,6 +5,7 @@ import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.exception.BusinessException;
 import com.self.framework.spring.extend.jpa.SpecificationQueryExtend;
 import com.self.framework.utils.ConvertDataUtil;
+import com.self.framework.utils.DateTool;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,17 +37,12 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer addOrUpdata(T v) {
-        T one = this.findOne(v);
-        if (!ObjectCheckUtil.checkIsNullOrEmpty(one)){
-            v = one;
-            v.setUpdateTime(DEFAULT_NOW_DATE);
-            v.setUpdateUser("qiuhang");
-        }else{
-            v.setCreateTime(DEFAULT_NOW_DATE);
-            v.setCreateUser("qiuhang");
-        }
-        T addWho = baseDao.saveAndFlush(v);
-        return ObjectCheckUtil.checkIsNullOrEmpty(addWho) ? 0 : 1;
+        return ObjectCheckUtil.checkIsNullOrEmpty(saveCurrData(v)) ? 0 : 1;
+    }
+
+    @Override
+    public T addOrUpdataReturn(T v) {
+        return saveCurrData(v);
     }
 
     @Override
@@ -97,5 +95,21 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
     @Override
     public T findOneById(String id) {
         return baseDao.findById(id).get();
+    }
+
+    /**
+     *
+     * @return T
+     */
+    private T saveCurrData(T v){
+        T one = findOne(v);
+        if (ObjectCheckUtil.checkIsNullOrEmpty(one)){
+            v.setCreateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
+            v.setCreateUser("qiuhang");
+        }else{
+            v.setUpdateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
+            v.setUpdateUser("qiuhang");
+        }
+        return baseDao.saveAndFlush(v);
     }
 }
