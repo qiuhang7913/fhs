@@ -92,6 +92,8 @@
             var error = [[${param.error}]]
             if (error && ($.inArray("1",error)) !== -1){
                 Ealert("diplayErrorTip",2,"登陆失败,请联系管理员！");
+            }else if ($.inArray("2",error) !== -1){
+                Ealert("diplayErrorTip",2,"登陆失败,验证码错误！");
             }
             $("#submitBtn").click(function () {
                 checkSubmit();

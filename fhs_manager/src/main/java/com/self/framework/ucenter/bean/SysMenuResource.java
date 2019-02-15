@@ -60,6 +60,10 @@ public class SysMenuResource extends BaseBean {
     @Min(value = 0, message = "排序值最小只能0")
     private Integer sort;//资源排序
 
+    @Column(name = "son_has")
+    @Min(value = 0, message = "状态最小只能0")
+    private Integer sonHas;//状态
+
     @Column(name = "status")
     @NotNull(message = "状态不能为空")
     @Min(value = 0, message = "状态最小只能0")
@@ -76,4 +80,7 @@ public class SysMenuResource extends BaseBean {
 
     @Transient
     private List<Map> sysMenuResFuncIds;
+
+    @Transient
+    private List<SysMenuResource> children;
 }

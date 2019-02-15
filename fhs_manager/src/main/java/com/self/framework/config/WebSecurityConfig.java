@@ -1,7 +1,5 @@
 package com.self.framework.config;
 
-import com.alibaba.fastjson.JSON;
-import com.self.framework.http.CsrfSecurityRequestMatcher;
 import com.self.framework.spring.extend.security.Md5PasswordEncoder;
 import com.self.framework.ucenter.service.CustomUserDetailsService;
 import com.self.framework.ucenter.service.MenuService;
@@ -15,9 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity

@@ -36,49 +36,45 @@
                 
         <!-- sidebar 左侧菜单 -->
         <div id="sidebar">
-            <ul>
+            <ul id="menus">
                 <li class="current">
                     <a th:href="@{/index}">
                         <img src="img/icons/menu/inbox.png" alt="" />首页
                     </a>
                 </li>
-                <li>
-                    <a href="#"><img th:src="@{img/icons/menu/layout.png}" alt="" />系统管理</a>
-                    <ul>
-                        <li>
-                            <a href="javascript:void(0)" th:attr="src=@{'/sys/user?go=list_user'}"
-                               onclick="goToPage(this)">用户管理</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" th:attr="src=@{'/sys/role?go=list_role'}"
-                               onclick="goToPage(this)">角色管理</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" th:attr="src=@{'/sys/menu?go=list_menu'}"
-                               onclick="goToPage(this)">资源管理</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><img src="img/icons/menu/brush.png" alt="" />多级菜单展示</a>
-                    <ul>
-                        <li><a href="#">Fake menu #1</a></li>
-                        <li><a href="#">Fake menu #2</a></li>
-                        <li><a href="#">Fake menu #3</a>
-                            <ul>
-                                <li><a href="#">Fake menu #1</a></li>
-                                <li><a href="#">Fake menu #2</a></li>
-                                <li><a href="#">Fake menu #3</a>
-                                    <ul>
-                                        <li><a href="#">Fake menu #1</a></li>
-                                        <li><a href="#">Fake menu #2</a></li>
-                                        <li><a href="#">Fake menu #3</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                <!--<li><a href="#"><img src="img/icons/menu/brush.png" alt="" /> Another submenu</a>-->
+                    <!--<ul>-->
+                        <!--<li><a href="#">Fake menu #1</a></li>-->
+                        <!--<li><a href="#">Fake menu #2</a></li>-->
+                        <!--<li><a href="#">Fake menu #3</a></li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+                <script th:inline="javascript">
+                    var currUserMenus = [[${currUserMenuRes}]];
+                    var html = "";
+                    function load(){
+                        $.each(currUserMenus,function (index,userMenu) {
+                            html =  html + '<li><a href="#"><img src="/img/icons/menu/layout.png" alt="" />'+userMenu.name+'</a>';
+                            html = html + f(userMenu, '');
+                            html = html + '</li>';
+                        });
+                        $("#menus").append(html);
+                        console.log(html);
+                    }
+                    function f(currMenuRes, html) {
+                        if (currMenuRes.children.length > 0){
+                            html = html + '<ul>';
+                            var childrens = currMenuRes.children;
+                            $.each(childrens,function (index,children) {
+                                html = html + '<li><a href="javascript:void(0)" src="'+children.url+'" onclick="goToPage(this)">'+children.name+'</a>';
+                                html = f(children,html);
+                            });
+                            html = html + '</li></ul>';
+                        }
+                        return html;
+                    }
+                    load();
+                </script>
             </ul>
         </div>
 
@@ -91,7 +87,6 @@
         </div>
     </body>
     <script th:inline="javascript">
-
         function goToPage(which) {
             var goWhere = $(which).attr("src");
             $("#myiframe").attr("src",goWhere);
@@ -111,6 +106,5 @@
                 }
             })
         }
-
     </script>
 </html>

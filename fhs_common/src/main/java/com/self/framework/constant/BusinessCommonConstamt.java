@@ -34,4 +34,5 @@ public class BusinessCommonConstamt {
 
     public static final String DEFALUT_USER_PASSWORD = "defalutPass";
 
+    public static final String DEFALUT_SUPER_MANAGER_LOGIN_NAME = "admin";
 }

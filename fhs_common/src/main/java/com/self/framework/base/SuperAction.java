@@ -20,9 +20,7 @@ import java.util.Set;
  * @author qiuhang
  * @version v1.0
  */
-public class SuperAction<T> {
-
-
+public class SuperAction {
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
     protected String goPage(HttpServletRequest request){

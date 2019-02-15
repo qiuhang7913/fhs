@@ -3,6 +3,7 @@ package com.self.framework.ucenter.action;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.self.framework.constant.HttpSessionAttrConstant;
 import com.self.framework.ucenter.from.LoginForm;
+import com.self.framework.ucenter.service.MenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -32,6 +34,11 @@ public class LoginAction {
     @Autowired
     DefaultKaptcha defaultKaptcha;
 
+    @RequestMapping(value = "/")
+    public String goIndex(HttpServletRequest  request){
+        return "redirect:index";
+    }
+
     @RequestMapping(value = "/login")
     public String goLoginPage(HttpServletRequest  request){
         logger.info("进入login" + request.getParameter("error"));
@@ -39,12 +46,14 @@ public class LoginAction {
     }
 
     @RequestMapping(value = "/doLogin", method = {RequestMethod.POST})
-    public String userLogin(@Valid LoginForm loginForm, HttpServletRequest request) {
-
+    public ModelAndView userLogin(@Valid LoginForm loginForm, HttpServletRequest request) {
+        ModelAndView modelAttribute = new ModelAndView();
         //验证码校验
         String s = request.getSession().getAttribute(HttpSessionAttrConstant.HTTP_VERIFICATION_CODE_NAME).toString();
         if (!s.equals(loginForm.getVerificationCode())) {
-            return "redirect:login?error=1";
+            modelAttribute.setViewName("redirect:login");
+            modelAttribute.addObject("error","2");
+            return modelAttribute;
         }
 
         //使用SpringSecurity拦截登陆请求 进行认证和授权
@@ -53,11 +62,13 @@ public class LoginAction {
                     new UsernamePasswordAuthenticationToken(loginForm.getLoginName(), loginForm.getPassword());
             Authentication authenticate = myAuthenticationManager.authenticate(usernamePasswordAuthenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticate);
+            modelAttribute.setViewName("redirect:index");
         }catch (Exception e){
             logger.error("登陆失败,失败原因可能为{},请求参数为{}",e.getMessage(), loginForm.asJson());
-            return "redirect:login?error=1";
+            modelAttribute.setViewName("redirect:login");
+            modelAttribute.addObject("error","1");
         }
-        return "redirect:index";
+        return modelAttribute;
     }
 
     @RequestMapping("/captcha.jpg")

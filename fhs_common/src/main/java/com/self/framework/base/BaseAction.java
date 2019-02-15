@@ -28,7 +28,7 @@ import java.util.Set;
  * @author qiuhang
  * @version v1.0
  */
-public class BaseAction<T extends BaseBean> extends SuperAction<T> {
+public class BaseAction<T extends BaseBean> extends SuperAction {
 
     /** service 操作 */
     @Autowired

@@ -9,6 +9,7 @@ import com.self.framework.ucenter.bean.SysMenuResourceFunc;
 import com.self.framework.ucenter.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +29,13 @@ public class MenuAction extends BaseAction<SysMenuResource> {
     public HttpResult<List<TreeNode>> obtainTreeData(HttpServletRequest request){
         List<TreeNode> treeNode = menuService.findMenuTreeData();
         return HttpResult.aOtherResult(HttpCodeConstant.HTTP_OK_CODE, HttpCodeConstant.HTTP_OK_CODE_DESCRIBE, treeNode);
+    }
+
+    @RequestMapping(value = "addOrUpdateNew", method = {RequestMethod.POST})
+    @ResponseBody
+    public HttpResult<Map> addOrUpdateNew(@RequestBody SysMenuResource sysMenuResource) {
+        Integer integer = menuService.addOrUpdata(sysMenuResource);
+        return integer > 0 ? HttpResult.okResult() : HttpResult.errorResult();
     }
 
     @RequestMapping(value = "findAll", method = RequestMethod.POST)
