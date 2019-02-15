@@ -107,6 +107,8 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
             v.setCreateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
             v.setCreateUser("qiuhang");
         }else{
+            v.setCreateTime(one.getCreateTime());
+            v.setCreateUser(one.getCreateUser());
             v.setUpdateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
             v.setUpdateUser("qiuhang");
         }

@@ -6,6 +6,7 @@ import com.self.framework.ucenter.dao.MenuWithRoleDao;
 import com.self.framework.ucenter.service.MenuWithRoleService;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +18,9 @@ public class MenuWithRoleServiceImpl extends BaseServiceImpl<SysMenuResourceWith
     private MenuWithRoleDao dao;
 
     @Override
-    public Integer addAll(List<SysMenuResourceWithRole> sysMenuResourceWithRoles) {
-        dao.deleteAll(sysMenuResourceWithRoles);
+    public Integer addAll(List<SysMenuResourceWithRole> sysMenuResourceWithRoles, String roleId) {
+        List<SysMenuResourceWithRole> all = dao.findAll(Example.of(SysMenuResourceWithRole.builder().roleId(roleId).build()));
+        dao.deleteAll(all);
         return ObjectCheckUtil.checkIsNullOrEmpty(dao.saveAll(sysMenuResourceWithRoles)) ? 0 : 1 ;
     }
 }

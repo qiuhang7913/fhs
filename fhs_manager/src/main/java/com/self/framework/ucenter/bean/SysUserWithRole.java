@@ -2,10 +2,7 @@ package com.self.framework.ucenter.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.base.BaseBean;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -14,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * @des: 资源菜单与角色多对多关系bean
+ * @des: 用户与角色多对多关系bean
  * @author qiuhang
  * @version v1.0
  */
@@ -22,9 +19,10 @@ import javax.persistence.Id;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "role_menu")
+@Entity(name = "user_role")
+@ToString
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
-public class SysMenuResourceWithRole extends BaseBean {
+public class SysUserWithRole extends BaseBean {
     /**
      *  主键id
      */
@@ -34,21 +32,9 @@ public class SysMenuResourceWithRole extends BaseBean {
     @Column(name = "id", nullable = false, length = 64)
     private String id;
 
-    /**
-     * 角色id
-     */
+    @Column(name = "user_id", nullable = false, length = 64)
+    private String userId;
+
     @Column(name = "role_id", nullable = false, length = 64)
     private String roleId;
-
-    /**
-     * 菜单id
-     */
-    @Column(name = "menu_id", nullable = false, length = 64)
-    private String menuId;
-
-    /**
-     * 动作方法
-     */
-    @Column(name = "func_ids", nullable = false, length = 256)
-    private String funcIds;
 }

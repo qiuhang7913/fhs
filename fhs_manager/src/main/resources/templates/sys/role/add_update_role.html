@@ -114,11 +114,11 @@
             }
         });
         ///选中资源动作
-        $.each(roleCurrMenuIds,function (index,menuId) {
-           $.each(roleCurrMenuFuncs,function (index,func) {
-               $("input[type='checkbox'][name='func_"+menuId+"'][value='"+func.id+"']").attr("checked",true)
-           });
-        });
+        // $.each(roleCurrMenuIds,function (index,menuId) {
+        //    $.each(roleCurrMenuFuncs,function (index,func) {
+        //        $("input[type='checkbox'][name='func_"+menuId+"'][value='"+func.id+"']").attr("checked",true)
+        //    });
+        // });
     };
     //****************************************** ajax 后台交互初始化定义 end
 
@@ -164,7 +164,7 @@
                 roleDes : $("#role_des").val(),
                 status : $("#status").val(),
                 sysMenuResources : newCurrSelectRoleRes,
-                id : sysRoleId[0]
+                id : sysRoleId != null ? sysRoleId[0] : ""
             };
 
             ajaxSub.reqData = sysRoleBean;
@@ -220,7 +220,6 @@
                     }
                 },
                 { field: 'funcs', title: '资源动作', align: 'center', formatter:function (funcs,row,index) {
-                        console.log(funcs);
                         var html = "";
                         $.each(funcs,function (index,func) {
                             html = html + '<input type="checkbox" name="func_' + row.id + '" value="'+func.id+'"/>' + func.funcName;
@@ -255,12 +254,24 @@
                 // 勾选父类
                 selectParentChecked(datas,row,"id","pid")
                 // 刷新数据
-                $("#dataTable").bootstrapTable('load', datas);
+                //$("#dataTable").bootstrapTable('load', datas);
+                $.get("/sys/role/obtainCurrRoleMenuFuncs",{roleId:sysRoleId[0],menuId:row.id},function (rvData) {
+                    console.log(rvData);
+                    var funcs = rvData.result;
+                    if (funcs.length === 0 ){//说明一个都没有
+                        $("input[type='checkbox'][name='func_"+row.id+"']").prop("checked",true);
+                    }else{
+                        $.each(funcs, function (index,func) {
+                            $("input[type='checkbox'][name='func_"+row.id+"'][value='"+func.id+"']").prop("checked",true);
+                        });
+                    }
+                },'json')
             },
             onUncheck:function(row){
                 var datas = $("#dataTable").bootstrapTable('getData');
                 selectChilds(datas,row,"id","pid",false);
-                $("#dataTable").bootstrapTable('load', datas);
+                //$("#dataTable").bootstrapTable('load', datas);
+                $("input[type='checkbox'][name='func_"+row.id+"']").prop("checked",false);
             },
             onLoadSuccess: function (data) {
                 if(data.code !== 200){

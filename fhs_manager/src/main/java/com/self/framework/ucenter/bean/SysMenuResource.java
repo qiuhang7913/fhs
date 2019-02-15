@@ -70,9 +70,9 @@ public class SysMenuResource extends BaseBean {
     private List<SysMenuResourceFunc> sysMenuResourceFuncs;
 
 
-    @ManyToMany(mappedBy = "sysMenuResources", fetch = FetchType.LAZY)
-    @NoSpecificationQuery
-    private List<SysRole> userRoles;
+//    @ManyToMany(mappedBy = "sysMenuResources", fetch = FetchType.LAZY)
+//    @NoSpecificationQuery
+//    private List<SysRole> userRoles;
 
     @Transient
     private List<Map> sysMenuResFuncIds;

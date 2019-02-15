@@ -38,7 +38,7 @@
             <div>
                 <div class="bloc" style="margin-top: 8%">
                     <div class="title">
-                        角色列表
+                        <span id="userName"></span>·角色列表
                     </div>
                     <div id="bodyContent" class="content" style="width: 99% !important;">
                         <div style="clear: both"></div>
@@ -50,18 +50,9 @@
 
         <!-- 列表操作按钮 -->
         <div id="toolbar" class="btn-group">
-            <button id="btn_add" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+            <button id="btn_save" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>保存
              </button>
-            <!--<button id="btn_delete" type="button" class="btn btn-default" onclick="batchUploadShow();">-->
-                <!--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>批量上传-->
-            <!--</button>-->
-            <button id="btn_edit" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>选择修改
-            </button>
-            <button id="btn_delete" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>选择删除
-            </button>
         </div>
 
         <div id="modal">
@@ -77,9 +68,11 @@
         </div>
     </body>
     <script th:inline="javascript">
+        var userId = [[${param.id}]];
+
         //列表初始化参数信息
         myBootstrapTable.domId = 'dataTable';
-        myBootstrapTable.reqUrl = '/sys/user/list';
+        myBootstrapTable.reqUrl = '/sys/role/list';
         myBootstrapTable.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
         myBootstrapTable.toolBarDomId = 'toolbar';
         myBootstrapTable.reqParamMap['isDelete'] = 0;
@@ -90,40 +83,18 @@
                 visible: true                  //是否显示复选框
             },
             {
-                field: 'loginName',
-                title: '登录名'
+                field: 'roleName',
+                title: '角色名称'
             },
             {
-                field: 'sex',
-                title: "性别",
-                formatter: function(value,row,index) {
-                    if(value === 1){
-                        return "女"
-                    }else{
-                        return "男"
-                    }
-                }
-            },
-            {
-                field: 'birthday',
-                title: "生日"
-            },
-            {
-                filed: 'address',
-                title: '地址信息',
-                formatter: function(value,row,index) {
-                    var pro = row.province === null ? "" : row.province + "-";
-                    var city = row.city === null ? "" : row.city + "-";
-                    var area = row.area === null ? "" : row.area + "&nbsp;&nbsp;&nbsp;";
-                    var address = row.address === null ? "" : row.address;
-                    return  pro + city + area + address;
-                }
+                field: 'roleDes',
+                title: "角色描述",
             },
             {
                 filed: 'status',
-                title: '用户状态',
+                title: '角色状态',
                 formatter: function(value,row,index) {
-                    if(row.type === 1){
+                    if(row.status === 1){
                         return "启用"
                     }else{
                         return "禁用"
@@ -138,26 +109,10 @@
                 }
             },
             {
-                filed: 'type',
-                title: '是否为超管',
-                formatter: function(value,row,index) {
-                    if (row.type === 1){
-                        return '非超管<a href="javascript:void(0)" onclick="powerRaising(\''+row.id+'\')">(提权)</a>';
-                    }else{
-                        return "超管"
-                    }
-                }
-            },
-            {
                 filed: 'id',
                 title: '操作',
                 formatter: function(value,row,index) {
-                    if (row.type === 1){
-                        return '<a href="javascript:void(0)" onclick="goUserRolePage(\''+row.id+'\')">用户角色</a>';
-                    }else{
-                        return "无"
-                    }
-                    //return '<a href="javascript:void(0)">无</a>'
+                    return '<a href="javascript:void(0)">无</a>'
                 }
             }
         ];
@@ -166,80 +121,61 @@
         myIZIMoal.url =  '/sys/user?go=add_update_user&action=add';
 
         $(function () {
+            myBootstrapTable.loadSuccessData = function(data){
+                $.get('/sys/user/obtainUserRoleIds/' + userId[0],{},function (rvData) {
+                    console.log(rvData);
+                    var userRoleIds = rvData.result;
+                    var allRoles = data.rows;
+                    var checks = [];
+                    $.each(allRoles,function (index,role) {
+                        var check = {};
+                        if($.inArray(role.id, userRoleIds) >= 0 ){
+                            check['type'] = 1;
+                            check['index'] = index;
+                        }else {
+                            check['type'] = 0;
+                            check['index'] = index;
+                        }
+                        checks.push(check);
+                    });
+                    myBootstrapTable.checkTableColumns(checks);
+                })
+            };
             myBootstrapTable.init();//初始化列表插件
-            myIZIMoal.init();//初始化模态窗口插件
             initPageEvent();
         });
 
         function initPageEvent() {
-            //绑定新增用户
-            $("#btn_add").on('click', function (event) {
-                event.preventDefault();
-                myIZIMoal.url =  '/sys/user?go=add_update_user&action=add';
-                myIZIMoal.subtitle = '新增用户';
-                myIZIMoal.open(event);
-            });
+            loadUserInfo();
 
-            //绑定编辑用户
-            $("#btn_edit").on('click', function (event) {
-                event.preventDefault();
+            //绑定保存用户角色关系
+            $("#btn_save").on('click', function (event) {
                 var datas = myBootstrapTable.obtainSelectRowData();
-                if (datas.length !== 1){
-                    Ealert0("请正确选择需要修改的数据",1);
-                    return;
-                }
-                myIZIMoal.url =  '/sys/user?go=add_update_user&action=update&sysUserId=' + datas[0].id;
-                myIZIMoal.subtitle = '编辑用户';
-                myIZIMoal.open(event);
-            });
-
-            //绑定删除用户
-            $("#btn_delete").on('click', function (event) {
-                var datas = myBootstrapTable.obtainSelectRowData()
                 if (datas.length === 0){
-                    Ealert0("请正确选择需要删除的数据")
+                    Ealert0("请正确选择需要保存的数据")
                     return;
                 }
                 var ids = [];
                 $.each(datas,function (index,data) {
                     ids.push(data.id);
-                    ajaxSub.delUrl = '/sys/user/del';
-                    ajaxSub.reqData = ids;
-                    ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
-                    ajaxSub.delData();
-                    ajaxSub.rvDelFunc = function (data) {
-                        myBootstrapTable.reload();
-                    }
-                })
+                });
+                ajaxSub.postUrl = '/sys/user/saveUserRoleRelation/' + userId[0];
+                ajaxSub.reqData = ids;
+                ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
+                ajaxSub.rvPostFunc = function (data) {
+                    myBootstrapTable.reload();
+                }
+                ajaxSub.postData();
             });
         }
-        
-        function goUserRolePage(id) {
-            myIZIMoal.url =  '/sys/user?go=add_update_user&action=add';
-            myIZIMoal.subtitle = '新增用户';
-            myIZIMoal.open(null);
-        }
-        
-        /**
-         * 提权
-         */
-        function powerRaising(id) {
-            var okFunc = function(){
-                var formHtml = $("#powerRaisingForm").html();
-                console.log(formHtml);
-                var submitOkFunc = function(){
 
-                };
-                EconfirmPrompt("提权!","提交", formHtml, submitOkFunc);
+        function loadUserInfo() {
+            ajaxSub.getUrl = '/sys/user/obtainOne/' + userId[0];
+            ajaxSub.rvGetFunc = function(rvData){
+                console.log(rvData);
+                $("#userName").append(rvData.result.realName);
             };
-            Econfirm('是否进行提权操作', '请注意,将普通用户提权为超管用户后被提升的用户将会拥有系统所有权限!', okFunc);
-        }
-        
-        /**
-         * 关闭模态窗口触发 【固定回调方法】
-         */
-        function closedIZIModalFunc(e) {
-            console.log("com in closed");
+            ajaxSub.getData();
         }
     </script>
 </html>

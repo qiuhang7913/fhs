@@ -9,5 +9,5 @@ import java.util.List;
  *
  */
 public interface MenuWithRoleService extends BaseService<SysMenuResourceWithRole> {
-    Integer addAll(List<SysMenuResourceWithRole> sysMenuResourceWithRoles);
+    Integer addAll(List<SysMenuResourceWithRole> sysMenuResourceWithRoles, String roleId);
 }

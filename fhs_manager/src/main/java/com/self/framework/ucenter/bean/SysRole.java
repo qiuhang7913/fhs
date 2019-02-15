@@ -43,9 +43,9 @@ public class SysRole extends BaseBean {
     @Column(name = "is_delete")
     private Integer is_delete = 0;//是否被删除
 
-    @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @NoSpecificationQuery
-    private List<SysUser> users;
+//    @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
+//    @NoSpecificationQuery
+//    private List<SysUser> users;
 
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)

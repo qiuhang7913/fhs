@@ -9,6 +9,8 @@ import com.self.framework.http.PageResult;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,5 +113,13 @@ public class BaseAction<T extends BaseBean> extends SuperAction<T> {
             }
         }
         return t;
+    }
+
+    /**
+     *
+     * @return
+     */
+    protected UserDetails getSessionUserInfo(){
+        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

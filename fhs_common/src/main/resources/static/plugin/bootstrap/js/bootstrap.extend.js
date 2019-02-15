@@ -110,12 +110,12 @@ var myIZIMoal = {
     url: '',
     init : function () {
         if (this.domId.length === 0) {
-            alert("ERROR,找不到相关渲染的dom!")
+            Ealert0("ERROR,找不到相关渲染的dom!",1);
             return null;
         }
 
         if (this.url.length === 0) {
-            alert("ERROR,找不到相关请求页面!")
+            Ealert0("ERROR,找不到相关请求页面!",1);
             return null;
         }
         $("#" + this.domId).iziModal({
@@ -173,7 +173,7 @@ var myBootstrapTable = {
     headers : {},//header信息
 
     reqParamMap : {
-        "between":{},
+        "between":{}
     },
 
     tableColumns : [],
@@ -214,10 +214,26 @@ var myBootstrapTable = {
 
     clickRow:function (data) {
         console.log(data);
+        $("#"+ myBootstrapTable.domId).bootstrapTable('load', data);
     },
 
     obtainSelectRowData:function () {
         return $("#"+ myBootstrapTable.domId).bootstrapTable('getSelections');
+    },
+
+    loadSuccessData:function (data) {
+
+    },
+
+    checkTableColumns:function (whos) {
+        $.each(whos,function (index,who) {
+            if(who.type === 1){
+                $("#"+ myBootstrapTable.domId).bootstrapTable('check', parseInt(who.index));
+            }else{
+                $("#"+ myBootstrapTable.domId).bootstrapTable('uncheck', parseInt(who.index));
+            }
+        });
+
     }
 };
 
@@ -284,10 +300,10 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         },
 
         onLoadSuccess: function (data) {
-            console.log("列表数据为:" );
-            console.log(data);
             if(data.code !== 200){
-                //alert(data.describe);
+                Ealert0(data.describe,1);
+            }else{
+                myBootstrapTable.loadSuccessData(data);
             }
         },
 

@@ -1,6 +1,7 @@
 package com.self.framework.ucenter.action;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.self.framework.base.BaseAction;
 import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.constant.HttpCodeConstant;
@@ -34,20 +35,19 @@ public class RoleAction extends BaseAction<SysRole> {
     @Autowired
     private MenuWithRoleService menuWithRoleService;
 
-    @Override
-    public HttpResult<SysRole> obtainOne(@PathVariable(value = "id") String id) {
-        SysRole sysRole = roleService.findOneById(id);
-        List<SysMenuResource> sysMenuResources = sysRole.getSysMenuResources();
-        sysMenuResources.forEach(sysMenuResource -> {
-            SysMenuResourceWithRole sysMenuResourceWithRole = menuWithRoleService.findOne(SysMenuResourceWithRole.builder()
-                    .roleId(id)//角色id
-                    .menuId(sysMenuResource.getId())//资源id
-                    .build());
-            sysMenuResource.setSysMenuResFuncIds(JSON.parseArray(sysMenuResourceWithRole.getFuncIds(),Map.class));
-        });
-        sysRole.setSysMenuResources(sysMenuResources);
-
-        return HttpResult.okOtherDataResult(sysRole);
+    /**
+     * 获取当前角色下的某一个角色菜单下的菜单资源动作
+     * @return
+     */
+    @RequestMapping(value = "obtainCurrRoleMenuFuncs", method = {RequestMethod.GET})
+    @ResponseBody
+    public HttpResult<List> obtainCurrRoleMenuFuncs(@RequestParam( value = "roleId") String roleId,
+                                                   @RequestParam(value = "menuId") String menuId){
+        SysMenuResourceWithRole one = menuWithRoleService.findOne(SysMenuResourceWithRole.builder().roleId(roleId).menuId(menuId).build());
+        if (!ObjectCheckUtil.checkIsNullOrEmpty(one)){
+           return HttpResult.okOtherDataResult(JSON.parseArray(one.getFuncIds()));
+        }
+        return HttpResult.errorOtherDataResult(new JSONArray());
     }
 
     @RequestMapping(value = "addOrUpdateNew", method = {RequestMethod.POST})
@@ -68,7 +68,7 @@ public class RoleAction extends BaseAction<SysRole> {
                 sysMenuResourceWithRoles.add(sysMenuResourceWithRole);
             });
 
-            Integer rv = menuWithRoleService.addAll(sysMenuResourceWithRoles);
+            Integer rv = menuWithRoleService.addAll(sysMenuResourceWithRoles, sysRoleNew.getId());
             return rv > 0 ? HttpResult.okResult() : HttpResult.okResult();
         }
         return HttpResult.errorResult();
