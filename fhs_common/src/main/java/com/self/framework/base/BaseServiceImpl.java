@@ -48,15 +48,14 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<String> ids) {
-        if (!ObjectCheckUtil.checkIsNullOrEmpty(ids)) {
-            ids.forEach(id -> {
-                try {
-                    baseDao.deleteById(id);
-                }catch (Exception e){
-                    throw new BusinessException(e.getMessage());
-                }
-            });
-        }
+        List<T> beDeleteObj = new ArrayList<>();
+        ids.forEach(id -> {
+            Optional<T> byId = baseDao.findById(id);
+            if (byId.isPresent()){
+                beDeleteObj.add(byId.get());
+            }
+        });
+        baseDao.deleteInBatch(beDeleteObj);
     }
 
     @Override

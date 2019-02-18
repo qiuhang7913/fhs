@@ -66,7 +66,7 @@ public class LoginAction {
         }catch (Exception e){
             logger.error("登陆失败,失败原因可能为{},请求参数为{}",e.getMessage(), loginForm.asJson());
             modelAttribute.setViewName("redirect:login");
-            modelAttribute.addObject("error","1");
+            modelAttribute.addObject("error","0");
         }
         return modelAttribute;
     }

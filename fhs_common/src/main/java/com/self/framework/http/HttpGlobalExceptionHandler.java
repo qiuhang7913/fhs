@@ -27,6 +27,6 @@ public class HttpGlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handle(BusinessException exception) {
         logger.error("错误信息!",exception);
-        return "服务器异常,请联系管理员!";
+        return "服务器异常,请联系管理员!\n可能存在一下错误:" + exception.getMessage();
     }
 }

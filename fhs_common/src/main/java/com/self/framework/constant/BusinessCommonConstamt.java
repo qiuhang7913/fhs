@@ -12,6 +12,8 @@ public class BusinessCommonConstamt {
 
     public static final Integer ONE_CODE = 1;
 
+    public static final Integer TOW_CODE = 2;
+
     public static final String EMPTY_STR = " ";
 
     public static final String PERCENT_SIGN_STR = "%";

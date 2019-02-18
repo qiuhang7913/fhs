@@ -27,11 +27,9 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenuResource> implements
     public Integer addOrUpdata(SysMenuResource v) {
         SysMenuResource sysMenuResource = findOne(v);
         if (ObjectCheckUtil.checkIsNullOrEmpty(sysMenuResource)) {//添加操作
-            v.setSonHas(BusinessCommonConstamt.ZERO_CODE);
             Example<SysMenuResource> ofRes = Example.of(SysMenuResource.builder().id(v.getParentId()).build());
             SysMenuResource sysMenuResourceParent = menuDao.findOne(ofRes).get();
             if (!ObjectCheckUtil.checkIsNullOrEmpty(sysMenuResourceParent)) {
-                sysMenuResourceParent.setSonHas(sysMenuResourceParent.getSonHas() + BusinessCommonConstamt.ONE_CODE);
                 menuDao.save(sysMenuResourceParent);
             }
         }

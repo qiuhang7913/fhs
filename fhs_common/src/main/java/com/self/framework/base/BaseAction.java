@@ -9,6 +9,10 @@ import com.self.framework.http.PageResult;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.expression.SecurityExpressionRoot;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,9 +43,15 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
     @RequestMapping(value = "addOrUpdate", method = {RequestMethod.POST})
     @ResponseBody
     public HttpResult<Map> addOrUpdate(@RequestBody String obj){
+        if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_ADD_FLAG)){
+            throw new BusinessException("当前用户没有添加获取修改权限!");
+        }
         Integer addCode = baseService.addOrUpdata(this.transformationRequestParam(obj,true));
         if (addCode == BusinessCommonConstamt.ZERO_CODE){
             return HttpResult.errorResult();
@@ -51,6 +62,9 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     @RequestMapping(value = "obtainOne/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public HttpResult<T> obtainOne(@PathVariable(value = "id" ) String id){
+        if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_FIND_FLAG)){
+            throw new BusinessException("当前用户没有查看权限!");
+        }
         T one = baseService.findOneById(id);
         if (!ObjectCheckUtil.checkIsNullOrEmpty(one)){
             return HttpResult.okOtherDataResult(one);
@@ -66,7 +80,11 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     @RequestMapping(value = "del", method = {RequestMethod.DELETE})
     @ResponseBody
     public HttpResult<Map> delete(@RequestBody List<String> ids){
-        baseService.delete(ids);
+        try {
+            baseService.delete(ids);
+        }catch (Exception e){
+            throw new BusinessException(e.getMessage());
+        }
         return HttpResult.okResult();
     }
 
@@ -115,11 +133,22 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
         return t;
     }
 
+    private boolean isPermission(String action){
+        RequestMapping requestMapping = this.getClass().getAnnotation(RequestMapping.class);
+        String nameSpace = requestMapping.value()[0];
+        UserDetails sessionUserInfo = this.getSessionUserInfo();
+        return sessionUserInfo.getAuthorities().contains(new SimpleGrantedAuthority(nameSpace + ":" + action));
+    }
     /**
      *
      * @return
      */
     protected UserDetails getSessionUserInfo(){
         return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public static void main(String[] args) {
+        String aa = "/aa/bb";
+        System.out.println(aa.substring(1).replace("/","."));
     }
 }

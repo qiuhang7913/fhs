@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
 import com.self.framework.constant.BusinessCommonConstamt;
+import com.self.framework.spring.extend.security.Md5PasswordEncoder;
 import com.self.framework.utils.ObjectCheckUtil;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.*;
@@ -66,70 +69,17 @@ public class SysUser extends BaseBean implements UserDetails {
     @Column(name = "is_delete")
     private Integer isDelete = 0;//是否被删除
 
+    @Transient
+    private String username;
+
+    @Transient
+    private List<GrantedAuthority> authorities;
+
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
             @JoinColumn(name = "role_id", referencedColumnName = "id" ) }) //被控方表字段名
     @NoSpecificationQuery
     private List<SysRole> userRoles;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> auths = new ArrayList<>();
-        Set<String> authResources = new HashSet<>();
-        List<SysRole> userRoleBeans = this.getUserRoles();//用户权限
-        if (ObjectCheckUtil.checkIsNullOrEmpty(userRoleBeans)){
-            return new ArrayList<>();
-        }
-        //权限资源
-        userRoleBeans.stream().map(SysRole::getSysMenuResources).forEach(sysMenuResources -> sysMenuResources.forEach(sysMenuResource -> {
-            String name = sysMenuResource.getName();//资源名称
-            List<SysMenuResourceFunc> sysMenuResourceFuncs = sysMenuResource.getSysMenuResourceFuncs();
-            sysMenuResourceFuncs.forEach(sysMenuResourceFunc -> {
-                String authFlag = name + ":";
-                Integer funcType = sysMenuResourceFunc.getFuncType();
-                if (funcType.intValue() == BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_ADD_CODE.intValue()){
-                    authFlag = authFlag + BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_ADD_FLAG;
-                }else if (funcType.intValue() == BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_UPDATE_CODE.intValue()){
-                    authFlag = authFlag + BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_UPDATE_FLAG;
-                }else if (funcType.intValue() == BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_DELETE_CODE.intValue()){
-                    authFlag = authFlag + BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_DELETE_FLAG;
-                }else{
-                    authFlag = authFlag + BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_FIND_FLAG;
-                }
-                authResources.add(authFlag);
-            });
-        }));
-        authResources.forEach( authResource -> {
-            auths.add(new SimpleGrantedAuthority(authResource));
-        });
-
-        return auths;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.loginName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
     public String getId() {
         return id;
@@ -155,7 +105,6 @@ public class SysUser extends BaseBean implements UserDetails {
         this.loginName = loginName;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
@@ -228,6 +177,14 @@ public class SysUser extends BaseBean implements UserDetails {
         this.type = type;
     }
 
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
     public List<SysRole> getUserRoles() {
         return userRoles;
     }
@@ -236,11 +193,47 @@ public class SysUser extends BaseBean implements UserDetails {
         this.userRoles = userRoles;
     }
 
-    public Integer getIsDelete() {
-        return isDelete;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public void setIsDelete(Integer isDelete) {
-        this.isDelete = isDelete;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public List<GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setEncodePassword(String password) {
+        PasswordEncoder encoder = new Md5PasswordEncoder();
+        String encodePasswd = encoder.encode(password);
+        this.password = encodePasswd;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

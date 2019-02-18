@@ -14,6 +14,22 @@ function hasCN_changeEncode(str){
     return rv;
 }
 
+/**
+ *
+ * @param listObject
+ * @param attr
+ * @returns {Array}
+ * @constructor
+ */
+function RvFormlistObjectToListAttr(listObject,attr) {
+    var ListAttr = [];
+    if (Array.isArray(listObject)){
+        $.each(listObject,function (index,object) {
+            ListAttr.push(object[attr]);
+        });
+    }
+    return ListAttr;
+}
 
 /**
  * @describe 获取随机字符串

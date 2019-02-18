@@ -12,6 +12,8 @@
         <script type="text/javascript" th:src="@{js/libs/jqueryui/1.8.13/jquery-ui.min.js}"></script>
         <script type="text/javascript" th:src="@{js/min.js}"></script>
         <script type="text/javascript" th:src="@{content/settings/main.js}"></script>
+
+        <script th:src="@{/js/myUtil_1.2.1.js}"></script>
     </head>
     <body>
 
@@ -22,7 +24,7 @@
                 Hi, 
                 <a href="#">admin</a>
                 |
-                <a href="#">退出</a>
+                <a href="/logout" >退出</a>
             </div>
             <div class="right">
                 <form action="#" id="search" class="search placeholder">
@@ -33,7 +35,6 @@
             </div>
         </div>
                 
-                
         <!-- sidebar 左侧菜单 -->
         <div id="sidebar">
             <ul id="menus">
@@ -42,13 +43,6 @@
                         <img src="img/icons/menu/inbox.png" alt="" />首页
                     </a>
                 </li>
-                <!--<li><a href="#"><img src="img/icons/menu/brush.png" alt="" /> Another submenu</a>-->
-                    <!--<ul>-->
-                        <!--<li><a href="#">Fake menu #1</a></li>-->
-                        <!--<li><a href="#">Fake menu #2</a></li>-->
-                        <!--<li><a href="#">Fake menu #3</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
                 <script th:inline="javascript">
                     var currUserMenus = [[${currUserMenuRes}]];
                     var html = "";
@@ -87,6 +81,15 @@
         </div>
     </body>
     <script th:inline="javascript">
+        // function goLogout() {
+        //     console.log("come in!");
+        //     ordinarySub.url= "/logout";
+        //     ordinarySub.postData = {
+        //         'X-CSRF-TOKEN': [[${_csrf.token}]]
+        //     };
+        //     ordinarySub.post();
+        // }
+
         function goToPage(which) {
             var goWhere = $(which).attr("src");
             $("#myiframe").attr("src",goWhere);

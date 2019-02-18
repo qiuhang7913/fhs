@@ -219,8 +219,8 @@
                         return value === 0 ? "启用" : "禁用";
                     }
                 },
-                { field: 'funcs', title: '资源动作', align: 'center', formatter:function (funcs,row,index) {
-                        var html = "";
+                { field: 'funcs', title: '资源动作', align: 'left', formatter:function (funcs,row,index) {
+                        var html = '';
                         $.each(funcs,function (index,func) {
                             html = html + '<input type="checkbox" name="func_' + row.id + '" value="'+func.id+'"/>' + func.funcName;
                         });
@@ -250,28 +250,23 @@
             onCheck:function(row){
                 var datas = $("#dataTable").bootstrapTable('getData');
                 // 勾选子类
-                selectChilds(datas,row,"id","pid",true);
+                //selectChilds(datas,row,"id","pid",true);
                 // 勾选父类
-                selectParentChecked(datas,row,"id","pid")
+                selectParentChecked(datas,row,"id","pid");
                 // 刷新数据
                 //$("#dataTable").bootstrapTable('load', datas);
-                $.get("/sys/role/obtainCurrRoleMenuFuncs",{roleId:sysRoleId[0],menuId:row.id},function (rvData) {
-                    console.log(rvData);
-                    var funcs = rvData.result;
-                    if (funcs.length === 0 ){//说明一个都没有
-                        $("input[type='checkbox'][name='func_"+row.id+"']").prop("checked",true);
-                    }else{
-                        $.each(funcs, function (index,func) {
-                            $("input[type='checkbox'][name='func_"+row.id+"'][value='"+func.id+"']").prop("checked",true);
-                        });
-                    }
-                },'json')
+                var funcIds = RvFormlistObjectToListAttr(row.funcs,'id');
+                if (sysRoleId != null && sysRoleId.length > 0){
+                    funcSelect(funcIds,row.id);
+                }else{
+                    $("input[type='checkbox'][name='func_"+row.id+"']").prop("checked",true);//全选
+                }
             },
             onUncheck:function(row){
                 var datas = $("#dataTable").bootstrapTable('getData');
                 selectChilds(datas,row,"id","pid",false);
                 //$("#dataTable").bootstrapTable('load', datas);
-                $("input[type='checkbox'][name='func_"+row.id+"']").prop("checked",false);
+                $("input[type='checkbox'][name='func_"+row.id+"']").prop("checked",false);//全选
             },
             onLoadSuccess: function (data) {
                 if(data.code !== 200){
@@ -280,6 +275,29 @@
             }
         });
     }
+
+    function funcSelect(funcIds, menuId) {
+        $.get("/sys/role/obtainCurrRoleMenuFuncs",{roleId:sysRoleId[0],menuId:menuId},function (rvData) {
+            if (rvData.code === 500 && rvData.result.length === 0){//修改页面且当前用户没有当前资源
+                $("input[type='checkbox'][name='func_"+menuId+"']").prop("checked",true);//全选
+            }else{
+                var hasFuncIds =   RvFormlistObjectToListAttr(rvData.result,'id');
+                $.each(funcIds, function (index,funcId) {
+                    if ($.inArray(funcId,hasFuncIds) >= 0){
+                        $("input[type='checkbox'][name='func_"+menuId+"'][value='"+funcId+"']").prop("checked",true);
+                    }else{
+                        $("input[type='checkbox'][name='func_"+menuId+"'][value='"+funcId+"']").prop("checked",false);
+                    }
+                });
+            }
+        },'json')
+    }
+
+    function allFuncSelect(which) {
+        var checked = which.checked;
+        $("input[type='checkbox'][name='func_"+which.value+"']").prop("checked",checked);
+    }
+    
     /**
      * 选中父项时，同时选中子项
      * @param datas 所有的数据
@@ -290,9 +308,15 @@
     function selectChilds(datas,row,id,pid,checked) {
         for(var i in datas){
             if(datas[i][pid] === row[id]){
-                datas[i].check=checked;
+                //datas[i].check=checked;
+                //$("input[type='checkbox'][name='func_"+datas[i][id]+"']").prop("checked",true);
+                if (checked) {
+                    $("#dataTable").bootstrapTable('check', parseInt(i));
+                }else{
+                    $("#dataTable").bootstrapTable('uncheck', parseInt(i));
+                }
                 selectChilds(datas,datas[i],id,pid,checked);
-            };
+            }
         }
     }
 
@@ -306,7 +330,7 @@
     function selectParentChecked(datas,row,id,pid){
         for(var i in datas){
             if(datas[i][id] === row[pid]){
-                datas[i].check=true;
+                $("#dataTable").bootstrapTable('check', parseInt(i));
                 selectParentChecked(datas,datas[i],id,pid);
             }
         }
