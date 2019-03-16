@@ -1,7 +1,9 @@
 package com.self.framework.ucenter.action;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.constant.HttpSessionAttrConstant;
+import com.self.framework.ucenter.bean.SysUser;
 import com.self.framework.ucenter.from.LoginForm;
 import com.self.framework.ucenter.service.MenuService;
 import org.slf4j.Logger;
@@ -62,6 +64,8 @@ public class LoginAction {
                     new UsernamePasswordAuthenticationToken(loginForm.getLoginName(), loginForm.getPassword());
             Authentication authenticate = myAuthenticationManager.authenticate(usernamePasswordAuthenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticate);
+            SysUser sysUser = (SysUser)authenticate.getPrincipal();
+            request.getSession().setAttribute("isSuper", !sysUser.getType().equals(BusinessCommonConstamt.ONE_CODE));
             modelAttribute.setViewName("redirect:index");
         }catch (Exception e){
             logger.error("登陆失败,失败原因可能为{},请求参数为{}",e.getMessage(), loginForm.asJson());

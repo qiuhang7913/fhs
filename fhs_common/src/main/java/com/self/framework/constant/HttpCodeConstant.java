@@ -11,4 +11,7 @@ public class HttpCodeConstant {
 
     public static final Integer HTTP_ERROR_CODE = 500;
     public static final String HTTP_OK_ERROR_DESCRIBE = "系统内部报错,请联系管理员!";
+
+    public static final Integer HTTP_FIND_ERROR_CODE = 201;
+    public static final String  HTTP_FIND_ERROR_DESCRIBE = "数据查询错误,可能数据不存在!";
 }

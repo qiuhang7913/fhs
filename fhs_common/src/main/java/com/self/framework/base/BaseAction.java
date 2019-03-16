@@ -9,9 +9,6 @@ import com.self.framework.http.PageResult;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.expression.SecurityExpressionRoot;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
 import javax.validation.Validator;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,13 +39,13 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     private Validator validator;
 
     @Autowired
-    private AuthenticationProvider authenticationProvider;
+    private HttpServletRequest request;
 
     @RequestMapping(value = "addOrUpdate", method = {RequestMethod.POST})
     @ResponseBody
     public HttpResult<Map> addOrUpdate(@RequestBody String obj){
         if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_ADD_FLAG)){
-            throw new BusinessException("当前用户没有添加获取修改权限!");
+            throw new BusinessException("当前用户没有添加/修改权限!");
         }
         Integer addCode = baseService.addOrUpdata(this.transformationRequestParam(obj,true));
         if (addCode == BusinessCommonConstamt.ZERO_CODE){
@@ -80,6 +75,10 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     @RequestMapping(value = "del", method = {RequestMethod.DELETE})
     @ResponseBody
     public HttpResult<Map> delete(@RequestBody List<String> ids){
+        if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_DELETE_FLAG)){
+            throw new BusinessException("当前用户没有删除权限!");
+        }
+
         try {
             baseService.delete(ids);
         }catch (Exception e){
@@ -92,6 +91,10 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     @ResponseBody
     public PageResult<T> list(@RequestBody String obj , HttpServletRequest request){
         PageResult<T> pageResult = new PageResult<>();
+        if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_FIND_FLAG)){
+            throw new BusinessException("当前用户没有查询权限!");
+        }
+
         try {
             T t = this.transformationRequestParam(obj, false);//手动序列化当前类
             Page<T> pageData = baseService.queryListHasPagingAndSort((T)t, (t.getPage()-1) * t.getRows(),t.getRows(), t.getSortOrder(), t.getSortFiled());
@@ -103,7 +106,6 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
                 pageResult.setRows(pageData.getContent());
             }
         }catch (Exception e){
-            e.printStackTrace();
             pageResult.setCode(HttpCodeConstant.HTTP_ERROR_CODE);
             pageResult.setDescribe(HttpCodeConstant.HTTP_OK_ERROR_DESCRIBE);
         }
@@ -137,8 +139,13 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
         RequestMapping requestMapping = this.getClass().getAnnotation(RequestMapping.class);
         String nameSpace = requestMapping.value()[0];
         UserDetails sessionUserInfo = this.getSessionUserInfo();
+        Boolean isSuper = (Boolean)request.getSession().getAttribute("isSuper");
+        if (isSuper){
+            return true;
+        }
         return sessionUserInfo.getAuthorities().contains(new SimpleGrantedAuthority(nameSpace + ":" + action));
     }
+
     /**
      *
      * @return
@@ -147,8 +154,4 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
         return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public static void main(String[] args) {
-        String aa = "/aa/bb";
-        System.out.println(aa.substring(1).replace("/","."));
-    }
 }

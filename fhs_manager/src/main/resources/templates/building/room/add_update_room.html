@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>房间新增修改页面</title>
+
+    <!--js 插件引入-->
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-table.min.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-treegird-table.css}">
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrapValidator.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/jquery-confirm/jquery-confirm.min.css}">
+
+    <script th:src="@{/plugin/bootstrap/js/jquery.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap-table.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap-table-zh-CN.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap-treegird-table.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/jquery.treegrid.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrapValidator.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.extend.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/jquery-confirm/jquery-confirm.min.js}" type="text/javascript"></script>
+
+    <script th:src="@{/js/myUtil_1.2.1.js}"></script>
+</head>
+<body style="width: 99%">
+    <div style="width: 90%; margin-top: 2%; margin-left: 3%">
+    <form id="form" role="form" class="form-horizontal"
+          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+        <div class="form-group">
+            <label for="room_name" class="col-sm-2 control-label" style="float: left; margin-top: 1%">房间名称：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="room_name" name="room_name" placeholder="请输入房间名称"
+                       required data-bv-notempty-message="房间名称不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="room_code" class="col-sm-2 control-label" style="float: left; margin-top: 1%">房间编码：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="room_code" name="room_code" placeholder="请输入房间编码"
+                       required data-bv-notempty-message="房间编码不能为空!"
+                       data-bv-remote="true" data-bv-remote-url='/building/room/checkRoomCode' data-bv-remote-message="房间编码已经存在">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="status" class="col-sm-2 control-label" style="float: left; margin-top: 1%">房间状态：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <select class="form-control" id="status" name="status"
+                        data-bv-notempty data-bv-notempty-message="请选择">
+                    <option th:value="0" selected="selected">禁用</option>
+                    <option th:value="1">空置</option>
+                    <option th:value="2">被预定</option>
+                    <option th:value="3">启用</option>
+                    <option th:value="4">维修</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="max_live" class="col-sm-2 control-label" style="float: left; margin-top: 1%">最多人数：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important; width: 30%">
+                <input type="number" class="form-control" id="max_live" name="max_live" placeholder="请输入房间最多人数"
+                       required data-bv-notempty-message="房间最多人数不能为空!">
+            </div>
+            <span style="float: left;margin-top: 1%">人</span>
+        </div>
+
+        <div class="form-group">
+            <label for="electric_up_toll" class="col-sm-2 control-label" style="float: left; margin-top: 1%">电费上调：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="electric_up_toll" name="electric_up_toll" placeholder="请输入电费上调金额" value="0.00"
+                       pattern="^\-?(\d*\.\d{2})$" data-bv-regexp-message="输入有误!"
+                    onblur="javascript:{this.value.length === 0 ? this.value = '0.00': this.value}"
+                    onchange="changeTollToDisplaySpan(this)">
+            </div>
+            <span class="glyphicon glyphicon-upload" style="float: left;margin-top: 1%">RMB</span>
+        </div>
+
+        <div class="form-group">
+            <label for="water_up_toll" class="col-sm-2 control-label" style="float: left; margin-top: 1%">水费上调：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="water_up_toll" name="water_up_toll" placeholder="请输入水费上调金额" value="0.00"
+                       pattern="^\-?(\d*\.\d{2})$" data-bv-regexp-message="输入有误!"
+                       onblur="javascript:{this.value.length === 0 ? this.value = '0.00': this.value;}"
+                        onchange="changeTollToDisplaySpan(this)">
+            </div>
+            <span class="glyphicon glyphicon-upload" style="float: left;margin-top: 1%">RMB</span>
+        </div>
+
+
+
+        <div class="form-group">
+            <label for="area_size" class="col-sm-2 control-label" style="float: left; margin-top: 1%">房间面积：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="area_size" name="area_size" placeholder="请输入房间居住面积"
+                       required data-bv-notempty-message="房间居住面积不能为空!">
+            </div>
+            <span style="float: left;margin-top: 1%">㎡</span>
+        </div>
+
+        <div class="form-group">
+            <label for="lighting" class="col-sm-2 control-label" style="float: left; margin-top: 1%">房间采光：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <select class="form-control" id="lighting" name="lighting"
+                        data-bv-notempty data-bv-notempty-message="请选择">
+                    <option value="">请选择</option>
+                    <option th:value="0">阴面</option>
+                    <option th:value="1">阳面</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="owner" class="col-sm-2 control-label" style="float: left; margin-top: 1%">拥有者：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 2.5% !important;">
+                <input type="text" class="form-control" id="owner" name="owner" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="room_toll" class="col-sm-2 control-label" style="float: left; margin-top: 1%">裸租金：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 2.5% !important;">
+                <input type="number" class="form-control" id="room_toll" name="room_toll" placeholder="请输入房间租金(裸租金)"
+                       required data-bv-notempty-message="房间租金(裸租金)不能为空!">
+            </div>
+            <span style="float: left;margin-top: 1%">RMB</span>
+        </div>
+
+        <div class="form-group">
+            <label for="total_electric_energy" class="col-sm-2 control-label" style="float: left; margin-top: 1%">房屋电度总计：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 2.5% !important;">
+                <input type="text" class="form-control" id="total_electric_energy" name="total_electric_energy" placeholder="请输入当前电度总计"
+                       required data-bv-notempty-message="电度总计不能为空"
+                       pattern="^\+?(\d*\.\d{2})$" data-bv-regexp-message="输入有误!">
+            </div>
+            <span style="float: left;margin-top: 1%">度</span>
+        </div>
+
+        <div class="form-group">
+            <label for="total_water_cube" class="col-sm-2 control-label" style="float: left; margin-top: 1%">房屋水立方总计：</label>
+            <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="total_water_cube" name="total_water_cube" placeholder="请输入当前水立方总计"
+                       required data-bv-notempty-message="水立方总计不能为空"
+                       pattern="^\+?(\d*\.\d{2})$" data-bv-regexp-message="输入有误!">
+            </div>
+            <span style="float: left;margin-top: 1%">m³</span>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-top: 5%">
+                <span style="margin-left: 20%"></span>
+                <button type="button" id="btn_ok" class="btn btn-default">提交</button>
+                <span style="margin-left: 20%"></span>
+                <button type="reset" id="btn_reset" class="btn btn-default">重置</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</body>
+<script th:inline="javascript">
+    var action = [[${param.action}]];
+    var roomId = [[${param.roomId}]];
+    var floorId = [[${param.floorId}]];
+
+    //****************************************** ajax 后台交互初始化定义 start
+    ajaxSub.postUrl = '/building/room/addOrUpdate';
+    ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
+    ajaxSub.rvPostFunc = function (rvData) {
+        if (rvData.code === 200){
+            window.parent.myBootstrapTable.reload();
+            window.parent.myIZIMoal.close();
+        }else{
+            Ealert0("错误",1);
+        }
+    };
+
+    ajaxSub.rvGetFunc = function (rvData) {
+        var buildingRoomBean = rvData.result;
+        console.log(buildingRoomBean);
+        $("#room_name").val(buildingRoomBean.roomName);
+        $("#room_code").val(buildingRoomBean.roomCode); $("#room_code").attr("readonly","readonly");
+        $("#status").find("option[value='"+buildingRoomBean.status+"']").attr("selected","selected");
+        $("#owner").val(buildingRoomBean.owner);
+        $("#room_toll").val(buildingRoomBean.roomToll);
+        $("#water_up_toll").val(buildingRoomBean.waterUpToll);
+        $("#electric_up_toll").val(buildingRoomBean.electricUpToll);
+        $("#total_electric_energy").val(buildingRoomBean.totalElectricEnergy);
+        $("#total_water_cube").val(buildingRoomBean.totalWaterCube);
+        $("#area_size").val(buildingRoomBean.areaSize)
+        $("#lighting").find("option[value='"+buildingRoomBean.lighting+"']").attr("selected","selected");
+        $("#max_live").val(buildingRoomBean.maxLive);
+        //数据回显
+
+    };
+    //****************************************** ajax 后台交互初始化定义 end
+
+    $(function(){
+        $("#form").bootstrapValidator();//初始化表单检验
+        if (floorId[0].length === 0){
+            Ealert0("楼层获取异常!",1);
+            $("#btn_ok").attr("disabled","disabled");
+        }
+        if (action[0] === 'add'){//新增页面
+            //.... do somethings;
+            roomId = [];
+        } else if (action[0] === 'update'){//修改页面
+            $("#room_code").removeAttr("data-bv-remote");
+            $("#room_code").removeAttr("data-bv-remote-url");
+            $("#room_code").removeAttr("data-bv-remote-message");
+            destroyVlidator("form");
+            if(roomId != null && roomId.length > 0){
+                ajaxSub.getUrl = '/building/room/obtainOne/' + roomId[0];
+                ajaxSub.getData();
+            }
+        }
+        initPageEvent();
+    });
+    
+    function initPageEvent() {
+        //房间状态变化
+        $("#status").on('change',function (event) {
+            event.preventDefault();
+            $("#owner").removeAttr("readonly");
+            $("#owner").removeAttr("required");
+            $("#owner").removeAttr("data-bv-notempty-message");
+            if (parseInt(event.target.value) === 1){ //说明当前房间空置
+                $("#owner").attr("readonly","readonly");
+            }else if (parseInt(event.target.value) === 2 || parseInt(event.target.value) === 3 ) {
+                $("#owner").attr("required",true);
+                $("#owner").attr("data-bv-notempty-message","拥有者不能为空");
+            }
+            destroyVlidator("form");
+        });
+
+        //提交绑定
+        $("#btn_ok").on('click', function (event) {
+            event.preventDefault();
+            var flag = isVlidator("form");
+            if (!flag){
+                return;
+            }
+            var buildingRoomBean = {
+                roomName : $("#room_name").val(),
+                roomCode : $("#room_code").val(),
+                status : $("#status").val(),
+                owner : $("#owner").val(),
+                floorId : floorId.length === 0 ? "" : floorId[0],
+                roomToll : $("#room_toll").val(),
+                waterUpToll : $("#water_up_toll").val(),
+                electricUpToll : $("#electric_up_toll").val(),
+                totalElectricEnergy : $("#total_electric_energy").val(),
+                totalWaterCube : $("#total_water_cube").val(),
+                areaSize : $("#area_size").val(),
+                lighting : $("#lighting").val(),
+                maxLive : $("#max_live").val(),
+                id : roomId.length === 0 ?  "" : roomId[0]
+            };
+            ajaxSub.reqData = buildingRoomBean;
+            ajaxSub.postData();
+        });
+    }
+
+    /**
+     *
+     * @param which
+     */
+    function changeTollToDisplaySpan(which) {
+        var toll = parseFloat(which.value);
+        if(toll < 0 ){
+            $(which).parent().parent().find("span").removeClass();
+            $(which).parent().parent().find("span").addClass("glyphicon glyphicon-download");
+        }else{
+            $(which).parent().parent().find("span").removeClass();
+            $(which).parent().parent().find("span").addClass("glyphicon glyphicon-upload");
+        }
+    }
+</script>
+</html>

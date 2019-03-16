@@ -159,6 +159,7 @@
     $(function(){
         if (action[0] === 'add'){//新增页面
             //.... do somethings;
+            sysUserId = [];
         } else if (action[0] === 'update'){//修改页面
             if(sysUserId != null && sysUserId.length > 0){
                 ajaxSub.getUrl = '/sys/user/obtainOne/' + sysUserId[0];

@@ -3,10 +3,12 @@ package com.self.framework.ucenter.action;
 import com.self.framework.base.BaseAction;
 import com.self.framework.constant.HttpCodeConstant;
 import com.self.framework.http.HttpResult;
+import com.self.framework.nosql.redis.ObjectRedisService;
 import com.self.framework.otherBean.TreeNode;
 import com.self.framework.ucenter.bean.SysMenuResource;
 import com.self.framework.ucenter.bean.SysMenuResourceFunc;
 import com.self.framework.ucenter.service.MenuService;
+import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,7 @@ public class MenuAction extends BaseAction<SysMenuResource> {
 
     @Autowired
     private MenuService menuService;
+
 
     @RequestMapping(value = "obtainTreeData", method = RequestMethod.GET)
     @ResponseBody

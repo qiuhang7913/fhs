@@ -2,6 +2,7 @@ package com.self.framework.ucenter.service.impl;
 
 import com.self.framework.base.BaseServiceImpl;
 import com.self.framework.constant.BusinessCommonConstamt;
+import com.self.framework.nosql.redis.ObjectRedisService;
 import com.self.framework.otherBean.TreeNode;
 import com.self.framework.ucenter.bean.SysMenuResource;
 import com.self.framework.ucenter.dao.MenuDao;
@@ -23,6 +24,9 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenuResource> implements
     @Autowired
     private MenuDao menuDao;
 
+    @Autowired
+    private ObjectRedisService<List<TreeNode>> redisService;
+
     @Override
     public Integer addOrUpdata(SysMenuResource v) {
         SysMenuResource sysMenuResource = findOne(v);
@@ -40,7 +44,15 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenuResource> implements
     public List<TreeNode> findMenuTreeData() {
         TreeNode treeNode = new TreeNode();
         treeNode.setTreeId(BusinessCommonConstamt.ZERO_STRING_CODE);
-        return getTreeNodeSon(treeNode);
+
+        //缓存处理
+        if (redisService.isExist(MENU_TREENODES_CACHE_CODE)){
+            return redisService.getObj(MENU_TREENODES_CACHE_CODE);
+        }else{
+            List<TreeNode> treeNodes = getTreeNodeSon(treeNode);
+            redisService.insertObj(MENU_TREENODES_CACHE_CODE, 3600L, treeNodes);
+            return treeNodes;
+        }
     }
 
     /**

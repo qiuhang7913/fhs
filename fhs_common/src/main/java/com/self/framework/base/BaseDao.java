@@ -17,4 +17,8 @@ import java.util.Map;
 public interface BaseDao<T>
         extends JpaRepository<T, String>, JpaSpecificationExecutor<T> {
     List<Map<String, Object>> findOther(String sql, Map<String,Object> param);
+
+    <Z> List<Z> findOther(String sql, Map<String,Object> param, Class<Z> zClass);
+
+    boolean insertOther(BaseBean baseBean);
 }

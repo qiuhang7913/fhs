@@ -195,7 +195,7 @@ public class SysUser extends BaseBean implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return this.getLoginName();
     }
 
     public void setUsername(String username) {
@@ -232,6 +232,10 @@ public class SysUser extends BaseBean implements UserDetails {
         return true;
     }
 
+    /**
+     * 是否启用权限控制
+     * @return
+     */
     @Override
     public boolean isEnabled() {
         return true;

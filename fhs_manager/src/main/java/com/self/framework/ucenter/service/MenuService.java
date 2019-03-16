@@ -7,6 +7,7 @@ import com.self.framework.ucenter.bean.SysMenuResource;
 import java.util.List;
 
 public interface MenuService extends BaseService<SysMenuResource> {
+    String MENU_TREENODES_CACHE_CODE = "sys:menu:treenodes";
 
     /**
      * 树形数据查询

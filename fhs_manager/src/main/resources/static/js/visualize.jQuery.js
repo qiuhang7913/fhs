@@ -485,7 +485,7 @@ $.fn.visualize = function(options, container){
 					canvasContain.addClass('visualize-bar');
 
 					/**
-					 * Write labels along the bottom of the chart.	If we're drawing
+					 * Write labels along the bottom of the chart.	If we'resources drawing
 					 * horizontal bars, these will be the yLabels, otherwise they
 					 * will be the xLabels.	The positioning also varies slightly:
 					 * yLabels are values, hence they will span the whole width of

@@ -50,7 +50,6 @@ public class MenuFuncAction extends BaseAction<SysMenuResourceFunc> {
                 }
             }
         }
-
         return rvMap;
     }
 }

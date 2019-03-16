@@ -39,7 +39,7 @@
         <div id="sidebar">
             <ul id="menus">
                 <li class="current">
-                    <a th:href="@{/index}">
+                    <a th:src="@{/dashboard}" onclick="goToPage(this)">
                         <img src="img/icons/menu/inbox.png" alt="" />首页
                     </a>
                 </li>
@@ -53,7 +53,6 @@
                             html = html + '</li>';
                         });
                         $("#menus").append(html);
-                        console.log(html);
                     }
                     function f(currMenuRes, html) {
                         if (currMenuRes.children.length > 0){

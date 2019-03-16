@@ -308,7 +308,7 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
         },
 
         onLoadError: function () {
-
+            Ealert0("数据加载异常,请联系管理员!",1);
         },
 
         onDblClickRow: function (row, $element) {
@@ -320,8 +320,18 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
  *  from 校验
  */
 function isVlidator(domId) {
+
     $("#" + domId).bootstrapValidator('validate');//提交验证
     return $("#" + domId).data('bootstrapValidator').isValid();
+}
+
+/**
+ *  from 销毁
+ */
+function destroyVlidator(domId) {
+    $("#" + domId).data('bootstrapValidator').destroy() ;
+    $("#" + domId).data('bootstrapValidator',null);
+    $("#" + domId).bootstrapValidator();
 }
 
 /**

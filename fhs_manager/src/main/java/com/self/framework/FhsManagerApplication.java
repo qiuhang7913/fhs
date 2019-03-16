@@ -1,4 +1,4 @@
-package com.self.framework.ucenter;
+package com.self.framework;
 
 import com.self.framework.spring.extend.jpa.BaseDaoFactoryBean;
 import org.springframework.boot.SpringApplication;
