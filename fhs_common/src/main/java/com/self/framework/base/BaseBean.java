@@ -41,6 +41,15 @@ public class BaseBean implements Serializable {
     @Transient
     private Integer sortOrder;
 
+    @Transient
+    private Map<String,Object> transMap;
+
+    /**
+     * 主键值
+     */
+    @Transient
+    private String pkFileValue;
+
     public String getCreateTime() {
         return createTime;
     }
@@ -111,5 +120,21 @@ public class BaseBean implements Serializable {
 
     public void setSortFiled(String sortFiled) {
         this.sortFiled = sortFiled;
+    }
+
+    public Map<String, Object> getTransMap() {
+        return transMap;
+    }
+
+    public void setTransMap(Map<String, Object> transMap) {
+        this.transMap = transMap;
+    }
+
+    public String getPkFileValue() {
+        return pkFileValue;
+    }
+
+    public void setPkFileValue(String pkFileValue) {
+        this.pkFileValue = pkFileValue;
     }
 }

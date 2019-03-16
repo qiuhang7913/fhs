@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -34,6 +35,9 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
     @Autowired
     private SpecificationQueryExtend<T> querySqlBuild;
 
+    @Autowired
+    private TransService<T> transService;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer addOrUpdata(T v) {
@@ -41,6 +45,7 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public T addOrUpdataReturn(T v) {
         return saveCurrData(v);
     }
@@ -63,6 +68,7 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
         Sort sort = new Sort(sortType.equals(BusinessCommonConstamt.ZERO_CODE) ? Sort.Direction.DESC : Sort.Direction.ASC, sortFiled);
         PageRequest of = PageRequest.of(pageStart, pageEnd, sort);
         Page<T> all = baseDao.findAll(querySqlBuild.getWhereClause(v), of);
+        transService.transMore(all.getContent());
         return all;
     }
 
@@ -76,7 +82,8 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
         if (ObjectCheckUtil.checkIsNullOrEmpty(v)){
             return new ArrayList<>();
         }
-        return baseDao.findAll(querySqlBuild.getWhereClause(v));
+        List<T> rvDataList = baseDao.findAll(querySqlBuild.getWhereClause(v));
+        return rvDataList;
     }
 
     @Override

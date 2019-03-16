@@ -104,6 +104,24 @@
                 title: "房间编码"
             },
             {
+                field: 'roomToll',
+                title: "房租",
+                formatter:function (value,row,index ) {
+                    return value + "¥"
+                }
+            },
+            {
+                field: 'areaSize',
+                title: "居住面积",
+                formatter:function (value,row,index ) {
+                    return value + "㎡"
+                }
+            },
+            {
+                field: 'transMap.floorIdToTransValue',
+                title: "所在楼层"
+            },
+            {
                 filed: 'status',
                 title: '房间状态',
                 formatter: function(value,row,index) {

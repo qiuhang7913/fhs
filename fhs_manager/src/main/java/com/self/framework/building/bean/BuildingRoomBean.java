@@ -1,7 +1,9 @@
 package com.self.framework.building.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.self.framework.annotation.Trans;
 import com.self.framework.base.BaseBean;
+import com.self.framework.building.service.BuildingRoomService;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,7 +23,8 @@ import java.math.BigDecimal;
 @Entity(name = "building_room")
 @ToString
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
-public class    BuildingRoomBean extends BaseBean {
+@Trans
+public class  BuildingRoomBean extends BaseBean {
 
     @Id
     @GenericGenerator(name = "user-uuid", strategy = "uuid")
@@ -59,6 +62,7 @@ public class    BuildingRoomBean extends BaseBean {
      * 楼层外键
      */
     @Column(name = "floor_id", nullable = false, length = 64)
+    @Trans(transKey = BuildingRoomService.FLOOR_ID_TO_NAME_CACHE)
     private String floorId;
 
     /**
@@ -108,4 +112,9 @@ public class    BuildingRoomBean extends BaseBean {
      */
     @Column(name = "max_live", nullable = false, length = 11)
     private Integer maxLive;
+
+    @Override
+    public String getPkFileValue() {
+        return this.getId();
+    }
 }
