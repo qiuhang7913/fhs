@@ -320,7 +320,6 @@ function initBootstrapTable(domId, reqPath, columns, paramsExtend, headers, tool
  *  from 校验
  */
 function isVlidator(domId) {
-
     $("#" + domId).bootstrapValidator('validate');//提交验证
     return $("#" + domId).data('bootstrapValidator').isValid();
 }

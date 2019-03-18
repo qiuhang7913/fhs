@@ -20,9 +20,7 @@ public class TransServiceImpl<T extends BaseBean> implements TransService {
     public void transMore(List listData) {
         listData.forEach(data ->{
             transOne((BaseBean) data);
-            System.out.println("aa");
         });
-        System.out.println(listData.toString());
     }
 
     @Override

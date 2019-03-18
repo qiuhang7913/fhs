@@ -45,8 +45,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 //		RequestMatcher requestMatcher = new CsrfSecurityRequestMatcher();
-//		((CsrfSecurityRequestMatcher) requestMatcher).setAllowRes(Arrays.asList("/logout"));
+//		((CsrfSecurityRequestMatcher) requestMatcher).setAllowRes(Arrays.asList("/druid/*"));
 //		http.csrf().requireCsrfProtectionMatcher(requestMatcher);
+		http.csrf().ignoringAntMatchers("/druid/*");
 		http.authorizeRequests()
 				// 所有用户均可访问的资源
 				.antMatchers( "/favicon.ico",
@@ -57,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 								"/js/**",
 								"/captcha.jpg",
 								"/login",
+								"/druid/**",
 								"/doLogin").permitAll()
 				// 任何尚未匹配的URL只需要验证用户即可访问
 				.anyRequest().authenticated()

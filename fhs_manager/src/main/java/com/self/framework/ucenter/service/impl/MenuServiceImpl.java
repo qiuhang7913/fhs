@@ -29,15 +29,22 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenuResource> implements
 
     @Override
     public Integer addOrUpdata(SysMenuResource v) {
-        SysMenuResource sysMenuResource = findOne(v);
-        if (ObjectCheckUtil.checkIsNullOrEmpty(sysMenuResource)) {//添加操作
-            Example<SysMenuResource> ofRes = Example.of(SysMenuResource.builder().id(v.getParentId()).build());
-            SysMenuResource sysMenuResourceParent = menuDao.findOne(ofRes).get();
-            if (!ObjectCheckUtil.checkIsNullOrEmpty(sysMenuResourceParent)) {
-                menuDao.save(sysMenuResourceParent);
-            }
-        }
+//        SysMenuResource sysMenuResource = findOne(v);
+//        if (ObjectCheckUtil.checkIsNullOrEmpty(sysMenuResource)) {//添加操作
+//            Example<SysMenuResource> ofRes = Example.of(SysMenuResource.builder().id(v.getParentId()).build());
+//            SysMenuResource sysMenuResourceParent = menuDao.findOne(ofRes).get();
+//            if (!ObjectCheckUtil.checkIsNullOrEmpty(sysMenuResourceParent)) {
+//                menuDao.save(sysMenuResourceParent);
+//            }
+//        }
+        redisService.del(MENU_TREENODES_CACHE_CODE);
         return super.addOrUpdata(v);
+    }
+
+    @Override
+    public void delete(List<String> ids) {
+        redisService.del(MENU_TREENODES_CACHE_CODE);
+        super.delete(ids);
     }
 
     @Override

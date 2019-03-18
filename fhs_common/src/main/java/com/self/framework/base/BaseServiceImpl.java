@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,14 +111,15 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
      */
     private T saveCurrData(T v){
         T one = findOne(v);
+        UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (ObjectCheckUtil.checkIsNullOrEmpty(one)){
             v.setCreateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
-            v.setCreateUser("qiuhang");
+            v.setCreateUser(userDetails.getUsername());
         }else{
             v.setCreateTime(one.getCreateTime());
             v.setCreateUser(one.getCreateUser());
             v.setUpdateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
-            v.setUpdateUser("qiuhang");
+            v.setUpdateUser(userDetails.getUsername());
         }
         return baseDao.saveAndFlush(v);
     }

@@ -17,11 +17,15 @@
 </head>
 <body style="width: 99%">
     <div style="width: 88%; margin-top: 2%; margin-left: 3%">
-    <form role="form" class="form-horizontal">
+    <form role="form" id="form" class="form-horizontal"
+          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
         <div class="form-group">
             <label for="res_name" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源名称：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
-                <input type="text" class="form-control" id="res_name" placeholder="请输入资源名称">
+                <input type="text" class="form-control" id="res_name" name="res_name" placeholder="请输入资源名称"
+                       required data-bv-notempty-message="资源名称不能为空!">
             </div>
         </div>
 
@@ -43,7 +47,8 @@
         <div class="form-group">
             <label for="res_type" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源类型：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
-                <select class="form-control" id="res_type">
+                <select class="form-control" id="res_type" name="res_types"
+                        required data-bv-notempty-message="资源类型不能为空!">
                     <option value="">请选择</option>
                     <option th:value="1">菜单</option>
                     <option th:value="2">连接</option>
@@ -54,7 +59,7 @@
         <div class="form-group">
             <label for="res_url" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源连接：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important; width: 60%">
-                <input type="text" class="form-control" id="res_url" placeholder="请输入资源连接">
+                <input type="text" class="form-control" id="res_url" name="res_url" placeholder="请输入资源连接">
             </div>
         </div>
 
@@ -69,14 +74,15 @@
         <div class="form-group">
             <label for="res_sort" class="col-sm-2 control-label" style="float: left; margin-top: 1%">资源排序：</label>
             <div class="col-sm-10" style="float: left; padding-left: 0 !important;">
-                <input type="text" class="form-control" id="res_sort" placeholder="请输入资源排序值">
+                <input type="text" class="form-control" id="res_sort" name="res_sort" placeholder="请输入资源排序值"
+                       required data-bv-notempty-message="资源排序值不能为空!">
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10" style="margin-top: 5%">
                 <span style="margin-left: 20%"></span>
-                <button type="submit" id="btn_ok" class="btn btn-default">提交</button>
+                <button type="button" id="btn_ok" class="btn btn-default">提交</button>
                 <span style="margin-left: 20%"></span>
                 <button type="reset" id="btn_reset" class="btn btn-default">重置</button>
             </div>
@@ -88,7 +94,6 @@
     var action = [[${param.action}]];
     var parentId = [[${param.parentId}]];
     var sysResId = [[${param.sysResId}]];
-    console.log(action);
 
     //****************************************** ajax 后台交互初始化定义 start
     ajaxSub.postUrl = '/sys/menu/addOrUpdateNew';
@@ -136,7 +141,7 @@
             event.preventDefault();
             $("#res_url").removeAttr('readonly');
             var value = $(this).val();
-            if (parseInt(value) === 0){
+            if (parseInt(value) === 1){
                 $("#res_url").val("#");
                 $("#res_url").attr('readonly','readonly');
             }
@@ -145,6 +150,10 @@
         //提交绑定
         $("#btn_ok").on('click', function (event) {
             event.preventDefault();
+            var flag = isVlidator("form");
+            if (!flag){
+                return;
+            }
             var sysResBean = {
                 icon:$("#res_icon").val(),
                 name:$("#res_name").val(),

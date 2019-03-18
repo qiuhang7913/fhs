@@ -47,8 +47,9 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
         if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_ADD_FLAG)){
             throw new BusinessException("当前用户没有添加/修改权限!");
         }
-        Integer addCode = baseService.addOrUpdata(this.transformationRequestParam(obj,true));
-        if (addCode == BusinessCommonConstamt.ZERO_CODE){
+        T t = this.transformationRequestParam(obj, true);
+        Integer addCode = baseService.addOrUpdata(t);
+        if (addCode.equals(BusinessCommonConstamt.ZERO_CODE)){
             return HttpResult.errorResult();
         }
         return HttpResult.okResult();
