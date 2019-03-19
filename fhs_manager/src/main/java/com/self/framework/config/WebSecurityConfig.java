@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 								"/js/**",
 								"/captcha.jpg",
 								"/login",
+								"/test/**",
 								"/druid/**",
 								"/doLogin").permitAll()
 				// 任何尚未匹配的URL只需要验证用户即可访问

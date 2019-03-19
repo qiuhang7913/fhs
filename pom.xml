@@ -24,6 +24,7 @@
         <module>fhs_manager</module>
         <module>fhs_nosql</module>
         <module>fhs_utils</module>
+        <module>fhs_message</module>
     </modules>
 
     <properties>

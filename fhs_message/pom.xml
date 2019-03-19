@@ -4,13 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.self.framework.common</groupId>
-    <artifactId>fhs_common</artifactId>
+    <groupId>com.self.framework.message</groupId>
+    <artifactId>fhs_message</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-
-    <name>fhs_common</name>
-    <description>框架公共管理项目</description>
+    <name>fhs_message</name>
+    <description>
+        异步消息通信相关
+        1>.提供分布式发布订阅消息系统kafaka(主要用于大量的数据入库减缓数据入库压力)
+        2>.提供消息队列服务系统rabbitmq(主要用于有关异步数据队列业务的相关)
+    </description>
 
     <parent>
         <groupId>com.self.framework</groupId>
@@ -20,20 +23,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.self.framework.nosql</groupId>
-            <artifactId>fhs_nosql</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.self.framework.message</groupId>
-            <artifactId>fhs_message</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.self.framework.utils</groupId>
             <artifactId>utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <!-- 此处注意对应版本
+            当前 2.2.2
+            对应kafaka 2.0.0, 2.1.0
+        -->
     </dependencies>
 
     <build>
@@ -41,8 +42,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>
