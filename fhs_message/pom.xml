@@ -35,6 +35,10 @@
             当前 2.2.2
             对应kafaka 2.0.0, 2.1.0
         -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

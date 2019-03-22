@@ -32,5 +32,9 @@ public abstract class KafkaService<T> {
      */
     protected abstract void onMessage(T messag);
 
+    /**
+     * topic name
+     * @return
+     */
     protected abstract String obtainTopicName();
 }
