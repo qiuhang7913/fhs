@@ -1,6 +1,7 @@
 package com.self.framework.base;
 
 import com.alibaba.fastjson.JSON;
+import com.self.framework.annotation.SysLog;
 import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.constant.HttpCodeConstant;
 import com.self.framework.exception.BusinessException;
@@ -42,6 +43,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     private HttpServletRequest request;
 
     @RequestMapping(value = "addOrUpdate", method = {RequestMethod.POST})
+    @SysLog
     @ResponseBody
     public HttpResult<Map> addOrUpdate(@RequestBody String obj){
         if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_ADD_FLAG)){
@@ -56,6 +58,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     }
 
     @RequestMapping(value = "obtainOne/{id}", method = {RequestMethod.GET})
+    @SysLog(logOptType = BusinessCommonConstamt.TOW_STRING_CODE)
     @ResponseBody
     public HttpResult<T> obtainOne(@PathVariable(value = "id" ) String id){
         if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_FIND_FLAG)){
@@ -74,6 +77,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
      * @return
      */
     @RequestMapping(value = "del", method = {RequestMethod.DELETE})
+    @SysLog(logOptType = BusinessCommonConstamt.THREE_STRING_CODE)
     @ResponseBody
     public HttpResult<Map> delete(@RequestBody List<String> ids){
         if (!isPermission(BusinessCommonConstamt.SYS_MENU_RESOURCE_FUNC_DELETE_FLAG)){
@@ -89,6 +93,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
     }
 
     @RequestMapping(value = "list", method = {RequestMethod.POST})
+    @SysLog(logOptType = BusinessCommonConstamt.TOW_STRING_CODE)
     @ResponseBody
     public PageResult<T> list(@RequestBody String obj , HttpServletRequest request){
         PageResult<T> pageResult = new PageResult<>();

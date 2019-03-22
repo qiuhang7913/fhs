@@ -12,7 +12,15 @@ public class BusinessCommonConstamt {
 
     public static final Integer ONE_CODE = 1;
 
+    public static final String ONE_STRING_CODE = "1";
+
     public static final Integer TOW_CODE = 2;
+
+    public static final String TOW_STRING_CODE = "2";
+
+    public static final Integer THREE_CODE = 3;
+
+    public static final String THREE_STRING_CODE = "3";
 
     public static final String EMPTY_STR = " ";
 

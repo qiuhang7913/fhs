@@ -1,5 +1,6 @@
 package com.self.framework.ucenter.action;
 
+import com.self.framework.annotation.SysLog;
 import com.self.framework.base.BaseAction;
 import com.self.framework.constant.BusinessCommonConstamt;
 import com.self.framework.constant.HttpCodeConstant;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/sys/user")
+@SysLog
 public class UserAction extends BaseAction<SysUser> {
 
     @Autowired
@@ -30,6 +32,7 @@ public class UserAction extends BaseAction<SysUser> {
     private UserWithRoleService userWithRoleService;
 
     @RequestMapping(value = "obtainUserRoleIds/{userId}", method = {RequestMethod.GET})
+    @SysLog(logOptType = BusinessCommonConstamt.TOW_STRING_CODE, logOptDes = "根据用户id获取用户所有的角色id!")
     @ResponseBody
     public HttpResult<List> obtainUserRoleIds(@PathVariable(value = "userId" )String userId){
         List<SysUserWithRole> sysUserWithRoles = userWithRoleService.queryList(SysUserWithRole.builder().userId(userId).build());
@@ -38,6 +41,7 @@ public class UserAction extends BaseAction<SysUser> {
     }
 
     @RequestMapping(value = "saveUserRoleRelation/{userId}", method = {RequestMethod.POST})
+    @SysLog(logOptDes = "保存用户和角色的关系!")
     @ResponseBody
     public HttpResult<Map> saveUserRoleRelation(@PathVariable(value = "userId" )String userId, @RequestBody List<String> roleIds){
         List<SysUserWithRole> sysUserWithRoles = new ArrayList<>();
