@@ -96,7 +96,7 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
         try {
             return one.get();
         }catch (Exception e){
-            logger.error("数据查询错误,查询参数为{}",JSON.toJSONString(v));
+            logger.error("未找到该数据,查询参数为{}\n",JSON.toJSONString(v));
             return null;
         }
     }
@@ -112,21 +112,21 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
      */
     private T saveCurrData(T v){
         T one = findOne(v);
-        String userNmae = "";
+        String userName = "";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!ObjectCheckUtil.checkIsNullOrEmpty(authentication)){
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            userNmae = userDetails.getUsername();
+            userName = userDetails.getUsername();
         }
 
         if (ObjectCheckUtil.checkIsNullOrEmpty(one)){
             v.setCreateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
-            v.setCreateUser(userNmae);
+            v.setCreateUser(userName);
         }else{
             v.setCreateTime(one.getCreateTime());
             v.setCreateUser(one.getCreateUser());
             v.setUpdateTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L3));
-            v.setUpdateUser(userNmae);
+            v.setUpdateUser(userName);
         }
         return baseDao.saveAndFlush(v);
     }

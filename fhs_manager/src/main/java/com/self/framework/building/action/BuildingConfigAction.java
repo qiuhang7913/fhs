@@ -1,5 +1,6 @@
 package com.self.framework.building.action;
 
+import com.self.framework.annotation.SysLog;
 import com.self.framework.base.BaseAction;
 import com.self.framework.building.bean.BuildingConfigBean;
 import com.self.framework.building.service.BuildingConfigService;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/building/config")
+@SysLog
 public class BuildingConfigAction extends BaseAction<BuildingConfigBean> {
 
     @Autowired

@@ -1,11 +1,9 @@
 package com.self.framework.building.action;
 
+import com.self.framework.annotation.SysLog;
 import com.self.framework.base.BaseAction;
-import com.self.framework.building.bean.BuildingFloorBean;
 import com.self.framework.building.bean.BuildingRoomBean;
-import com.self.framework.building.service.BuildingFloorService;
 import com.self.framework.building.service.BuildingRoomService;
-import com.self.framework.ucenter.bean.SysMenuResourceFunc;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +16,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/building/room")
+@SysLog
 public class BuildingRoomAction extends BaseAction<BuildingRoomBean> {
 
     @Autowired

@@ -52,3 +52,20 @@ spring security 权限安全模块
 1.异步消息整合(kafka 和 rabbitmq)
 2.搜索引擎es的整合
 3.暂时不用springcloud
+
+/&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+2019/3/26
+1.框架已经完成增删改查的基础封装【主要使用spirng data jpa 并且扩展使用了hibernate的相关功能】
+2.spring security 权限安全框架的整合
+3.角色-资源-用户 的动态权限关系已经完成
+4.前端页面技术基本封装完成【主要使用到了bootstrap框架和jQuery类库，包括bootstrap table|bootstrap treeview|jquery confirm|izimodel 模态插件】
+5.公版三方工具整合【fastjson整合|Kaptcha验证码整合|hibernate 参数校验器的整合......】
+6.数据连接池使用阿里druid 做sql相关监控管理
+7.nosql的整合，已完成redis的整合,暂时不整合mongodb
+8.异步消息整合(kafka 和 rabbitmq)
+9.代码生成器[目前仅实现javabean]
+
+接下来主要任务:
+1.代码生成器[暂时不实现action servie dao]
+2.搜索引擎es的整合
+3.暂时不用springcloud

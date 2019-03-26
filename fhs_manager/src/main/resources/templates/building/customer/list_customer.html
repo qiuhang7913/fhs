@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
     <head>
-        <title>房间列表</title>
+        <title>房客列表</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
         <!--css引入-->
@@ -35,11 +35,11 @@
         <div style="clear:both"></div>
 
         <div id="content" class="white" >
-            <h1><img th:src="@{/img/icons/posts.png}" alt="" />房间管理</h1>
+            <h1><img th:src="@{/img/icons/posts.png}" alt="" />房客管理</h1>
             <div>
                 <div class="bloc" style="margin-top: 8%">
                     <div class="title">
-                        房间列表
+                        房客列表
                     </div>
                     <div id="bodyContent" class="content" style="width: 99% !important;">
                         <div style="clear: both"></div>
@@ -51,12 +51,7 @@
 
         <!-- 列表操作按钮 -->
         <div id="toolbar" class="btn-group">
-             <span sec:authorize="hasAnyAuthority('super','/building/floor:find')">
-                 <span style="font-size: 22px;">当前楼层：</span>
-                 <select id="floorCombox" style="height: 22px"></select>
-                 </br>
-             </span>
-            <span sec:authorize="hasAnyAuthority('super','/building/room:add')">
+            <span sec:authorize="hasAnyAuthority('super','/building/floor:add')">
                 <button id="btn_add" type="button" class="btn btn-default">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
                 </button>
@@ -64,13 +59,13 @@
             <!--<button id="btn_delete" type="button" class="btn btn-default" onclick="batchUploadShow();">-->
             <!--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>批量上传-->
             <!--</button>-->
-            <span sec:authorize="hasAnyAuthority('super','/building/room:update')">
+            <span sec:authorize="hasAnyAuthority('super','/building/floor:update')">
                 <button id="btn_edit" type="button" class="btn btn-default">
                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>选择修改
                 </button>
             </span>
 
-            <span sec:authorize="hasAnyAuthority('super','/building/room:delete')">
+            <span sec:authorize="hasAnyAuthority('super','/building/floor:delete')">
                 <button id="btn_delete" type="button" class="btn btn-default">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>选择删除
                 </button>
@@ -79,13 +74,12 @@
 
         <div id="modal">
         </div>
+
     </body>
     <script th:inline="javascript">
-        var curretnFloorId = '';
-
         //列表初始化参数信息
         myBootstrapTable.domId = 'dataTable';
-        myBootstrapTable.reqUrl = '/building/room/list';
+        myBootstrapTable.reqUrl = '/building/customer/list';
         myBootstrapTable.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
         myBootstrapTable.toolBarDomId = 'toolbar';
         //myBootstrapTable.reqParamMap['isDelete'] = 0;
@@ -96,58 +90,63 @@
                 visible: true                  //是否显示复选框
             },
             {
-                field: 'roomName',
-                title: '房间名称'
+                field: 'name',
+                title: '姓名'
             },
             {
-                field: 'roomCode',
-                title: "房间编码"
+                field: 'wxNumber',
+                title: '微信号'
             },
             {
-                field: 'roomToll',
-                title: "房租",
-                formatter:function (value,row,index ) {
-                    return value + "¥"
-                }
+                field: 'refRoom',
+                title: '房间code'
             },
             {
-                field: 'areaSize',
-                title: "居住面积",
-                formatter:function (value,row,index ) {
-                    return value + "㎡"
-                }
+                field: 'idCard',
+                title: '身份证号'
             },
             {
-                field: 'transMap.floorIdToTransValue',
-                title: "所在楼层"
-            },
-            {
-                filed: 'status',
-                title: '房间状态',
+                filed: 'mobilePhone',
+                title: '手机',
                 formatter: function(value,row,index) {
-                    if (row.status === 1){
-                        return '空置';
-                    }else if(row.status === 2){
-                        return '被预定';
-                    }else if (row.status === 3){
-                        return '启用';
-                    }else if (row.status === 4){
-                        return '维修';
-                    }
-                    return '禁用';
+                    return row.mobilePhone;
                 }
             },
             {
-                filed: 'id',
+                filed: 'sex',
+                title: '性别',
+                formatter: function(value,row,index) {
+                    if (row.sex === 1){
+                        return "男";
+                    }
+                    return "女";
+                }
+            },
+            {
+                filed: 'occupationInfo',
+                title: '职业信息',
+                formatter: function(value,row,index) {
+                    return row.occupationInfo;
+                }
+            },
+            {
+                filed: 'urgentContacts',
+                title: '紧急联系人',
+                formatter: function(value,row,index) {
+                    return row.urgentContacts + "[电话:" + row.urgentContactsPhone + "]";
+                }
+            },
+            {
+                filed: 'customerId',
                 title: '操作',
                 formatter: function(value,row,index) {
-                    return '<a href="javascript:void(0)" onclick="goRoomCustomner(\''+ row.id +'\',\''+row.owner+'\')">当前房客</a>'
+                    return '<a href="javascript:void(0)">无</a>'
                 }
             }
         ];
 
-        myIZIMoal.title = '新增/编辑房间';
-        myIZIMoal.url =  '/building/room?go=add_update_room&action=add';
+        myIZIMoal.title = '新增/编辑房客';
+        myIZIMoal.url =  '/building/customer?go=add_update_customer&action=add';
 
         $(function () {
             myBootstrapTable.loadSuccessData = function(data){
@@ -158,26 +157,11 @@
         });
 
         function initPageEvent() {
-            //初始化页面楼层combox,绑定change事件
-            comboSelectInit("floorCombox");
-            $("#floorCombox").on('change',function (event) {
-                $("#floorCombox").next("span[id='floorCode']").remove();
-                $("#floorCombox").after('&nbsp;&nbsp;&nbsp;&nbsp;<span id="floorCode" style="font-size: 16px;">'+ event.target.value +'</span>');
-                curretnFloorId = $("#floorCombox").find("option[value='"+event.target.value+"']").attr("otherValue");
-                myBootstrapTable.reqParamMap['floorId'] = curretnFloorId;
-                myBootstrapTable.reload();
-            });
-
             //绑定新增用户
             $("#btn_add").on('click', function (event) {
                 event.preventDefault();
-                if (curretnFloorId.length === 0){
-                    var okFunc = function(){};
-                    Econfirm('新增提示', '请注意,新增房间需要先选择当前楼层,请先选择楼层!', okFunc);
-                    return;
-                }
-                myIZIMoal.url =  '/building/room?go=add_update_room&action=add&floorId=' + curretnFloorId;
-                myIZIMoal.subtitle = '新增楼层';
+                myIZIMoal.url =  '/building/customer?go=add_update_customer&action=add';
+                myIZIMoal.subtitle = '新增房客';
                 myIZIMoal.open(event, this);
             });
 
@@ -189,32 +173,23 @@
                     Ealert0("请正确选择需要修改的数据",1);
                     return;
                 }
-                myIZIMoal.url =  '/building/room?go=add_update_room&action=update&roomId=' + datas[0].id + "&floorId=" + datas[0].floorId;
-                myIZIMoal.subtitle = '编辑楼层';
+                myIZIMoal.url =  '/building/customer?go=add_update_customer&action=update&customerId=' + datas[0].customerId;
+                myIZIMoal.subtitle = '编辑房客';
                 myIZIMoal.open(event);
             });
 
             //绑定删除用户
             $("#btn_delete").on('click', function (event) {
-                var datas = myBootstrapTable.obtainSelectRowData();
+                var datas = myBootstrapTable.obtainSelectRowData()
                 if (datas.length === 0){
-                    Ealert0("请正确选择需要删除的数据");
+                    Ealert0("请正确选择需要删除的数据",1);
                     return;
                 }
                 var ids = [];
-                var noCodes = [];
                 $.each(datas,function (index,data) {
-                    if (data.status === 0 || data.status === 1){
-                        ids.push(data.id);
-                    }else{
-                        noCodes.push(data.roomCode);
-                    }
+                    ids.push(data.customerId);
                 });
-                if (noCodes.length > 0){
-                    Econfirm("删除提示","存在被使用的房间,这些房间目前无法被删除：" + JSON.stringify(noCodes), function () {});
-                }
-
-                ajaxSub.delUrl = '/building/room/del';
+                ajaxSub.delUrl = '/building/customer/del';
                 ajaxSub.reqData = ids;
                 ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
                 ajaxSub.delData();
@@ -222,32 +197,6 @@
                     myBootstrapTable.reload();
                 }
             });
-        }
-
-        /**
-         * 楼层comboc加载
-         * @param domId
-         */
-        function comboSelectInit(domId) {
-            $.get('/building/floor/obatinFloorCombox',{},function (rvData) {
-                var datas = rvData.result;
-                var html = '<option value="" otherValue="">所有</option>';
-                if (Array.isArray(datas)){
-                    $.each(datas,function (index,data) {
-                        html = html + '<option value="'+data.value+'" otherValue = "'+data.floorId+'"> '+data.text+' </option>'
-                    });
-                }
-                $("#" + domId).empty();
-                $("#" + domId).append(html);
-            });
-        }
-
-        /**
-         *
-         * @param id
-         */
-        function goRoomCustomner(id,owner) {
-            openNewWindow("/building/room?go=room_to_customer_list&roomId=" + id + "&owner=" +　owner,"",400,400);
         }
     </script>
 </html>

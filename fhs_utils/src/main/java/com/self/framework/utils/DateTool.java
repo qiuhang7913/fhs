@@ -3,9 +3,8 @@ package com.self.framework.utils;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +40,23 @@ public class DateTool {
 	}
 
 	/**
+	 * 根据localDateTime 获取对应的字符串时间
+	 * 获取失败后默认返回当前时间的字符串时间
+	 * @return
+	 */
+	public static LocalDate getLocalDateByDateStr(String dataString, String dataRule){
+		try {
+			if (dataRule.contains("E")){
+				return LocalDate.parse(dataString, DateTimeFormatter.ofPattern(dataRule, Locale.CHINA));
+			}
+			return LocalDate.parse(dataString, DateTimeFormatter.ofPattern(dataRule));
+		}catch (Exception e){
+			e.printStackTrace ();
+			return LocalDate.now();
+		}
+	}
+
+	/**
 	 * 获取前几日的时间数据
 	 * @param howDays
 	 * @return
@@ -54,7 +70,45 @@ public class DateTool {
 		}
 		return beforeDateList;
 	}
-	public static void main(String a[]) {
-		System.out.println(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L_WEEKDAY));
+
+	/**
+	 * 计算时间年份差
+	 * @param localDateStart 被减数
+	 * @param localDateEnd 减数
+	 * @return
+	 */
+	public static Integer calculationYearDifference(LocalDate localDateStart, LocalDate localDateEnd){
+		int years = calculationDifference(localDateStart, localDateEnd).getYears();
+		return Integer.valueOf(years);
 	}
+
+	/**
+	 * 计算时间月份差
+	 * @param localDateStart
+	 * @param localDateEnd
+	 * @return
+	 */
+	public static Integer calculationMonthDifference(LocalDate localDateStart, LocalDate localDateEnd){
+		int months = calculationDifference(localDateStart, localDateEnd).getMonths();
+		return Integer.valueOf(months);
+	}
+
+	/**
+	 * 计算
+	 * @param localDateStart
+	 * @param localDateEnd
+	 * @return
+	 */
+	private static Period calculationDifference(LocalDate localDateStart, LocalDate localDateEnd){
+		return Period.between(localDateStart, localDateEnd);
+	}
+
+	public static void main(String a[]) {
+		System.out.println( DateTool.calculationYearDifference(
+				DateTool.getLocalDateByDateStr("1993-06-30",DateTool.FORMAT_L3),
+				LocalDate.now()
+				)
+		);
+	}
+
 }

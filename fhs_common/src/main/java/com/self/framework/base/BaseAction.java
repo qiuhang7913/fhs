@@ -103,7 +103,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
 
         try {
             T t = this.transformationRequestParam(obj, false);//手动序列化当前类
-            Page<T> pageData = baseService.queryListHasPagingAndSort((T)t, (t.getPage()-1) * t.getRows(),t.getRows(), t.getSortOrder(), t.getSortFiled());
+            Page<T> pageData = baseService.queryListHasPagingAndSort(t, t.getPage()-1, t.getRows(), t.getSortOrder(), t.getSortFiled());
 
             if (!ObjectCheckUtil.checkIsNullOrEmpty(pageData)){
                 pageResult.setCode(HttpCodeConstant.HTTP_OK_CODE);
@@ -114,6 +114,7 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
         }catch (Exception e){
             pageResult.setCode(HttpCodeConstant.HTTP_ERROR_CODE);
             pageResult.setDescribe(HttpCodeConstant.HTTP_OK_ERROR_DESCRIBE);
+            throw new BusinessException(e.getMessage());
         }
         return pageResult;
     }

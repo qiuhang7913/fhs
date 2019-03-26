@@ -74,6 +74,11 @@ public class SysLogAcpect {
         }
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         SysLog sysLogAnnotationMethod = signature.getMethod().getAnnotation(SysLog.class);
+        //当前方法不做日志
+        if (ObjectCheckUtil.checkIsNullOrEmpty(sysLogAnnotationMethod)){
+            return;
+        }
+
         HttpServletRequest request = attributes.getRequest();
         HttpResult httpResult = null;
         PageResult pageResult = null;
@@ -90,8 +95,12 @@ public class SysLogAcpect {
                 logDes = "修改数据";
             }else if (BusinessCommonConstamt.TOW_STRING_CODE.equals(sysLogAnnotationMethod.logOptType())){
                 String listData = "";
-                if (!ObjectCheckUtil.checkIsNullOrEmpty(httpResult)){
-                    listData =  ",本次查询成功相应数据个数：" + JSON.parseArray(JSON.toJSONString(httpResult.getResult())).size();
+                if (!ObjectCheckUtil.checkIsNullOrEmpty(httpResult) && !ObjectCheckUtil.checkIsNullOrEmpty(httpResult.getResult())){
+                    if (httpResult.getResult() instanceof Iterable){
+                        listData =  ",本次查询成功相应数据个数：" + JSON.parseArray(JSON.toJSONString(httpResult.getResult())).size();
+                    }else{
+                        listData =  ",本次查询成功相应数据个数：1";
+                    }
                 }
                 if (!ObjectCheckUtil.checkIsNullOrEmpty(pageResult)){
                     listData =  ",本次查询成功相应数据个数：" + pageResult.getTotal();
@@ -148,6 +157,9 @@ public class SysLogAcpect {
                 .recordOptTime(DateTool.getDataStrByLocalDateTime(LocalDateTime.now(), DateTool.FORMAT_L6))
                 .build();
 
-        System.out.println(JSON.toJSONString(build));
+        if (kafkaService == null){
+            kafkaService = ObtainSpringBean.getBean(SysLogKafkaService.class);
+        }
+        kafkaService.sendMsg(build);
     }
 }

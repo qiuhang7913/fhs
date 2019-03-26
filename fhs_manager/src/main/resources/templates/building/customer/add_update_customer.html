@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>房客新增修改页面</title>
+
+    <!--js 插件引入-->
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-table.min.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrap-treegird-table.css}">
+    <link rel="stylesheet" th:href="@{/plugin/bootstrap/css/bootstrapValidator.css}" />
+
+    <script th:src="@{/plugin/bootstrap/js/jquery.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap-table.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap-table-zh-CN.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap-treegird-table.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/jquery.treegrid.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrapValidator.min.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/bootstrap/js/bootstrap.extend.js}" type="text/javascript"></script>
+    <script th:src="@{/plugin/laydate/laydate.js}" type="text/javascript"></script>
+
+    <script th:src="@{/js/myUtil_1.2.1.js}"></script>
+</head>
+<body style="width: 99%">
+    <div style="width: 90%; margin-top: 2%; margin-left: 3%">
+    <form id="form" role="form" class="form-horizontal"
+          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+        <div class="form-group">
+            <label for="customer_name" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">房客姓名：</label>
+            <div class="col-sm-10" style="width:30%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="请输入房客姓名"
+                       pattern="^[\u4e00-\u9fa5]{2,4}$" data-bv-regexp-message="输入有误!"
+                       required data-bv-notempty-message="房客姓名不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="wx_number" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">微信号：</label>
+            <div class="col-sm-10" style="width:30%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="wx_number" name="wx_number" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_card" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">身份证号：</label>
+            <div class="col-sm-10" style="width:40%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="id_card" name="id_card" placeholder="请输入身份证号" maxlength="18"
+                       pattern="(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)" data-bv-regexp-message="输入有误!"
+                       required data-bv-notempty-message="身份证号不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="mobile_phone" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">手机号：</label>
+            <div class="col-sm-10" style="width:35%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="mobile_phone" name="mobile_phone" placeholder="请输入手机号" maxlength="11"
+                       pattern="^1[34578]\d{9}$" data-bv-regexp-message="输入有误!"
+                       required data-bv-notempty-message="手机号不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="birthday" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">生日：</label>
+            <div class="col-sm-10" style="width:30%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="birthday" name="birthday" placeholder="请输入生日"
+                       required data-bv-notempty-message="生日不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="age" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">年龄：</label>
+            <div class="col-sm-10" style="width:30%; float: left; padding-left: 0 !important;">
+                <input type="number" class="form-control" id="age" name="age">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="sex" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">性别：</label>
+            <div class="col-sm-10" style="width:35%; float: left; padding-left: 0 !important;">
+                <select class="form-control" id="sex" name="sex"
+                        data-bv-notempty data-bv-notempty-message="请选择">
+                    <option value="">请选择</option>
+                    <option th:value="1">男</option>
+                    <option th:value="2">女</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="occupation_info" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">职业信息：</label>
+            <div class="col-sm-10" style="width:50%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="occupation_info" name="occupation_info" placeholder="请输入职业信息"
+                       required data-bv-notempty-message="职业信息不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">户籍地址：</label>
+            <div class="col-sm-10" style="width:30%; float: left; padding-left: 0 !important;">
+                <div style="margin-top: 5%;">
+                    <label style="float: left;" class="control-label">省:</label>
+                    <select class="form-control" id="province" name="province" style="float: left; width: 60%;">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+                <div style="clear: both"></div>
+                <div style="margin-top: 5%;">
+                    <label style="float: left;">市:</label>
+                    <select class="form-control" id="city" name="city" style="float: left; width: 60%;">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+                <div style="clear: both"></div>
+                <div style="margin-top: 5%;">
+                    <label style="float: left;">区:</label>
+                    <select class="form-control" id="area" name="area" style="float: left; width: 60%;">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ref_room" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">所属房间：</label>
+            <div class="col-sm-10" style="width:30%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="ref_room" name="ref_room" placeholder="请输入所属房间"
+                       required data-bv-notempty-message="所属房间不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="urgent_contacts" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">紧急联系人：</label>
+            <div class="col-sm-10" style="width:30%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="urgent_contacts" name="urgent_contacts" placeholder="请输入紧急联系人"
+                       required data-bv-notempty-message="紧急联系人不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="urgent_contacts_phone" class="col-sm-2 control-label" style="width:20%; float: left; margin-top: 1%">紧急联系人电话：</label>
+            <div class="col-sm-10" style="width:35%; float: left; padding-left: 0 !important;">
+                <input type="text" class="form-control" id="urgent_contacts_phone" name="urgent_contacts_phone" placeholder="请输入紧急联系人手机" maxlength="11"
+                       pattern="^1[34578]\d{9}$" data-bv-regexp-message="输入有误!"
+                       required data-bv-notempty-message="紧急联系人手机不能为空!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-top: 5%">
+                <span style="margin-left: 20%"></span>
+                <button type="button" id="btn_ok" class="btn btn-default">提交</button>
+                <span style="margin-left: 20%"></span>
+                <button type="reset" id="btn_reset" class="btn btn-default">重置</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</body>
+<script th:inline="javascript">
+    var action = [[${param.action}]];
+    var customerId = [[${param.customerId}]];
+    var allCityDatas = {};
+    var allAreaDatas = {};
+
+    //****************************************** ajax 后台交互初始化定义 start
+    ajaxSub.postUrl = '/building/customer/addOrUpdate';
+    ajaxSub.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};
+    ajaxSub.rvPostFunc = function (rvData) {
+        if (rvData.code === 200){
+            window.parent.myBootstrapTable.reload();
+            window.parent.myIZIMoal.close();
+        }else{
+            Ealert0("错误",1);
+        }
+    };
+
+    ajaxSub.rvGetFunc = function (rvData) {
+        var buildingFlooCustomerBean = rvData.result;
+        console.log(buildingFlooCustomerBean)
+        $("#customer_name").val(buildingFlooCustomerBean.name);
+        $("#wx_number").val(buildingFlooCustomerBean.wxNumber);
+        $("#id_card").val(buildingFlooCustomerBean.idCard);
+        $("#mobile_phone").val(buildingFlooCustomerBean.mobilePhone);
+        $("#birthday").val(buildingFlooCustomerBean.birthday);
+        $("#age").val(buildingFlooCustomerBean.age);
+        $("#sex").find("option[value='"+buildingFlooCustomerBean.sex+"']").attr("selected","selected");
+        $("#occupation_info").val(buildingFlooCustomerBean.occupationInfo);
+        var permanentAddr = buildingFlooCustomerBean.permanentAddr;
+        var addrs = permanentAddr.split(",");
+        if(addrs.length > 0){
+            $("#province").prepend('<option value="000000" selected="selected">'+addrs[0]+'</option>');
+        }
+        if(addrs.length > 1){
+            $("#city").prepend('<option value="000000" selected="selected">'+addrs[1]+'</option>');
+        }
+        if(addrs.length > 2){
+            $("#area").prepend('<option value="000000" selected="selected">'+addrs[2]+'</option>');
+        }
+        $("#ref_room").val(buildingFlooCustomerBean.refRoom);
+        $("#urgent_contacts").val(buildingFlooCustomerBean.urgentContacts);
+        $("#urgent_contacts_phone").val(buildingFlooCustomerBean.urgentContactsPhone);
+        //数据回显
+
+    };
+    //****************************************** ajax 后台交互初始化定义 end
+
+    $(function(){
+        if (action[0] === 'add'){//新增页面
+            //.... do somethings;
+            customerId = [];
+        } else if (action[0] === 'update'){//修改页面
+            if(customerId != null && customerId.length > 0){
+                ajaxSub.getUrl = '/building/customer/obtainOne/' + customerId[0];
+                ajaxSub.getData();
+            }
+        }
+        initPageEvent();
+    });
+    
+    function initPageEvent() {
+        //初始化时间插件
+        laydate.render({
+            elem: '#birthday' //指定元素
+        });
+
+        //获取中国地址信息
+        $.get('/china.json',{},function (chinaData) {
+            var provinces = chinaData.children;
+            var insertHtml = '<option value="">请选择</option>';
+            $.each(provinces,function (index,province) {
+                insertHtml = insertHtml + '<option value="'+province.id+'">'+province.name+'</option>';
+                allCityDatas[province.id] = province.children;
+            });
+            $("#province").empty();
+            $("#province").append(insertHtml);
+        });
+
+        //省下拉绑定
+        $("#province").on('change',function (event) {
+            event.preventDefault();
+            var insertHtml = '<option value="">请选择</option>';
+            var proId = $(this).val();
+            var citys = allCityDatas[proId];
+            $.each(citys,function (index,city) {
+                insertHtml = insertHtml + '<option value="'+city.id+'">'+city.name+'</option>';
+                allAreaDatas[city.id] = city.children;
+            });
+            $("#city").empty();
+            $("#city").append(insertHtml);
+        });
+
+        //市下拉绑定
+        $("#city").on('change',function (event) {
+            event.preventDefault();
+            var insertHtml = '<option value="">请选择</option>';
+            var cityId = $(this).val();
+            var areas = allAreaDatas[cityId];
+            $.each(areas,function (index,area) {
+                insertHtml = insertHtml + '<option value="'+area.id+'">'+area.name+'</option>';
+            });
+            $("#area").empty();
+            $("#area").append(insertHtml);
+        });
+
+        //提交绑定
+        $("#btn_ok").on('click', function (event) {
+            event.preventDefault();
+            var flag = isVlidator("form");
+            if (!flag){
+                return;
+            }
+            var buildingFlooCustomerBean = {
+                name:$("#customer_name").val(),
+                idCard : $("#id_card").val(),
+                mobilePhone : $("#mobile_phone").val(),
+                birthday : $("#birthday").val(),
+                age : $("#age").val(),
+                sex : $("#sex").val(),
+                occupationInfo : $("#occupation_info").val(),
+                refRoom : $("#ref_room").val(),
+                permanentAddr : $("#province").find("option:selected").text() + "," + $("#city").find("option:selected").text() + "," + $("#area").find("option:selected").text(),
+                urgentContacts : $("#urgent_contacts").val(),
+                urgentContactsPhone : $("#urgent_contacts_phone").val(),
+                customerId : customerId.length === 0 ?  "" : customerId[0]
+            };
+
+            ajaxSub.reqData = buildingFlooCustomerBean;
+            ajaxSub.postData();
+        });
+    }
+
+</script>
+</html>

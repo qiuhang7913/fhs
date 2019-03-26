@@ -1,5 +1,6 @@
 package com.self.framework.building.action;
 
+import com.self.framework.annotation.SysLog;
 import com.self.framework.base.BaseAction;
 import com.self.framework.building.bean.BuildingFloorBean;
 import com.self.framework.building.service.BuildingFloorService;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/building/floor")
+@SysLog
 public class BuildingFloorAction extends BaseAction<BuildingFloorBean> {
 
     @Autowired

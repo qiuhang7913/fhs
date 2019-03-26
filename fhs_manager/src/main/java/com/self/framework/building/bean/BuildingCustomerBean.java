@@ -11,6 +11,8 @@ import java.util.Date;
 @Data
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "building_customer")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class BuildingCustomerBean extends BaseBean{
