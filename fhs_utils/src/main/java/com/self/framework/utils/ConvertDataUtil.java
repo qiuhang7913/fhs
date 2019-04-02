@@ -11,6 +11,7 @@ public class ConvertDataUtil {
 
     private static Integer DEFUALT_INT = 0;
 
+    private static Double DEFUALT_DOUBLE = 0.00;
     /**
      *
      * @param obj
@@ -31,6 +32,19 @@ public class ConvertDataUtil {
 
         }
         return DEFUALT_INT;
+    }
+
+    /**
+     *
+     * @param obj
+     * @return
+     */
+    public static Double convertDouble(Object obj){
+        if (!ObjectCheckUtil.checkIsNullOrEmpty(obj)){
+            return Double.parseDouble(String.valueOf(obj));
+
+        }
+        return DEFUALT_DOUBLE;
     }
 
     public static void main(String[] args) {

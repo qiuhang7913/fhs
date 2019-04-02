@@ -3,6 +3,7 @@ package com.self.framework.base;
 import com.self.framework.annotation.Trans;
 import com.self.framework.nosql.redis.StringRedisService;
 import com.self.framework.utils.ObjectCheckUtil;
+import com.self.framework.utils.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class TransServiceImpl<T extends BaseBean> implements TransService {
                 if (ObjectCheckUtil.checkIsNullOrEmpty(trans)){
                     continue;
                 }
-                String redisQueryKey = trans.transKey() + data.getPkFileValue();
+                String redisQueryKey = trans.transKey() + ReflectUtil.reflectObjObtainFileValue(data, field.getName());
                 String value = "";
                 if (redisService.isExist(redisQueryKey)){
                     value = redisService.getObj(redisQueryKey);
@@ -43,4 +44,5 @@ public class TransServiceImpl<T extends BaseBean> implements TransService {
             }
         }
     }
+
 }

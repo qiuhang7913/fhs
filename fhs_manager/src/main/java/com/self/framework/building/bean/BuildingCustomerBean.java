@@ -1,5 +1,7 @@
 package com.self.framework.building.bean;
 
+import com.self.framework.annotation.Trans;
+import com.self.framework.building.service.BuildingCustomerService;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "building_customer")
+@Trans
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class BuildingCustomerBean extends BaseBean{
 
@@ -58,6 +61,7 @@ public class BuildingCustomerBean extends BaseBean{
 
 	// 所属房间
 	@Column(name = "ref_room")
+	@Trans(transKey = BuildingCustomerService.REF_ROOMID_TO_ROOMCODE_CACHE_KEY)
 	private String refRoom;
 
 	// 信用积分(3以下差 6以上良好 8以上优秀)
@@ -79,4 +83,5 @@ public class BuildingCustomerBean extends BaseBean{
 	// 紧急联系人电话
 	@Column(name = "urgent_contacts_phone")
 	private Long urgentContactsPhone;
+
 }

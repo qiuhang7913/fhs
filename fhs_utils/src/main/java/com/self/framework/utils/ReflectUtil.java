@@ -4,11 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @des: 反射工具类
@@ -31,6 +29,22 @@ public class ReflectUtil {
      */
     public static Class<?> reflectObjObtainFileClassType(Object object, String fileName) {
         return reflectObjObtainFileMethod(object,fileName).getReturnType();
+    }
+
+    /**
+     *
+     * @param object
+     * @param fileName
+     * @return
+     */
+    public static Object reflectObjObtainFileValue(Object object, String fileName) {
+        Object invoke = null;
+        try {
+            invoke = reflectObjObtainFileMethod(object, fileName).invoke(object);
+        } catch (IllegalAccessException | InvocationTargetException e ) {
+            e.printStackTrace();
+        }
+        return invoke;
     }
 
     /**

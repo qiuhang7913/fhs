@@ -153,12 +153,4 @@ public class BaseAction<T extends BaseBean> extends SuperAction {
         return sessionUserInfo.getAuthorities().contains(new SimpleGrantedAuthority(nameSpace + ":" + action));
     }
 
-    /**
-     *
-     * @return
-     */
-    protected UserDetails getSessionUserInfo(){
-        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
 }

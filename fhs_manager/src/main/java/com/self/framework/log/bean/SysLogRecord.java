@@ -1,6 +1,7 @@
 package com.self.framework.log.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.self.framework.annotation.Between;
 import com.self.framework.annotation.NoSpecificationQuery;
 import com.self.framework.base.BaseBean;
 import com.self.framework.ucenter.bean.SysMenuResourceFunc;
@@ -45,6 +46,7 @@ public class SysLogRecord extends BaseBean {
 
     @Column(name = "record_opt_time")
     @NotNull
+    @Between
     private String recordOptTime;//记录操作时间
 
     @Column(name = "record_opt_remote_ip")

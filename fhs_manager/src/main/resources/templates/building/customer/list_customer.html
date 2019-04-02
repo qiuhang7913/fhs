@@ -99,7 +99,11 @@
             },
             {
                 field: 'refRoom',
-                title: '房间code'
+                title: '房间信息',
+                formatter: function(value,row,index) {
+                    var tipsHtml = '<span href="javascript:void(0)" key="'+row.refRoom+'" onmouseover="initTips(this)" class="tooltip-show" data-html="true" data-toggle="tooltip" title="" >' + row.transMap.refRoomToTransValue + '</span>';
+                    return tipsHtml;
+                }
             },
             {
                 field: 'idCard',
@@ -197,6 +201,29 @@
                     myBootstrapTable.reload();
                 }
             });
+        }
+
+        /**
+         *
+         * @param which
+         */
+        function initTips(which) {
+            var titleHtml = $(which).attr("title");
+            if (titleHtml.toString().length === 0){
+                $.get('/building/room/obtainOne/' + $(which).attr("key"),{},function (rvData) {
+                    var roomBean = rvData.result;
+                    var html = '<p align="left">房间code:' + roomBean.roomCode + '</br>'
+                        + '房间名称:' + roomBean.roomName + '</br>'
+                        + '所在楼层:' + roomBean.transMap.floorIdToTransValue + '</br>'
+                        + '租金:' + roomBean.roomToll + '¥ </p>';
+                    $(which).attr("title",html);
+                    $(which).tooltip('show');
+                    $(which).attr("title","");
+                });
+            }else{
+                $(which).tooltip('show');
+                $(which).attr("title","");
+            }
         }
     </script>
 </html>

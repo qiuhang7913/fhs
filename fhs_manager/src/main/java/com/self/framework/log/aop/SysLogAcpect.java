@@ -8,19 +8,19 @@ import com.self.framework.http.HttpResult;
 import com.self.framework.http.PageResult;
 import com.self.framework.log.bean.SysLogRecord;
 import com.self.framework.log.service.SysLogKafkaService;
-import com.self.framework.message.kafka.KafkaService;
 import com.self.framework.spring.extend.ObtainSpringBean;
 import com.self.framework.ucenter.bean.SysUser;
 import com.self.framework.utils.ConvertDataUtil;
 import com.self.framework.utils.DateTool;
 import com.self.framework.utils.ObjectCheckUtil;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -32,8 +32,8 @@ import java.time.LocalDateTime;
  * @author qiuhang
  * @version v1.0
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class SysLogAcpect {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -42,8 +42,8 @@ public class SysLogAcpect {
     /**
      * @des: 切入点
      */
-    @Pointcut("execution(public * com.self.framework.base.BaseAction.*(..)) || " +
-            "execution(public * com.self.framework.*.action.*.*(..))")
+//    @Pointcut("execution(public * com.self.framework.base.BaseAction.*(..)) || " +
+//            "execution(public * com.self.framework.*.action.*.*(..))")
     public void sysLog(){}
 
     /**

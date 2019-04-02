@@ -35,7 +35,7 @@ public class BuildingRoomServiceImpl extends BaseServiceImpl<BuildingRoomBean> i
             put("floorId", buildingRoomBean.getFloorId());
         }});
         if (!ObjectCheckUtil.checkIsNullOrEmpty(queryDataList)){
-            redisService.insertObj(FLOOR_ID_TO_NAME_CACHE + buildingRoomBean.getId(), queryDataList.get(0).get("floorCode").toString());
+            redisService.insertObj(FLOOR_ID_TO_NAME_CACHE + buildingRoomBean.getFloorId(), queryDataList.get(0).get("floorCode").toString());
         }
         //缓存更新
         return super.addOrUpdata(buildingRoomBean);

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,12 +32,12 @@ public class IndexAction extends SuperAction {
     MenuService menuService;
 
     @Override
-    protected String goPage(HttpServletRequest request) {
+    protected String goPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SysUser sysUser = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boolean isAdmin = BusinessCommonConstamt.DEFALUT_SUPER_MANAGER_LOGIN_NAME.equals(sysUser.getLoginName());
         List<SysMenuResource> currUserMenuRes = getCurrUserMenuRes(sysUser.getUserRoles(), isAdmin);
         request.setAttribute("currUserMenuRes",currUserMenuRes);
-        return super.goPage(request);
+        return super.goPage(request, response);
     }
     /**
      * 获取当前用户菜单资源
