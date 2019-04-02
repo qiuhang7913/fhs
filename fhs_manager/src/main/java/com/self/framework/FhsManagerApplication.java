@@ -1,11 +1,8 @@
 package com.self.framework;
 
-import com.self.framework.scheduled.dynamicScheduled.DynamicScheduledTaskService;
-import com.self.framework.scheduled.dynamicScheduled.MyRunnable;
 import com.self.framework.spring.extend.jpa.BaseDaoFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>账单详情</title>
@@ -23,6 +23,8 @@
     <script th:src="@{/plugin/jquery-confirm/jquery-confirm.min.js}" type="text/javascript"></script>
 
     <script th:src="@{/js/myUtil_1.2.1.js}"></script>
+    <script th:src="@{/js/FileSaver.js}"></script>
+    <script th:src="@{/js/jquery.wordexport.js}"></script>
     <style type="text/css">
         .word-icon {
             font-family: helvetica,sans-serif;
@@ -38,24 +40,106 @@
 <body style="width: 99%">
     <div style="margin-left: 5%; margin-top: 1%;">
         <div style="width: 99%;">
-            <button id="btn_add" type="button" class="btn btn-default">
+            <button id="btn_download" type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>下载
                 <span class="word-icon">W</span>
             </button>
         </div>
-        <div style="width: 80%;border: 1px solid #CCCCCC; height: 400px; margin-top: 1%">
+        <div id="pagecontent" style="width: 80%;border: 1px solid #CCCCCC; height: 400px; margin-top: 1%; background-color: #f2f3eb">
             <div style="margin-top: 1%">
-                <span>账单编码:</span>
-                <input style="border: 0px;" readonly="readonly" value="40289f6469d837df0169d83a2c220001"/>
+                <div style="font-family: 楷体; font-weight: bold; font-size: 16px;">
+                    <span style="width: 25%; color: orange;">账单状态:</span>
+                    <span id="status" style="width: 70%; color: green;"></span>
+                </div>
             </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="float: left; width: 45%;">
+                    <span style="width: 25%;">账单编码:</span>
+                    <span id="billCode" style="width: 70%;"></span>
+                </div>
+                <div style="float: left; width: 45%;">
+                    <span style="width: 25%;">记账时间:</span>
+                    <span id="billTime" style="width: 70%;"></span>
+                </div>
+            </div>
+            <div style="clear: both"></div>
             <div style="margin-top: 1%">
                 <div style="float: left; width: 45%;">
                     <span style="width: 25%;">账单所属(房间):</span>
-                    <input style="border: 0px; width: 70%;" readonly="readonly" value="L_004(四楼) -> R_01(1号房间)"/>
+                    <span id="refRoom" style="width: 70%;"></span>
                 </div>
                 <div style="float: left; width: 45%;">
                     <span style="width: 25%;">账单所属(房客):</span>
-                    <input style="border: 0px; width: 70%;" readonly="readonly" value=" 邱航"/>
+                    <span id="refCustomer" style="width: 70%;"></span>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="float: left; width: 45%;">
+                    <span style="width: 25%;">之前水立方数:</span>
+                    <span id="beforeWaterCube" style="width: 70%;"></span>m³
+                </div>
+                <div style="float: left; width: 45%;">
+                    <span style="width: 25%;">本次水立方数:</span>
+                    <span id="currWaterCube" style="width: 70%;"></span>m³
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="float: left; width: 45%; color: chocolate;">
+                    <span style="width: 25%;">本次用水立方数:</span>
+                    <span id="useWaterCube" style="width: 70%;"></span>m³
+                </div>
+                <div style="float: left; width: 45%; color: chocolate;">
+                    <span style="width: 25%;">当前水费总计(<span id="waterRent"></span>¥/m³):</span>
+                    <span id="currWaterRentTotal" style="width: 70%;"></span>¥
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="float: left; width: 45%;">
+                    <span style="width: 25%;">之前电度数:</span>
+                    <span id="beforeElectricEnergy" style="width: 70%;"></span>度
+                </div>
+                <div style="float: left; width: 45%;">
+                    <span style="width: 25%;">本次电度数:</span>
+                    <span id="currElectricEnergy" style="width: 70%;"></span>度
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="float: left; width: 45%; color: chocolate;">
+                    <span style="width: 25%;">本次用电度数:</span>
+                    <span id="useElectricEnergy" style="width: 70%;"></span>度
+                </div>
+                <div style="float: left; width: 45%; color: chocolate;">
+                    <span style="width: 25%;">当前电费总计(<span id="electricEnergyRent"></span>¥/度):</span>
+                    <span id="currElectricEnergyRentTotal" style="width: 70%;"></span>¥
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="font-family: 楷体; font-weight: bold; font-size: 22px;">
+                    <span style="width: 25%; color: chocolate;">缴费总计:</span>
+                    <span id="rentTotalCapitals" style="width: 30%; color: chocolate;"></span>
+                    <span id="rentTotal" style="width: 30%; color: chocolate;"></span>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="font-family: 楷体; font-weight: bold; font-size: 22px;">
+                    <span style="width: 25%; color: chocolate;">实收金额:</span>
+                    <span id="actualRentTotalCapitals" style="width: 30%; color: chocolate;"></span>
+                    <span id="actualRentTotal" style="width: 30%; color: chocolate;"></span>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <div style="margin-top: 1%">
+                <div style="font-family: 楷体; font-weight: bold; font-size: 16px;">
+                    <span style="width: 25%; color: chocolate;">本次新增冲减金额:</span>
+                    <span id="blankingCapitals" style="width: 30%; color: green;"></span>
+                    <span id="blanking" style="width: 30%; color: green;"></span>
                 </div>
             </div>
         </div>
@@ -63,15 +147,44 @@
 </body>
 <script th:inline="javascript">
     var billId = [[${param.billId}]];
+    var staus_list = ['已启动', '已生成', '已缴费'];
 
     //****************************************** ajax 后台交互初始化定义 start
     ajaxSub.rvGetFunc = function (rvData) {
         var billBean = rvData.result;
         console.log(billBean);
-        // $("#record_time").val(billBean.recordTime);
-        // $("#ref_room").val(billBean.transMap.refRoomToTransValue);
-        // $("#ref_customer").val(billBean.transMap.refCustomerToTransValue);
-        // $("#rent_total").val(billBean.rentTotal);
+        var billTime = billBean.recordTime.replace(/-/g,"").replace(/ /g,"").replace(/:/g,"");
+        inputHtmlSpanValue("status", staus_list[billBean.status - 1]);
+        inputHtmlSpanValue("billCode", billTime + "-" + billBean.transMap.refFloorToTransValue + "-" + billBean.transMap.refRoomToTransValue);
+        inputHtmlSpanValue("billTime", billBean.recordTime);
+        inputHtmlSpanValue("refRoom", billBean.transMap.refFloorToTransValue + "(" + billBean.transMap.refFloorNameToTransValue + ")"
+                                        + "->" + billBean.transMap.refRoomToTransValue + "(" + billBean.transMap.refRoomNameToTransValue + ")");
+        inputHtmlSpanValue("refCustomer", billBean.transMap.refCustomerToTransValue);
+
+        //水的信息
+        inputHtmlSpanValue("beforeWaterCube", billBean.beforeWaterCube);//之前水立方计数
+        inputHtmlSpanValue("currWaterCube", billBean.currWaterCube);//当前水立方计数
+        inputHtmlSpanValue("useWaterCube", (billBean.currWaterCube - billBean.beforeWaterCube) + "");//用水立方数
+        inputHtmlSpanValue("waterRent", billBean.transMap.waterRent);//立方水收费
+        inputHtmlSpanValue("currWaterRentTotal", billBean.waterRentTotal);//水费总计
+
+        //电的信息
+        inputHtmlSpanValue("beforeElectricEnergy", billBean.beforeElectricEnergy);//之前电度计数
+        inputHtmlSpanValue("currElectricEnergy", billBean.currElectricEnergy);//当前电度计数
+        inputHtmlSpanValue("useElectricEnergy", (billBean.currElectricEnergy - billBean.beforeElectricEnergy) + "");//用电度数
+        inputHtmlSpanValue("electricEnergyRent", billBean.transMap.electricEnergyRent);//电度收费
+        inputHtmlSpanValue("currElectricEnergyRentTotal", billBean.electricRentTotal);//电费总计
+
+        //总计信息
+        inputHtmlSpanValue("rentTotal", billBean.rentTotal + "¥");//缴费总计
+        inputHtmlSpanValue("rentTotalCapitals", '(' + smalltoBIG(billBean.rentTotal) + ")");//缴费总计大写
+        inputHtmlSpanValue("actualRentTotal", billBean.actualRentTotal + "¥");//实收总计
+        inputHtmlSpanValue("actualRentTotalCapitals", '(' + smalltoBIG(billBean.actualRentTotal)+ ")");//实收总计大写
+
+        var blanking = billBean.actualRentTotal - billBean.rentTotal;
+        blanking = blanking > 0.00 ? blanking.toFixed(2) : 0.00;
+        inputHtmlSpanValue("blanking", blanking + "¥");//新增冲减
+        inputHtmlSpanValue("blankingCapitals", '(' + smalltoBIG(blanking)+ ")");//新增冲减大写
         //数据回显
 
     };
@@ -86,7 +199,14 @@
     });
     
     function initPageEvent() {
+        $("#btn_download").on("click",function (evnet) {
+            $("#pagecontent").wordExport($("#billCode").text() + "-bill");
+        });
+    }
 
+    function inputHtmlSpanValue(domId,value) {
+        $("#" + domId).empty();
+        $("#" + domId).append(value);
     }
 </script>
 </html>

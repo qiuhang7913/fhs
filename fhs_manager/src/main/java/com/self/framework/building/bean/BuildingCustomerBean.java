@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.self.framework.base.BaseBean;
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -84,4 +85,11 @@ public class BuildingCustomerBean extends BaseBean{
 	@Column(name = "urgent_contacts_phone")
 	private Long urgentContactsPhone;
 
+	// 可冲减租金
+	@Column(name = "blanking_rent")
+	private BigDecimal blankingRent;
+
+	// 租房押金(总押金 = 租房押金 + 房间物件押金)
+	@Column(name = "deposit_rent")
+	private BigDecimal depositRent;
 }

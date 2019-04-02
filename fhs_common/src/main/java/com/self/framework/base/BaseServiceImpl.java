@@ -103,9 +103,12 @@ public class BaseServiceImpl<T extends BaseBean> implements BaseService<T> {
 
     @Override
     public T findOneById(String id) {
-        T t = baseDao.findById(id).get();
-        transService.transOne(t);
-        return t;
+        Optional<T> byId = baseDao.findById(id);
+        if (byId.isPresent()){
+            transService.transOne(byId.get());
+            return byId.get();
+        }
+        return null;
     }
 
     /**

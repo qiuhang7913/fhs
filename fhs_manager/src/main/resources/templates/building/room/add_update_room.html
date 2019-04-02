@@ -227,6 +227,7 @@
             $("#owner").removeAttr("readonly");
             $("#owner").removeAttr("required");
             $("#owner").removeAttr("data-bv-notempty-message");
+            $("#owner").val("");
             if (parseInt(event.target.value) === 1){ //说明当前房间空置
                 $("#owner").attr("readonly","readonly");
             }else if (parseInt(event.target.value) === 2 || parseInt(event.target.value) === 3 ) {

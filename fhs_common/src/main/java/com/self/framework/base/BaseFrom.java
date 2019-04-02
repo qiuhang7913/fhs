@@ -11,7 +11,17 @@ import java.io.Serializable;
  */
 public class BaseFrom implements Serializable {
 
+    private String accessTolen;
+
     public String asJson(){
         return JSON.toJSONString(this);
     };
+
+    public String getAccessTolen() {
+        return accessTolen;
+    }
+
+    public void setAccessTolen(String accessTolen) {
+        this.accessTolen = accessTolen;
+    }
 }

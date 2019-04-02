@@ -56,6 +56,7 @@
         myBootstrapTable.reqUrl = '/building/room/list';
         myBootstrapTable.headers = {'X-CSRF-TOKEN': [[${_csrf.token}]]};//header信息
         myBootstrapTable.toolBarDomId = 'toolbar';
+        myBootstrapTable.reqParamMap['status'] = 3;
         myBootstrapTable.tableColumns =  [
             {
                 checkbox: true,
