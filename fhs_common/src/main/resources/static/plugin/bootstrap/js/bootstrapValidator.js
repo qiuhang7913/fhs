@@ -316,7 +316,7 @@ if (typeof jQuery === 'undefined') {
                             .addClass('help-block')
                             .attr('data-bv-validator', validatorName)
                             .attr('data-bv-for', field)
-                            .attr('data-bv-result', this.STATUS_NOT_VALIDATED)
+                            .attr('data-bv-http', this.STATUS_NOT_VALIDATED)
                             .html(this._getMessage(field, validatorName))
                             .appendTo($message);
                     }
@@ -953,7 +953,7 @@ if (typeof jQuery === 'undefined') {
          *
          * @param {String|jQuery} field The field name or field element
          * @param {String} status The status. Can be 'NOT_VALIDATED', 'VALIDATING', 'INVALID' or 'VALID'
-         * @param {String} [validatorName] The validator name. If null, the method updates validity result for all validators
+         * @param {String} [validatorName] The validator name. If null, the method updates validity http for all validators
          * @returns {BootstrapValidator}
          */
         updateStatus: function(field, status, validatorName) {
@@ -1004,7 +1004,7 @@ if (typeof jQuery === 'undefined') {
                 }
 
                 // Show/hide error elements and feedback icons
-                $errors.attr('data-bv-result', status);
+                $errors.attr('data-bv-http', status);
 
                 // Determine the tab containing the element
                 var $tabPane = $field.parents('.tab-pane'),
@@ -1040,8 +1040,8 @@ if (typeof jQuery === 'undefined') {
 
                     case this.STATUS_VALID:
                         // If the field is valid (passes all validators)
-                        isValidField = ($allErrors.filter('[data-bv-result="' + this.STATUS_NOT_VALIDATED +'"]').length === 0)
-                                     ? ($allErrors.filter('[data-bv-result="' + this.STATUS_VALID +'"]').length === $allErrors.length)  // All validators are completed
+                        isValidField = ($allErrors.filter('[data-bv-http="' + this.STATUS_NOT_VALIDATED +'"]').length === 0)
+                                     ? ($allErrors.filter('[data-bv-http="' + this.STATUS_VALID +'"]').length === $allErrors.length)  // All validators are completed
                                      : null;                                                                                            // There are some validators that have not done
                         if (isValidField !== null) {
                             this.disableSubmitButtons(this.$submitButton ? !this.isValid() : !isValidField);
@@ -1082,7 +1082,7 @@ if (typeof jQuery === 'undefined') {
                                     container: 'body',
                                     html: true,
                                     placement: 'top',
-                                    title: $allErrors.filter('[data-bv-result="' + that.STATUS_INVALID + '"]').eq(0).html()
+                                    title: $allErrors.filter('[data-bv-http="' + that.STATUS_INVALID + '"]').eq(0).html()
                                 })
                                 : $icon.tooltip('hide');
                         break;
@@ -1091,7 +1091,7 @@ if (typeof jQuery === 'undefined') {
                         (isValidField === false)
                                 ? $icon.css('cursor', 'pointer').popover('destroy').popover({
                                     container: 'body',
-                                    content: $allErrors.filter('[data-bv-result="' + that.STATUS_INVALID + '"]').eq(0).html(),
+                                    content: $allErrors.filter('[data-bv-http="' + that.STATUS_INVALID + '"]').eq(0).html(),
                                     html: true,
                                     placement: 'top',
                                     trigger: 'hover click'
@@ -1205,7 +1205,7 @@ if (typeof jQuery === 'undefined') {
                 var $f = map[field];
                 if ($f.data('bv.messages')
                       .find('.help-block[data-bv-validator][data-bv-for="' + field + '"]')
-                      .filter('[data-bv-result="' + this.STATUS_INVALID +'"]')
+                      .filter('[data-bv-http="' + this.STATUS_INVALID +'"]')
                       .length > 0)
                 {
                     return false;
@@ -1291,7 +1291,7 @@ if (typeof jQuery === 'undefined') {
                 messages = messages.concat(
                     $(this)
                         .data('bv.messages')
-                        .find('.help-block[data-bv-for="' + $(this).attr('data-bv-field') + '"][data-bv-result="' + that.STATUS_INVALID + '"]' + filter)
+                        .find('.help-block[data-bv-for="' + $(this).attr('data-bv-field') + '"][data-bv-http="' + that.STATUS_INVALID + '"]' + filter)
                         .map(function() {
                             var v = $(this).attr('data-bv-validator'),
                                 f = $(this).attr('data-bv-for');
@@ -2084,7 +2084,7 @@ if (typeof jQuery === 'undefined') {
         },
 
         /**
-         * Return result from the callback method
+         * Return http from the callback method
          *
          * @param {BootstrapValidator} validator The validator plugin instance
          * @param {jQuery} $field Field element

@@ -1036,7 +1036,7 @@
 			 * This "filters" `originalText` by passing it as the first argument to every callback
 			 * with the name `eventName` and taking the return value and passing it to the next function.
 			 *
-			 * This function returns the result after all the callbacks have been applied to `originalText`.
+			 * This function returns the http after all the callbacks have been applied to `originalText`.
 			 */
 			filter : function (eventName, originalText) {
 				if (typeof (this._events[eventName]) === "object") {

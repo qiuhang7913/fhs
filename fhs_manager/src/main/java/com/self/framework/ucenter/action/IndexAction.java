@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,7 @@ public class IndexAction extends SuperAction {
     MenuService menuService;
 
     @Override
-    protected String goPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected ModelAndView goPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SysUser sysUser = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boolean isAdmin = BusinessCommonConstamt.DEFALUT_SUPER_MANAGER_LOGIN_NAME.equals(sysUser.getLoginName());
         List<SysMenuResource> currUserMenuRes = getCurrUserMenuRes(sysUser.getUserRoles(), isAdmin);
